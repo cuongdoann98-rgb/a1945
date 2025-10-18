@@ -13,68 +13,66 @@
   </script>
 
   <style>
-    /* ===== RESET + LAYOUT BASE ===== */
-    html,body { height:100%; margin:0; padding:0; font-family:-apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:#f7f7f7; display:flex; justify-content:center; }
+    html,body { height:100%; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:#f7f7f7; display:flex; justify-content:center; }
     .phone { width:100%; max-width:420px; background:#fff; min-height:100vh; box-sizing:border-box; }
 
-    /* ===== Header kiểu iPhone ===== */
-    header.ios-header { position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; display:flex; align-items:center; justify-content:center; background:#fff; padding:12px 0; font-weight:600; font-size:17px; border-bottom:1px solid #eee; height:52px; color:#000; z-index:1000; box-sizing:border-box; }
-    .ios-header .back-btn { position:absolute; left:16px; top:50%; transform:translateY(-50%); font-size:22px; font-weight:400; color:#000; cursor:pointer; line-height:1; }
-    .ios-title { text-align:center; line-height:1.2; font-size:18px; font-weight:600; max-width:calc(100% - 96px); white-space:normal; padding:0 8px; }
+    header.ios-header { position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; display:flex; align-items:center; justify-content:center; background:#fff; padding:12px 0; font-weight:600; font-size:17px; border-bottom:1px solid #eee; height:52px; z-index:1000; box-sizing:border-box; }
+    .ios-header .back-btn { position:absolute; left:16px; top:50%; transform:translateY(-50%); font-size:22px; color:#000; cursor:pointer; }
+    .ios-title { text-align:center; font-size:18px; font-weight:600; }
 
-    /* ===== Nội dung chính ===== */
     .main-content { margin-top:70px; }
     .container { margin:0 auto; padding:20px 16px 180px; box-sizing:border-box; max-width:420px; width:100%; display:flex; flex-direction:column; gap:20px; }
 
-    .balance-box { display:flex; align-items:center; background:#f9f9f9; border:1.5px solid #d0d0d0; border-radius:12px; padding:12px 15px; gap:12px; box-sizing:border-box; }
-    .tiktok-logo { width:40px; height:40px; object-fit:contain; }
+    .balance-box { display:flex; align-items:center; background:#f9f9f9; border:1.5px solid #d0d0d0; border-radius:12px; padding:12px 15px; gap:12px; }
+    .tiktok-logo { width:40px; height:40px; }
     .balance-info { display:flex; flex-direction:column; gap:4px; }
     .recharge-text { font-size:18px; font-weight:700; color:#000; }
     .balance-line { display:flex; align-items:center; gap:8px; }
     .coin-icon { width:18px; height:18px; }
-    #balanceAmount { font-size:13px; font-weight:400; color:#666; border:none; background:transparent; width:auto; text-align:left; pointer-events:none; }
+    #balanceAmount { font-size:13px; color:#666; border:none; background:transparent; }
 
-    .recharge-section { background:#fff; border-radius:12px; padding:15px; display:flex; flex-direction:column; gap:12px; box-shadow:0 0 8px rgba(0,0,0,0.05); }
-    .recharge-section h3 { margin:0; font-size:23px; font-weight:700; text-align:left; }
+    .recharge-section { background:#fff; border-radius:12px; padding:15px; box-shadow:0 0 8px rgba(0,0,0,0.05); }
+    .recharge-section h3 { margin:0; font-size:23px; font-weight:700; }
     .tiktok-input-wrapper { display:flex; align-items:center; border:1.5px solid #d0d0d0; border-radius:10px; padding:0 10px; background:#f9f9f9; }
     .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; }
 
     .coins-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-top:5px; }
-    .coin-option { background:#e3e3e3; border:1.5px solid #d0d0d0; border-radius:10px; padding:15px 10px; text-align:center; cursor:pointer; transition:0.18s; box-sizing:border-box; }
+    .coin-option { background:#e3e3e3; border:1.5px solid #d0d0d0; border-radius:10px; padding:15px 10px; text-align:center; cursor:pointer; transition:0.18s; }
     .coin-option.selected { border-color:#fe2c55; background:#fff2f5; }
     .coin-value { font-weight:600; font-size:18px; display:flex; align-items:center; justify-content:center; gap:6px; }
     .coin-value img { width:18px; height:18px; }
-    .coin-price { font-size:13px; color:#777; margin-top:2px; }
+    .coin-price { font-size:13px; color:#777; }
 
-    .sheet-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); opacity:0; visibility:hidden; transition:all .25s ease; z-index:1200; }
-    .sheet { position:fixed; left:0; right:0; bottom:-100%; background:#fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -5px 20px rgba(0,0,0,0.2); transition:bottom .28s ease; z-index:1300; }
-    .sheet.active { bottom:0; }
-    .sheet-backdrop.active { opacity:1; visibility:visible; }
-
-    .sheet-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid #eee; }
-    .sheet-content { padding:20px; display:flex; flex-direction:column; gap:15px; }
-    .sheet-content input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:18px; text-align:center; outline:none; }
-
-    .payment-footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; background:#fff; border-top:1px solid #eee; box-shadow:0 -3px 10px rgba(0,0,0,0.05); padding:10px 16px 20px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:1100; border-radius:16px 16px 0 0; box-sizing:border-box; }
-    .payment-logos { display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:6px; align-self:flex-start; margin-left:0; }
-    .payment-logos .pay-icon { height:10px; width:auto; object-fit:contain; }
+    .payment-footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; background:#fff; border-top:1px solid #eee; box-shadow:0 -3px 10px rgba(0,0,0,0.05); padding:10px 16px 20px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:1100; border-radius:16px 16px 0 0; }
+    .payment-logos { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
+    .pay-icon { height:10px; width:auto; object-fit:contain; }
     .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; }
-    .total-label { color:#666; font-weight:500; }
-    .total-amount { font-weight:600; color:#000; }
     .done-btn { width:100%; background:#fe2c55; color:#fff; border:none; border-radius:8px; padding:13px; font-size:16px; cursor:pointer; }
-    .status { text-align:center; font-size:15px; color:#555; }
+
+    /* === Custom Popup Sheet === */
+    .sheet-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); opacity:0; visibility:hidden; transition:all .25s ease; z-index:1500; }
+    .sheet-backdrop.active { opacity:1; visibility:visible; }
+    .sheet { position:fixed; left:0; right:0; bottom:-100%; background:#fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -5px 20px rgba(0,0,0,0.2); transition:bottom .3s ease; z-index:1600; max-width:420px; margin:auto; }
+    .sheet.active { bottom:0; }
+
+    .sheet-header { padding:16px 20px; text-align:center; font-size:18px; font-weight:700; border-bottom:1px solid #eee; position:relative; }
+    .sheet-header button { position:absolute; right:20px; top:12px; border:none; background:none; font-size:22px; cursor:pointer; }
+
+    .sheet-body { padding:20px; display:flex; flex-direction:column; gap:15px; }
+    .sheet-body h4 { margin:0; font-size:15px; color:#555; }
+    .coin-input-row { display:flex; align-items:center; justify-content:center; gap:8px; }
+    .coin-input-row img { width:20px; height:20px; }
+    .coin-input-row input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:16px; width:120px; text-align:center; outline:none; }
+    .sheet .done-btn { margin-top:10px; }
 
     @media (max-width:380px) {
-      .ios-title { font-size:14px; max-width:70%; }
-      .payment-logos .pay-icon { height:18px; }
-      .coin-value { font-size:15px; }
+      .ios-title { font-size:15px; }
     }
   </style>
 </head>
 <body>
   <div class="phone">
 
-    <!-- Header -->
     <header class="ios-header">
       <span class="back-btn">&lt;</span>
       <div class="ios-title">Get Coins to send Gifts to TikTok</div>
@@ -83,13 +81,10 @@
     <div class="main-content">
       <main class="container">
         <div class="balance-box">
-          <img src="tiktok.png" alt="TikTok Logo" class="tiktok-logo">
+          <img src="tiktok.png" class="tiktok-logo">
           <div class="balance-info">
             <span class="recharge-text">Recharge</span>
-            <div class="balance-line">
-              <img src="coin.png" alt="Coin" class="coin-icon">
-              <input type="text" id="balanceAmount" value="2,506,051">
-            </div>
+            <div class="balance-line"><img src="coin.png" class="coin-icon"><input type="text" id="balanceAmount" value="2,506,051"></div>
           </div>
         </div>
 
@@ -101,145 +96,86 @@
           </div>
 
           <div class="coins-grid">
-            <div class="coin-option" data-coins="70" data-price="1.00">
-              <div class="coin-value"><img src="coin.png" alt="coin">70</div>
-              <div class="coin-price">$1.00</div>
-            </div>
-            <div class="coin-option" data-coins="350" data-price="5.00">
-              <div class="coin-value"><img src="coin.png" alt="coin">350</div>
-              <div class="coin-price">$5.00</div>
-            </div>
-            <div class="coin-option" data-coins="700" data-price="9.00">
-              <div class="coin-value"><img src="coin.png" alt="coin">700</div>
-              <div class="coin-price">$9.00</div>
-            </div>
-            <div class="coin-option" data-coins="1700" data-price="19.00">
-              <div class="coin-value"><img src="coin.png" alt="coin">1,700</div>
-              <div class="coin-price">$19.00</div>
-            </div>
-            <div class="coin-option" data-coins="3000" data-price="29.00">
-              <div class="coin-value"><img src="coin.png" alt="coin">3,000</div>
-              <div class="coin-price">$29.00</div>
-            </div>
-            <div class="coin-option" data-coins="7000" data-price="69.00">
-              <div class="coin-value"><img src="coin.png" alt="coin">7,000</div>
-              <div class="coin-price">$69.00</div>
-            </div>
-            <div class="coin-option" data-coins="17500" data-price="199.00">
-              <div class="coin-value"><img src="coin.png" alt="coin">17,500</div>
-              <div class="coin-price">$199.00</div>
-            </div>
-            <div class="coin-option" id="customOption">
-              <div class="coin-value"><img src="coin.png" alt="coin">Custom</div>
-            </div>
+            <div class="coin-option" data-coins="70" data-price="1.00"><div class="coin-value"><img src="coin.png">70</div><div class="coin-price">$1.00</div></div>
+            <div class="coin-option" data-coins="350" data-price="5.00"><div class="coin-value"><img src="coin.png">350</div><div class="coin-price">$5.00</div></div>
+            <div class="coin-option" data-coins="700" data-price="9.00"><div class="coin-value"><img src="coin.png">700</div><div class="coin-price">$9.00</div></div>
+            <div class="coin-option" data-coins="1700" data-price="19.00"><div class="coin-value"><img src="coin.png">1,700</div><div class="coin-price">$19.00</div></div>
+            <div class="coin-option" data-coins="3000" data-price="29.00"><div class="coin-value"><img src="coin.png">3,000</div><div class="coin-price">$29.00</div></div>
+            <div class="coin-option" data-coins="7000" data-price="69.00"><div class="coin-value"><img src="coin.png">7,000</div><div class="coin-price">$69.00</div></div>
+            <div class="coin-option" data-coins="17500" data-price="199.00"><div class="coin-value"><img src="coin.png">17,500</div><div class="coin-price">$199.00</div></div>
+            <div class="coin-option" id="customOption"><div class="coin-value"><img src="coin.png">Custom</div></div>
           </div>
-
         </section>
       </main>
 
-      <!-- Footer -->
       <div class="payment-footer">
         <div class="payment-logos">
-          <img src="visa.png" alt="visa" class="pay-icon">
-          <img src="mastercard.png" alt="MasterCard" class="pay-icon">
-          <img src="paypal.png" alt="PayPal" class="pay-icon">
-          <img src="applepay.png" alt="Apple Pay" class="pay-icon">
-          <img src="googlepay.png" alt="Google Pay" class="pay-icon">
-          <img src="zalopay.png" alt="Zalo Pay" class="pay-icon">
-          <img src="momo.png" alt="Momo Pay" class="pay-icon">
-          <img src="vnpay.png" alt="VN Pay" class="pay-icon">
+          <img src="visa.png" class="pay-icon"><img src="mastercard.png" class="pay-icon"><img src="paypal.png" class="pay-icon"><img src="applepay.png" class="pay-icon"><img src="googlepay.png" class="pay-icon"><img src="zalopay.png" class="pay-icon"><img src="momo.png" class="pay-icon"><img src="vnpay.png" class="pay-icon">
         </div>
-        <div class="total-line">
-          <span class="total-label">Total:</span>
-          <span class="total-amount" id="totalAmount">$0.00</span>
-        </div>
+        <div class="total-line"><span>Total:</span><span id="totalAmount">$0.00</span></div>
         <button class="done-btn">Recharge</button>
-        <div class="status" id="status"></div>
       </div>
+    </div>
 
-      <!-- Custom Coin Popup -->
-      <div id="customPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1500;">
-        <div style="background:#fff; padding:20px; border-radius:12px; width:300px; text-align:center;">
-          <h3>Enter custom coins</h3>
-          <input type="number" id="customCoinInput" placeholder="e.g. 5000" style="padding:8px; width:100%; margin:10px 0; border:1px solid #ccc; border-radius:6px;">
-          <button id="confirmCustom" style="background:#000; color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;">Confirm</button>
+    <!-- === Custom Popup Sheet === -->
+    <div class="sheet-backdrop" id="sheetBackdrop"></div>
+    <div class="sheet" id="customSheet">
+      <div class="sheet-header">
+        Custom
+        <button id="closeSheet">&times;</button>
+      </div>
+      <div class="sheet-body">
+        <h4>Number of Coins</h4>
+        <div class="coin-input-row">
+          <img src="coin.png">
+          <input type="number" id="customCoinInput" placeholder="Enter coins">
         </div>
+        <button class="done-btn" id="confirmCustom">Recharge</button>
       </div>
+    </div>
 
-      <!-- Order Summary Popup -->
-      <div id="orderPopup" class="order-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:2000;">
-        <div style="background:#fff; width:90%; max-width:360px; border-radius:16px; padding:20px; position:relative; box-shadow:0 5px 20px rgba(0,0,0,0.15);">
-          <button class="close-btn" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
-          <h3 style="text-align:center; margin-bottom:20px;">Order Summary</h3>
-          <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Account</span><span id="popupUsername">@username</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Total</span><span id="popupTotal">$0.00</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Coins</span><span id="popupCoins">0</span></div>
-          <h4 style="margin-top:20px; margin-bottom:10px;">Select a payment method</h4>
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;"><img src="visa-logo.png" alt="Visa" style="height:14px;"><span>************36</span></div>
-          <p style="font-size:12px; color:#666;">By tapping <b>Pay Now</b>, you agree to the Terms of Service and Privacy Policy.</p>
-          <button class="pay-now-btn" style="width:100%; background:#000; color:#fff; border:none; padding:10px; border-radius:8px; margin-top:10px; font-size:16px;">Pay Now</button>
-        </div>
-      </div>
-
-    </div> <!-- end .main-content -->
-  </div> <!-- end .phone -->
+  </div>
 
   <script>
-    const PRICE_PER_COIN = 1.0/70;
+    const PRICE_PER_COIN = 1.0 / 70;
     const coinOptions = document.querySelectorAll('.coin-option');
     const customOption = document.getElementById('customOption');
-    const customPopup = document.getElementById('customPopup');
-    const customInput = document.getElementById('customCoinInput');
-    const confirmCustom = document.getElementById('confirmCustom');
     const totalAmountEl = document.getElementById('totalAmount');
-    const tiktokIdInput = document.getElementById('tiktokId');
-    const footerRechargeBtn = document.querySelector('.done-btn');
-    const orderPopup = document.getElementById('orderPopup');
-    const closeBtn = orderPopup.querySelector('.close-btn');
-    const popupUsername = document.getElementById('popupUsername');
-    const popupTotal = document.getElementById('popupTotal');
-    const popupCoins = document.getElementById('popupCoins');
+    const sheet = document.getElementById('customSheet');
+    const sheetBackdrop = document.getElementById('sheetBackdrop');
+    const closeSheet = document.getElementById('closeSheet');
+    const confirmCustom = document.getElementById('confirmCustom');
+    const customInput = document.getElementById('customCoinInput');
+    let selectedCoins = 0, selectedPrice = 0;
 
-    let selectedCoins = 0;
-    let selectedPrice = 0;
-
-    function formatUSD(num){ return '$' + num.toFixed(2); }
+    const openSheet = () => { sheet.classList.add('active'); sheetBackdrop.classList.add('active'); };
+    const closePopup = () => { sheet.classList.remove('active'); sheetBackdrop.classList.remove('active'); };
 
     coinOptions.forEach(option=>{
       option.addEventListener('click',()=>{
         coinOptions.forEach(o=>o.classList.remove('selected'));
         option.classList.add('selected');
-
-        if(option.id === 'customOption'){
-          customPopup.style.display = 'flex';
-        }else{
-          selectedCoins = parseInt(option.dataset.coins);
-          selectedPrice = parseFloat(option.dataset.price);
-          totalAmountEl.textContent = formatUSD(selectedPrice);
+        if(option.id==='customOption') openSheet();
+        else {
+          selectedCoins=parseInt(option.dataset.coins);
+          selectedPrice=parseFloat(option.dataset.price);
+          totalAmountEl.textContent='$'+selectedPrice.toFixed(2);
         }
       });
     });
 
     confirmCustom.addEventListener('click',()=>{
-      const val = parseInt(customInput.value);
+      const val=parseInt(customInput.value);
       if(val && val>0){
-        selectedCoins = val;
-        selectedPrice = val * PRICE_PER_COIN;
-        totalAmountEl.textContent = formatUSD(selectedPrice);
-        customPopup.style.display = 'none';
+        selectedCoins=val;
+        selectedPrice=val*PRICE_PER_COIN;
+        totalAmountEl.textContent='$'+selectedPrice.toFixed(2);
+        closePopup();
       }
     });
 
-    footerRechargeBtn.addEventListener('click',()=>{
-      if(selectedCoins>0){
-        popupUsername.textContent = '@'+tiktokIdInput.value || 'username';
-        popupCoins.textContent = selectedCoins.toLocaleString();
-        popupTotal.textContent = formatUSD(selectedPrice);
-        orderPopup.style.display = 'flex';
-      }
-    });
-
-    closeBtn.addEventListener('click',()=>{ orderPopup.style.display='none'; });
+    closeSheet.addEventListener('click',closePopup);
+    sheetBackdrop.addEventListener('click',closePopup);
   </script>
 </body>
 </html>
