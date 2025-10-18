@@ -76,7 +76,7 @@
       left: 16px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 400;
       color: #000;
       cursor: pointer;
@@ -180,14 +180,20 @@
       padding: 10px 16px 20px;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: 10px;
       z-index: 1100;
       border-radius: 16px 16px 0 0;
       box-sizing: border-box;
     }
 
-    .payment-logos { display:flex; justify-content:flex-start; flex-wrap:wrap; gap:6px; align-items:center; }
+    .payment-logos { display: flex;
+        justify-content: flex-start; /* căn trái */
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-self: flex-start; /* 🔥 ép khối logo dính sát mép trái khối cha */
+        margin-left: 0;  }
     .payment-logos .pay-icon { height:10px; width:auto; object-fit:contain; }
 
     .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; }
@@ -413,6 +419,7 @@
   </script>
 </body>
 </html>
+
 
 
 
