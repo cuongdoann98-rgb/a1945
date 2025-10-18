@@ -1,89 +1,417 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TikTok Coin Recharge</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.4.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.4.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.4.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  <style>
+    /* ===== RESET + LAYOUT BASE ===== */
+    html,body { height:100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
+    /* phone wrapper - giữ nội dung ở giữa, tối đa 420px */
+    .phone {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      min-height: 100vh;
+      box-shadow: none;
+      box-sizing: border-box;
+    }
+
+    /* ===== Header kiểu iPhone ===== */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+        z-index: 10;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .main-content {
+      margin-top: 70px; /* đẩy nội dung xuống dưới header */
+    }
+
+    .ios-header {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      padding: 12px 0;
+      font-weight: 600;
+      font-size: 17px;
+      border-bottom: 1px solid #eee;
+      height: 52px;
+      color: #000;
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+
+    .ios-header .back-btn {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 26px;
+      font-weight: 400;
+      color: #000;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .ios-title {
+      text-align: center;
+      line-height: 1.2;
+      font-size: 16px;
+      font-weight: 600;
+      max-width: calc(100% - 96px); /* chừa chỗ cho back và có padding */
+      white-space: normal;
+      padding: 0 8px;
+    }
+
+    /* ===== Nội dung chính (giữ nguyên class .container như cũ) ===== */
+    .container {
+      /* chừa chỗ cho header (70px) và footer (khoảng 160px) */
+      margin: 0 auto;
+      padding: 20px 16px 180px;
+      box-sizing: border-box;
+      max-width: 420px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Ví Recharge (balance-box) */
+    .balance-box {
+      display: flex;
+      align-items: center;
+      background-color: #f9f9f9;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 12px;
+      padding: 12px 15px;
+      gap: 12px;
+      box-sizing: border-box;
+    }
+
+    .tiktok-logo { width:40px; height:40px; object-fit:contain; }
+    .balance-info { display:flex; flex-direction:column; gap:4px; }
+    .recharge-text { font-size:18px; font-weight:700; color:#000; }
+    .balance-line { display:flex; align-items:center; gap:8px; }
+    .coin-icon { width:18px; height:18px; }
+    #balanceAmount {
+      font-size: 13px;         /* chữ nhỏ hơn */
+      font-weight: 400;        /* mảnh hơn */
+      color: #666;             /* màu xám nhẹ */
+      border: none;            /* bỏ viền */
+      background: transparent; /* bỏ nền trắng */
+      width: auto;             /* tự co theo nội dung */
+      text-align: left;        /* căn trái */
+      pointer-events: none;    /* không cho sửa, chỉ hiển thị */
+}
+
+
+    /* recharge-section / coin grid */
+    .recharge-section {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    }
+    .recharge-section h3 { margin:0; font-size:23px; font-weight:700; text-align:left; }
+    .tiktok-input-wrapper { display:flex; align-items:center; border:1.5px solid #d0d0d0; border-radius:10px; padding:0 10px; background:#f9f9f9; }
+    .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; }
+
+    .coins-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-top:5px; }
+    .coin-option { background:#e3e3e3; border:1.5px solid #d0d0d0; border-radius:10px; padding:15px 10px; text-align:center; cursor:pointer; transition:0.18s; box-sizing:border-box; }
+    .coin-option.selected { border-color:#fe2c55; background:#fff2f5; }
+    .coin-value { font-weight:600; font-size:18px; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .coin-value img { width:18px; height:18px; }
+    .coin-price { font-size:13px; color:#777; margin-top:2px; }
+
+    /* ===== Bottom sheet (popup custom) ===== */
+    .sheet-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); opacity:0; visibility:hidden; transition:all .25s ease; z-index:1200; }
+    .sheet { position:fixed; left:0; right:0; bottom:-100%; background:#fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -5px 20px rgba(0,0,0,0.2); transition:bottom .28s ease; z-index:1300; }
+    .sheet.active { bottom:0; }
+    .sheet-backdrop.active { opacity:1; visibility:visible; }
+
+    .sheet-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid #eee; }
+    .sheet-content { padding:20px; display:flex; flex-direction:column; gap:15px; }
+    .sheet-content input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:18px; text-align:center; outline:none; }
+
+    /* ===== Footer thanh toán ===== */
+    .payment-footer {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 420px;
+      background-color: #fff;
+      border-top: 1px solid #eee;
+      box-shadow: 0 -3px 10px rgba(0,0,0,0.05);
+      padding: 10px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 1100;
+      border-radius: 16px 16px 0 0;
+      box-sizing: border-box;
+    }
+
+    .payment-logos { display:flex; justify-content:center; flex-wrap:wrap; gap:6px; align-items:center; }
+    .payment-logos .pay-icon { height:18px; width:auto; object-fit:contain; }
+
+    .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; }
+    .total-label { color:#666; font-weight:500; }
+    .total-amount { font-weight:600; color:#000; }
+
+    .done-btn { width:100%; background:#fe2c55; color:#fff; border:none; border-radius:8px; padding:13px; font-size:16px; cursor:pointer; }
+    .status { text-align:center; font-size:15px; color:#555; }
+
+    /* small responsive tweaks */
+    @media (max-width:380px) {
+      .ios-title { font-size:14px; max-width:70%; }
+      .payment-logos .pay-icon { height:18px; }
+      .coin-value { font-size:15px; }
+    }
+      #sheetRecharge {
+        width: 100%;
+        background-color: #fe2c55;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 13px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s ease;
       }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+      
+      #sheetRecharge:hover {
+        background-color: #e8264c;
+      }
+
+  </style>
+</head>
+<body>
+  <!-- wrapper to center content (optional) -->
+  <div class="phone">
+
+    <!-- Header -->
+    <header class="ios-header">
+      <span class="back-btn">&lt;</span>
+      <div class="ios-title">Get Coins to send Gifts to TikTok</div>
+    </header>
+    <div class="main-content">
+   <!-- toàn bộ phần logo TikTok + Recharge + Get Coins ở đây -->
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+    <!-- Main container -->
+    <main class="container">
+      <div class="balance-box">
+        <img src="tiktok.png" alt="TikTok Logo" class="tiktok-logo">
+        <div class="balance-info">
+          <span class="recharge-text">Recharge</span>
+          <div class="balance-line">
+            <img src="coin.png" alt="Coin" class="coin-icon">
+            <input type="text" id="balanceAmount" value="2,506,051">
+          </div>
+        </div>
+      </div>
+
+      <section class="recharge-section">
+        <h3>Get Coins</h3>
+        <div class="tiktok-input-wrapper">
+          <span class="at-symbol">@</span>
+          <input type="text" id="tiktokId" placeholder="username">
+        </div>
+
+        <div class="coins-grid">
+          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">70</div><div class="coin-price">$1.00</div></div>
+          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">350</div><div class="coin-price">$5.00</div></div>
+          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">700</div><div class="coin-price">$9.00</div></div>
+          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">1,700</div><div class="coin-price">$19.00</div></div>
+          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">3,000</div><div class="coin-price">$29.00</div></div>
+          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">7,000</div><div class="coin-price">$69.00</div></div>
+          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">17,500</div><div class="coin-price">$199.00</div></div>
+          <div class="coin-option" id="customOption"><div class="coin-value"><img src="coin.png" alt="coin">Custom</div></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <div class="payment-footer">
+      <div class="payment-logos">
+        <img src="Visa.png" alt="Visa" class="pay-icon">
+        <img src="mastercard.png" alt="MasterCard" class="pay-icon">
+        <img src="paypal.png" alt="PayPal" class="pay-icon">
+        <img src="applepay.png" alt="Apple Pay" class="pay-icon">
+        <img src="googlepay.png" alt="Google Pay" class="pay-icon">
+        <img src="zalopay.png" alt="Zalo Pay" class="pay-icon">
+        <img src="momo.png" alt="Momo Pay" class="pay-icon">
+        <img src="vnpay.png" alt="VN Pay" class="pay-icon">
+      </div>
+
+      <div class="total-line">
+        <span class="total-label">Total:</span>
+        <span class="total-amount" id="totalAmount">$0.00</span>
+      </div>
+
+      <button class="done-btn">Recharge</button>
+      <div class="status" id="status"></div>
+    </div>
+
+    <!-- Bottom Sheet -->
+    <div class="sheet-backdrop"></div>
+    <div class="sheet">
+      <div class="sheet-header">
+        <span class="sheet-back">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </span>
+        <h3>Custom</h3>
+        <span class="sheet-help">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#000" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM11 17h2v2h-2zm1-13c-1.65 0-3 1.35-3 3h2a1 1 0 112 0c0 .55-.45 1-1 1h-1v2h2v-1.18c1.16-.41 2-1.52 2-2.82 0-1.65-1.35-3-3-3z"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="sheet-content">
+        <label for="sheetInput">Number of Coins</label>
+        <input type="number" id="sheetInput" placeholder="Enter coins" inputmode="numeric">
+        <button id="sheetRecharge">Recharge</button>
+      </div>
+    </div>
+
+  </div> <!-- end .phone -->
+
+  <!-- JavaScript (giữ nguyên logic của bạn) -->
+  <script>
+    const options = document.querySelectorAll('.coin-option');
+    const statusText = document.getElementById('status');
+    const doneBtn = document.querySelector('.done-btn');
+    const balanceInput = document.getElementById('balanceAmount');
+    const tiktokIdInput = document.getElementById('tiktokId');
+    const customOption = document.getElementById('customOption');
+    let selectedCoin = 0;
+    const totalAmountEl = document.getElementById('totalAmount');
+    const sheet = document.querySelector('.sheet');
+    const backdrop = document.querySelector('.sheet-backdrop');
+    const inputEl = document.getElementById('sheetInput');
+    const rechargeBtn = document.getElementById('sheetRecharge');
+    const backBtn = document.querySelector('.sheet-back');
+    const helpBtn = document.querySelector('.sheet-help');
+
+    function openSheet() {
+      sheet.classList.add('active');
+      backdrop.classList.add('active');
+      setTimeout(() => inputEl.focus(), 300);
+    }
+
+    function closeSheet() {
+      sheet.classList.remove('active');
+      backdrop.classList.remove('active');
+    }
+
+    backdrop.addEventListener('click', closeSheet);
+    backBtn.addEventListener('click', closeSheet);
+
+    helpBtn.addEventListener('click', () => {
+      alert("Enter the number of TikTok coins you want to recharge.");
+    });
+
+    rechargeBtn.addEventListener('click', () => {
+      const val = parseInt(inputEl.value);
+      if (isNaN(val) || val <= 0) {
+        alert("Please enter a valid number of coins");
+        return;
+      }
+      selectedCoin = val;
+      totalAmountEl.textContent = "$" + (val * 0.014).toFixed(2);
+      closeSheet();
+      inputEl.value = "";
+    });
+
+    options.forEach(opt => {
+      function selectOption() {
+        options.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        if (opt === customOption) {
+          openSheet();
+        } else {
+          selectedCoin = parseInt(opt.querySelector('.coin-value').textContent.replace(/,/g,'')) || 0;
+          const priceText = opt.querySelector('.coin-price')?.textContent || "$0.00";
+          totalAmountEl.textContent = priceText;
         }
-      });
-    </script>
-  </body>
+      }
+      opt.addEventListener('click', selectOption);
+    });
+
+    function parseNumber(str){
+      return parseInt(str.replace(/,/g,'')) || 0;
+    }
+
+    function formatNumberWithComma(num){
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    doneBtn.addEventListener('click', () => {
+      const userId = '@' + tiktokIdInput.value.trim();
+      if (selectedCoin <= 0) {
+        statusText.textContent = "Please select coin amount";
+        statusText.style.color = "red";
+        return;
+      }
+      if (userId === '@') {
+        statusText.textContent = "Please enter a valid TikTok ID";
+        statusText.style.color = "red";
+        return;
+      }
+      statusText.textContent = "Processing payment...";
+      statusText.style.color = "#777";
+      setTimeout(() => {
+        let current = parseNumber(balanceInput.value);
+        current -= selectedCoin;
+        if (current < 0) current = 0;
+        balanceInput.value = formatNumberWithComma(current);
+        statusText.textContent = `Payment successful ✅ for ${userId}`;
+        statusText.style.color = "green";
+      }, 1500);
+    });
+  </script>
+</body>
 </html>
+
+
