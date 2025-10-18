@@ -8,7 +8,6 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
   <script>
-    // Đăng ký service worker bảo vệ bằng catch để không ném lỗi khi file không tồn tại
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js').catch(err => {
         console.warn('Service worker registration failed:', err);
@@ -17,19 +16,17 @@
   </script>
 
   <style>
-    /* === Nền ngoài trắng, trang liền mạch === */
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      background: #ffffff; /* nền trắng toàn trang theo yêu cầu */
+      background: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       justify-content: center;
       color: #111;
     }
 
-    /* Khung phone để căn giữa nội dung, nhưng nền trong suốt để thấy nền trắng ngoài */
     .phone {
       width: 100%;
       max-width: 420px;
@@ -39,7 +36,6 @@
       position: relative;
     }
 
-    /* Header: grid 3 cột để nút back không chồng tiêu đề */
     header.ios-header {
       position: fixed;
       top: 0;
@@ -48,7 +44,7 @@
       width: 100%;
       max-width: 420px;
       display: grid;
-      grid-template-columns: 48px 1fr 48px; /* left button, title, right spacer */
+      grid-template-columns: 48px 1fr 48px;
       align-items: center;
       justify-items: center;
       background: #fff;
@@ -85,49 +81,54 @@
       text-overflow: ellipsis;
     }
 
-    /* container: dùng cùng padding ngang như payment-footer để phần giữa có bề rộng bằng nút Recharge */
+    /* container dùng cùng padding ngang như payment-footer => phần giữa khớp với nút đỏ */
     .main-content { margin-top: 70px; }
     .container { margin: 0 auto; padding: 20px 16px 180px; box-sizing: border-box; max-width: 420px; width: 100%; display:flex; flex-direction:column; gap:20px; }
 
-    /* Balance box */
-    .balance-box { display:flex; align-items:center; background:#fff; border-radius:12px; padding:12px 15px; gap:12px; box-sizing:border-box; border: 1px solid rgba(0,0,0,0.03); }
+    /* đảm bảo các phần giữa chiếm đúng bề ngang nội dung */
+    .balance-box, .recharge-section, .tiktok-input-wrapper, .coins-grid {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .balance-box { display:flex; align-items:center; background:#fff; border-radius:12px; padding:12px 15px; gap:12px; border: 1px solid rgba(0,0,0,0.03); }
     .tiktok-logo { width:40px; height:40px; object-fit:contain; }
     .balance-info { display:flex; flex-direction:column; gap:4px; }
     .recharge-text { font-size:18px; font-weight:700; color:#000; }
     .balance-line { display:flex; align-items:center; gap:8px; }
     .coin-icon { width:18px; height:18px; }
-    #balanceAmount { font-size:13px; color:#666; border:none; background:transparent; }
+    #balanceAmount { font-size:13px; color:#666; border:none; background:transparent; width:auto; }
 
-    .recharge-section { background: transparent; border-radius:12px; padding:0; box-sizing:border-box; }
+    .recharge-section { background: transparent; border-radius:12px; padding:0; }
     .recharge-section h3 { margin:0 0 8px 0; font-size:23px; font-weight:700; }
 
-    .tiktok-input-wrapper { display:flex; align-items:center; border:1.5px solid #d0d0d0; border-radius:10px; padding:0 10px; background:#f9f9f9; box-sizing:border-box; }
-    .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; }
+    .tiktok-input-wrapper { display:flex; align-items:center; border:1.5px solid #d0d0d0; border-radius:10px; padding:0 10px; background:#f9f9f9; }
+    .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; width:100%; }
 
-    /* Coins grid: luôn 2 cột theo yêu cầu, giữ background ô như cũ */
+    /* 2 cột bằng nhau, đầy đủ chiều rộng nội dung */
     .coins-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(120px, 1fr)); /* luôn 2 cột */
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin-top: 12px;
       align-items: start;
-      box-sizing: border-box;
     }
     .coin-option {
-      background: #e3e3e3; /* giữ background/visual cũ */
+      background: #e3e3e3;
       border: 1.5px solid #d0d0d0;
       border-radius: 10px;
       padding: 12px 10px;
       text-align: center;
       cursor: pointer;
       transition: 0.18s;
-      box-sizing: border-box;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
       gap:6px;
       user-select: none;
+      box-sizing: border-box;
+      width: 100%;
     }
     .coin-option:focus { outline: 3px solid rgba(254,44,85,0.12); }
     .coin-option.selected { border-color: #fe2c55; background: #fff2f5; }
@@ -143,7 +144,6 @@
     .done-btn { width:100%; background:#fe2c55; color:#fff; border:none; border-radius:8px; padding:13px; font-size:16px; cursor:pointer; }
     .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
-    /* === Custom Popup Sheet === */
     .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transition: all .25s ease; z-index:1500; }
     .sheet-backdrop.active { opacity: 1; visibility: visible; }
     .sheet { position: fixed; left: 0; right: 0; bottom: -100%; background: #fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); transition: bottom .25s ease; z-index:1501; }
@@ -247,7 +247,6 @@
       </div>
     </div>
 
-    <!-- Custom sheet -->
     <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true"></div>
     <div class="sheet" id="customSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="customTitle">
       <div class="sheet-header">
@@ -268,7 +267,6 @@
   </div>
 
   <script>
-    // === DOM refs ===
     const coinOptions = Array.from(document.querySelectorAll('.coin-option'));
     const customOption = document.getElementById('customOption');
     const totalAmountEl = document.getElementById('totalAmount');
@@ -284,33 +282,59 @@
     let selectedCoins = 0;
     let selectedPrice = 0;
     let coinOptionsDisabled = false;
+    const STORAGE_KEY = 'recharge_balance';
 
-    // Lấy default rate từ preset đầu
+    // default rate
     const firstPriced = coinOptions.find(o => o.dataset.coins && o.dataset.price);
     const DEFAULT_RATE = (firstPriced && parseInt(firstPriced.dataset.coins, 10) > 0)
       ? (parseFloat(firstPriced.dataset.price) / parseInt(firstPriced.dataset.coins, 10))
       : (1.0 / 70);
 
-    // Format balance hiển thị
-    try {
-      const raw = (balanceInput.value || '').toString().replace(/,/g, '');
-      const num = Number(raw);
-      if (!Number.isNaN(num)) balanceInput.value = num.toLocaleString();
-    } catch (e) { /* ignore */ }
+    // load balance from localStorage (persistent). If none, read from HTML default and persist it.
+    function loadBalance() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored !== null) {
+          const num = Number(stored);
+          if (!Number.isNaN(num)) {
+            balanceInput.value = num.toLocaleString();
+            return;
+          }
+        }
+        // fallback: parse existing value in DOM and persist
+        const raw = (balanceInput.value || '').toString().replace(/,/g, '');
+        const num = Number(raw) || 0;
+        localStorage.setItem(STORAGE_KEY, String(num));
+        balanceInput.value = num.toLocaleString();
+      } catch (e) {
+        // ignore localStorage errors
+        try {
+          const raw = (balanceInput.value || '').toString().replace(/,/g, '');
+          const num = Number(raw) || 0;
+          balanceInput.value = num.toLocaleString();
+        } catch {}
+      }
+    }
 
-    // Hàm cộng coins vào ví (cập nhật ô balanceAmount) - lũy tiến
+    function saveBalance(num) {
+      try {
+        localStorage.setItem(STORAGE_KEY, String(Number(num) || 0));
+      } catch (e) { /* ignore */ }
+    }
+
+    // add coins (lũy tiến) and persist
     function addCoinsToBalance(coinsToAdd) {
       try {
         const raw = (balanceInput.value || '').toString().replace(/,/g, '');
         const current = Number(raw) || 0;
         const next = current + Number(coinsToAdd || 0);
         balanceInput.value = next.toLocaleString();
+        saveBalance(next);
       } catch (e) {
-        // ignore errors silently
+        // ignore
       }
     }
 
-    // Bật/tắt các lựa chọn coin (thêm class disabled để tắt pointer-events)
     function setCoinOptionsDisabled(disabled) {
       coinOptionsDisabled = !!disabled;
       coinOptions.forEach(o => {
@@ -325,14 +349,12 @@
     }
 
     const openSheet = () => {
-      // không mở sheet khi các option đang bị tắt
       if (coinOptionsDisabled) return;
       sheet.classList.add('active');
       sheetBackdrop.classList.add('active');
       sheet.setAttribute('aria-hidden', 'false');
       sheetBackdrop.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden'; // disable background scroll
-      // clear previous input
+      document.body.style.overflow = 'hidden';
       customInput.value = '';
       setTimeout(() => customInput.focus(), 50);
     };
@@ -343,7 +365,6 @@
       sheet.setAttribute('aria-hidden', 'true');
       sheetBackdrop.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-      // focus trở lại ô đã chọn (nếu có) hoặc first option
       const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
       if (focused) focused.focus();
     };
@@ -354,10 +375,9 @@
       rechargeBtn.disabled = !(hasUser && hasSelection);
     }
 
-    // Xử lý chọn option (không chọn custom ngay khi mở sheet), bỏ chọn khi đang disabled
     coinOptions.forEach(option => {
       function selectOption() {
-        if (coinOptionsDisabled) return; // ignore khi tắt chọn
+        if (coinOptionsDisabled) return;
         coinOptions.forEach(o => o.classList.remove('selected'));
         if (option.id === 'customOption') {
           openSheet();
@@ -380,7 +400,6 @@
       });
     });
 
-    // Xác nhận custom trong sheet
     confirmCustom.addEventListener('click', () => {
       const val = parseInt(customInput.value, 10);
       if (!Number.isInteger(val) || val <= 0) {
@@ -404,16 +423,14 @@
       if (e.key === 'Escape' && sheet.classList.contains('active')) closePopup();
     });
 
-    // Khi người dùng nhập username: nếu trước đó đã tắt option -> bật lại
     tiktokIdInput.addEventListener('input', () => {
       updateRechargeState();
+      // nếu đang disabled và user nhập username -> bật lại lựa chọn
       if (coinOptionsDisabled && tiktokIdInput.value.trim().length > 0) {
-        // bật lại để người dùng chọn tiếp
         setCoinOptionsDisabled(false);
       }
     });
 
-    // Nút Recharge — client-side stub (chỉ mô phỏng, cần backend để thực sự xử lý)
     rechargeBtn.addEventListener('click', () => {
       const username = tiktokIdInput.value.trim();
       if (!username) {
@@ -427,18 +444,18 @@
       }
       const summary = `Xác nhận nạp\n\nUsername: @${username}\nCoins: ${selectedCoins.toLocaleString()}\nTotal: $${selectedPrice.toFixed(2)}\n\nTiếp tục?`;
       if (confirm(summary)) {
-        // Thực hiện gọi API/payment gateway tại đây trong ứng dụng thật
         rechargeBtn.disabled = true;
         const prevText = rechargeBtn.textContent;
         rechargeBtn.textContent = 'Processing...';
-        // Mô phỏng xử lý (thay bằng gọi API thực tế)
+
+        // Mô phỏng call API; thay bằng gọi API thực tế
         setTimeout(() => {
-          // Nếu nạp thành công -> cộng coins vào ví (lũy tiến)
+          // nạp thành công -> cộng lũy tiến vào ví (persist)
           addCoinsToBalance(selectedCoins);
 
           // Sau khi hoàn tất:
           // - chỉ reset ô username
-          // - tắt (disable) các lựa chọn coin (người dùng phải nhập username mới bật lại)
+          // - tắt (disable) các lựa chọn coin
           // - total trở về 0
           tiktokIdInput.value = '';
           selectedCoins = 0;
@@ -449,14 +466,12 @@
 
           alert('Mô phỏng nạp hoàn tất. Thay thế bằng gọi API ở server để hoàn tất giao dịch.');
 
-          // restore nút và trạng thái
           rechargeBtn.textContent = prevText;
           updateRechargeState();
         }, 1000);
       }
     });
 
-    // Khi sheet đóng xong, focus về option đã được chọn
     sheet.addEventListener('transitionend', () => {
       if (!sheet.classList.contains('active')) {
         const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
@@ -464,8 +479,9 @@
       }
     });
 
-    // Không tự động disable options ban đầu — giữ trạng thái cho phép chọn khi trang load.
-    // (Nếu muốn disable mặc định trước khi user nhập username, gọi setCoinOptionsDisabled(true) tại load)
+    // init
+    loadBalance();
+    // note: options are enabled initially; if you want them disabled until username entered, call setCoinOptionsDisabled(true) here.
   </script>
 </body>
 </html>
