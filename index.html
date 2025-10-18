@@ -1,13 +1,13 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TikTok Coin Recharge</title>
+  <title>Nạp Coins TikTok</title>
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
   <script>
+    // Đăng ký service worker bảo vệ bằng catch để không ném lỗi khi file không tồn tại
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js').catch(err => {
         console.warn('Service worker registration failed:', err);
@@ -16,101 +16,123 @@
   </script>
 
   <style>
-    html,body { height:100%; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:#f7f7f7; display:flex; justify-content:center; }
-    .phone { width:100%; max-width:420px; background:#fff; min-height:100vh; box-sizing:border-box; }
+    /* === Nền ngoài trắng, trang liền mạch === */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #ffffff; /* nền trắng toàn trang theo yêu cầu */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      color: #111;
+    }
 
-   header.ios-header {
-  position:fixed;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:100%;
-  max-width:420px;
-  display:grid;
-  grid-template-columns:48px 1fr 48px; /* left btn, title, right spacer */
-  align-items:center;
-  justify-items:center;
-  background:#fff;
-  padding:12px 0;
-  font-weight:600;
-  font-size:17px;
-  border-bottom:1px solid #eee;
-  height:52px;
-  z-index:1000;
-  box-sizing:border-box;
-}
-.ios-header .back-btn {
-  /* không absolute nữa */
-  position:static;
-  width:48px;
-  height:100%;
-  display:inline-flex;
-  align-items:center;
-  justify-content:flex-start;
-  padding-left:12px;
-  font-size:22px;
-  color:#000;
-  cursor:pointer;
-  background:none;
-  border:none;
-}
-.ios-title {
-  grid-column:2;
-  text-align:center;
-  font-size:18px;
-  font-weight:600;
-  max-width:100%;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis; /* tránh bị che hoặc xuống dòng */
-} 
-    .main-content { margin-top:70px; }
-    .container { margin:0 auto; padding:20px 16px 180px; box-sizing:border-box; max-width:420px; width:100%; display:flex; flex-direction:column; gap:20px; }
+    /* Khung phone để căn giữa nội dung, nhưng nền trong suốt để thấy nền trắng ngoài */
+    .phone {
+      width: 100%;
+      max-width: 420px;
+      background: transparent;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+    }
 
-    .balance-box { display:flex; align-items:center; background:#f9f9f9; border:1.5px solid #d0d0d0; border-radius:12px; padding:12px 15px; gap:12px; }
-    .tiktok-logo { width:40px; height:40px; }
+    /* Header: grid 3 cột để nút back không chồng tiêu đề */
+    header.ios-header {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 420px;
+      display: grid;
+      grid-template-columns: 48px 1fr 48px; /* left button, title, right spacer */
+      align-items: center;
+      justify-items: center;
+      background: #fff;
+      padding: 12px 0;
+      font-weight: 600;
+      font-size: 17px;
+      border-bottom: 1px solid #eee;
+      height: 52px;
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+    .ios-header .back-btn {
+      position: static;
+      width: 48px;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 12px;
+      font-size: 22px;
+      color: #000;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .ios-title {
+      grid-column: 2;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .main-content { margin-top: 70px; }
+    .container { margin: 0 auto; padding: 20px 16px 180px; box-sizing: border-box; max-width: 420px; width: 100%; display:flex; flex-direction:column; gap:20px; }
+
+    /* Balance box */
+    .balance-box { display:flex; align-items:center; background:#fff; border-radius:12px; padding:12px 15px; gap:12px; box-sizing:border-box; border: 1px solid rgba(0,0,0,0.03); }
+    .tiktok-logo { width:40px; height:40px; object-fit:contain; }
     .balance-info { display:flex; flex-direction:column; gap:4px; }
     .recharge-text { font-size:18px; font-weight:700; color:#000; }
     .balance-line { display:flex; align-items:center; gap:8px; }
     .coin-icon { width:18px; height:18px; }
     #balanceAmount { font-size:13px; color:#666; border:none; background:transparent; }
 
-    .recharge-section { background:#fff; border-radius:12px; padding:15px; box-shadow:0 0 8px rgba(0,0,0,0.05); }
-    .recharge-section h3 { margin:0; font-size:23px; font-weight:700; }
-    .tiktok-input-wrapper { display:flex; align-items:center; border:1.5px solid #d0d0d0; border-radius:10px; padding:0 10px; background:#f9f9f9; }
+    .recharge-section { background: transparent; border-radius:12px; padding:0; box-sizing:border-box; }
+    .recharge-section h3 { margin:0 0 8px 0; font-size:23px; font-weight:700; }
+
+    .tiktok-input-wrapper { display:flex; align-items:center; border:1.5px solid #d0d0d0; border-radius:10px; padding:0 10px; background:#f9f9f9; box-sizing:border-box; }
     .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; }
 
-    /* responsive coins grid */
-.coins-grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap:12px;
-  margin-top:8px;
-  align-items:start;
-}
+    /* Coins grid: luôn 2 cột theo yêu cầu, giữ background ô như cũ */
+    .coins-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(120px, 1fr)); /* luôn 2 cột */
+      gap: 12px;
+      margin-top: 12px;
+      align-items: start;
+      box-sizing: border-box;
+    }
+    .coin-option {
+      background: #e3e3e3; /* giữ background/visual cũ */
+      border: 1.5px solid #d0d0d0;
+      border-radius: 10px;
+      padding: 12px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.18s;
+      box-sizing: border-box;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    }
+    .coin-option:focus { outline: 3px solid rgba(254,44,85,0.12); }
+    .coin-option.selected { border-color: #fe2c55; background: #fff2f5; }
+    .coin-value { font-weight:600; font-size:18px; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .coin-value img { width:18px; height:18px; }
+    .coin-price { font-size:13px; color:#777; }
 
-/* nhỏ gọn ô coin khi cần */
-.coin-option {
-  background:#e3e3e3;
-  border:1.5px solid #d0d0d0;
-  border-radius:10px;
-  padding:12px 8px; /* giảm padding */
-  text-align:center;
-  cursor:pointer;
-  transition:0.18s;
-  box-sizing:border-box;
-}
-
-/* trên màn hình rất nhỏ dùng 1 cột */
-@media (max-width:360px) {
-  .coins-grid {
-    grid-template-columns: 1fr;
-    gap:10px;
-  }
-  .coin-value { font-size:16px; }
-  .coin-price { font-size:12px; }
-}
-    .payment-footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; background:#fff; border-top:1px solid #eee; box-shadow:0 -3px 10px rgba(0,0,0,0.05); padding:10px 16px 20px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:1100; border-radius:16px 16px 0 0; }
+    .payment-footer { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; background: #fff; border-top: 1px solid #eee; box-shadow: 0 -3px 10px rgba(0,0,0,0.05); padding: 10px 16px 20px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:1100; border-radius:16px 16px 0 0; box-sizing:border-box; }
     .payment-logos { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
     .pay-icon { height:14px; width:auto; object-fit:contain; }
     .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; }
@@ -118,25 +140,23 @@
     .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
     /* === Custom Popup Sheet === */
-    .sheet-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); opacity:0; visibility:hidden; transition:all .25s ease; z-index:1500; }
-    .sheet-backdrop.active { opacity:1; visibility:visible; }
-    .sheet { position:fixed; left:0; right:0; bottom:-100%; background:#fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -5px 20px rgba(0,0,0,0.2); transition:bottom .3s ease; z-index:1600; max-width:420px; margin:auto; }
-    .sheet.active { bottom:0; }
-
+    .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transition: all .25s ease; z-index:1500; }
+    .sheet-backdrop.active { opacity: 1; visibility: visible; }
+    .sheet { position: fixed; left: 0; right: 0; bottom: -100%; background: #fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); transition: bottom .3s ease; z-index:1600; max-width:420px; margin:auto; box-sizing:border-box; }
+    .sheet.active { bottom: 0; }
     .sheet-header { padding:16px 20px; text-align:center; font-size:18px; font-weight:700; border-bottom:1px solid #eee; position:relative; }
     .sheet-header button { position:absolute; right:20px; top:12px; border:none; background:none; font-size:22px; cursor:pointer; }
-
     .sheet-body { padding:20px; display:flex; flex-direction:column; gap:15px; }
     .sheet-body h4 { margin:0; font-size:15px; color:#555; }
     .coin-input-row { display:flex; align-items:center; justify-content:center; gap:8px; }
     .coin-input-row img { width:20px; height:20px; }
     .coin-input-row input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:16px; width:120px; text-align:center; outline:none; }
-    .sheet .done-btn { margin-top:10px; }
 
     .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
 
-    @media (max-width:380px) {
-      .ios-title { font-size:15px; }
+    @media (max-width: 340px) {
+      .coin-value { font-size:16px; }
+      .coin-price { font-size:12px; }
     }
   </style>
 </head>
@@ -144,8 +164,9 @@
   <div class="phone">
 
     <header class="ios-header">
-      <button class="back-btn" type="button" aria-label="Back">&lt;</button>
+      <button class="back-btn" type="button" aria-label="Trở lại">&lt;</button>
       <div class="ios-title">Get Coins to send Gifts to TikTok</div>
+      <div style="width:48px;" aria-hidden="true"></div>
     </header>
 
     <div class="main-content">
@@ -156,7 +177,6 @@
             <span class="recharge-text">Recharge</span>
             <div class="balance-line">
               <img src="coin.png" class="coin-icon" alt="coin icon">
-              <!-- balance shown as readonly input for easy copy but not editable -->
               <input type="text" id="balanceAmount" value="2,506,051" readonly aria-readonly="true" />
             </div>
           </div>
@@ -172,28 +192,58 @@
           </div>
 
           <div class="coins-grid" role="list">
-            <div class="coin-option" role="button" tabindex="0" data-coins="70" data-price="1.00"><div class="coin-value"><img src="coin.png" alt="coin icon">70</div><div class="coin-price">$1.00</div></div>
-            <div class="coin-option" role="button" tabindex="0" data-coins="350" data-price="5.00"><div class="coin-value"><img src="coin.png" alt="coin icon">350</div><div class="coin-price">$5.00</div></div>
-            <div class="coin-option" role="button" tabindex="0" data-coins="700" data-price="9.00"><div class="coin-value"><img src="coin.png" alt="coin icon">700</div><div class="coin-price">$9.00</div></div>
-            <div class="coin-option" role="button" tabindex="0" data-coins="1700" data-price="19.00"><div class="coin-value"><img src="coin.png" alt="coin icon">1,700</div><div class="coin-price">$19.00</div></div>
-            <div class="coin-option" role="button" tabindex="0" data-coins="3000" data-price="29.00"><div class="coin-value"><img src="coin.png" alt="coin icon">3,000</div><div class="coin-price">$29.00</div></div>
-            <div class="coin-option" role="button" tabindex="0" data-coins="7000" data-price="69.00"><div class="coin-value"><img src="coin.png" alt="coin icon">7,000</div><div class="coin-price">$69.00</div></div>
-            <div class="coin-option" role="button" tabindex="0" data-coins="17500" data-price="199.00"><div class="coin-value"><img src="coin.png" alt="coin icon">17,500</div><div class="coin-price">$199.00</div></div>
-            <div class="coin-option" id="customOption" role="button" tabindex="0"><div class="coin-value"><img src="coin.png" alt="coin icon">Custom</div></div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="70" data-price="1.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">70</div>
+              <div class="coin-price">$1.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="350" data-price="5.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">350</div>
+              <div class="coin-price">$5.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="700" data-price="9.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">700</div>
+              <div class="coin-price">$9.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="1700" data-price="19.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">1,700</div>
+              <div class="coin-price">$19.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="3000" data-price="29.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">3,000</div>
+              <div class="coin-price">$29.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="7000" data-price="69.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">7,000</div>
+              <div class="coin-price">$69.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="17500" data-price="199.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">17,500</div>
+              <div class="coin-price">$199.00</div>
+            </div>
+            <div class="coin-option" id="customOption" role="button" tabindex="0">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">Custom</div>
+            </div>
           </div>
         </section>
       </main>
 
       <div class="payment-footer" aria-live="polite">
         <div class="payment-logos" aria-hidden="true">
-          <img src="visa.png" class="pay-icon" alt="Visa"><img src="mastercard.png" class="pay-icon" alt="Mastercard"><img src="paypal.png" class="pay-icon" alt="PayPal"><img src="applepay.png" class="pay-icon" alt="Apple Pay"><img src="googlepay.png" class="pay-icon" alt="Google Pay"><img src="zalopay.png" class="pay-icon" alt="ZaloPay"><img src="momo.png" class="pay-icon" alt="MoMo"><img src="vnpay.png" class="pay-icon" alt="VNPay">
+          <img src="visa.png" class="pay-icon" alt="Visa">
+          <img src="mastercard.png" class="pay-icon" alt="Mastercard">
+          <img src="paypal.png" class="pay-icon" alt="PayPal">
+          <img src="applepay.png" class="pay-icon" alt="Apple Pay">
+          <img src="googlepay.png" class="pay-icon" alt="Google Pay">
+          <img src="zalopay.png" class="pay-icon" alt="ZaloPay">
+          <img src="momo.png" class="pay-icon" alt="MoMo">
+          <img src="vnpay.png" class="pay-icon" alt="VNPay">
         </div>
         <div class="total-line"><span>Total:</span><span id="totalAmount">$0.00</span></div>
         <button class="done-btn" id="rechargeBtn" type="button" disabled>Recharge</button>
       </div>
     </div>
 
-    <!-- === Custom Popup Sheet === -->
+    <!-- Custom sheet -->
     <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true"></div>
     <div class="sheet" id="customSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="customTitle">
       <div class="sheet-header">
@@ -214,8 +264,7 @@
   </div>
 
   <script>
-    // Pricing: derive a default per-coin rate from the first preset option (so custom price is consistent).
-    // If you want discounts, move pricing to server or add explicit per-option rate attributes.
+    // === DOM refs ===
     const coinOptions = Array.from(document.querySelectorAll('.coin-option'));
     const customOption = document.getElementById('customOption');
     const totalAmountEl = document.getElementById('totalAmount');
@@ -231,15 +280,15 @@
     let selectedCoins = 0;
     let selectedPrice = 0;
 
-    // compute default per-coin rate from first option that has both data-coins and data-price
+    // Lấy default rate từ preset đầu
     const firstPriced = coinOptions.find(o => o.dataset.coins && o.dataset.price);
     const DEFAULT_RATE = (firstPriced && parseInt(firstPriced.dataset.coins, 10) > 0)
       ? (parseFloat(firstPriced.dataset.price) / parseInt(firstPriced.dataset.coins, 10))
       : (1.0 / 70);
 
-    // format balance nicely
+    // Format balance hiển thị
     try {
-      const raw = balanceInput.value.replace(/,/g, '');
+      const raw = (balanceInput.value || '').toString().replace(/,/g, '');
       const num = Number(raw);
       if (!Number.isNaN(num)) balanceInput.value = num.toLocaleString();
     } catch (e) { /* ignore */ }
@@ -250,36 +299,34 @@
       sheet.setAttribute('aria-hidden', 'false');
       sheetBackdrop.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden'; // disable background scroll
-      customInput.focus();
+      // clear previous input
+      customInput.value = '';
+      setTimeout(() => customInput.focus(), 50);
     };
+
     const closePopup = () => {
       sheet.classList.remove('active');
       sheetBackdrop.classList.remove('active');
       sheet.setAttribute('aria-hidden', 'true');
       sheetBackdrop.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-      // if user cancelled, ensure custom option is not selected
-      if (!customOption.classList.contains('selected')) {
-        // nothing
-      }
+      // focus trở lại ô đã chọn (nếu có) hoặc first option
+      const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
+      if (focused) focused.focus();
     };
 
-    // helper to update recharge button state
     function updateRechargeState() {
       const hasUser = tiktokIdInput.value.trim().length > 0;
       const hasSelection = selectedCoins > 0 && selectedPrice > 0;
       rechargeBtn.disabled = !(hasUser && hasSelection);
     }
 
-    // keyboard support for coin options (Enter/Space)
+    // Xử lý chọn option (không chọn custom ngay khi mở sheet)
     coinOptions.forEach(option => {
       function selectOption() {
-        // deselect all
         coinOptions.forEach(o => o.classList.remove('selected'));
         if (option.id === 'customOption') {
-          // open sheet, do NOT mark selected yet
           openSheet();
-          // leave selectedCoins/selectedPrice unchanged until confirm
         } else {
           option.classList.add('selected');
           const coins = parseInt(option.dataset.coins, 10);
@@ -287,10 +334,9 @@
           selectedCoins = Number.isFinite(coins) ? coins : 0;
           selectedPrice = Number.isFinite(price) ? price : 0;
           totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
+          updateRechargeState();
         }
-        updateRechargeState();
       }
-
       option.addEventListener('click', selectOption);
       option.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -300,71 +346,61 @@
       });
     });
 
+    // Xác nhận custom trong sheet
     confirmCustom.addEventListener('click', () => {
       const val = parseInt(customInput.value, 10);
       if (!Number.isInteger(val) || val <= 0) {
-        alert('Please enter a valid positive integer for coins.');
+        alert('Vui lòng nhập số xu hợp lệ (số nguyên dương).');
         customInput.focus();
         return;
       }
       selectedCoins = val;
       selectedPrice = +(val * DEFAULT_RATE);
-      // set display
       totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
-      // mark custom option selected
       coinOptions.forEach(o => o.classList.remove('selected'));
       customOption.classList.add('selected');
       closePopup();
       updateRechargeState();
     });
 
-    closeSheet.addEventListener('click', () => {
-      closePopup();
-    });
-    sheetBackdrop.addEventListener('click', () => {
-      closePopup();
-    });
+    closeSheet.addEventListener('click', closePopup);
+    sheetBackdrop.addEventListener('click', closePopup);
 
-    // allow Esc to close the sheet
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && sheet.classList.contains('active')) {
-        closePopup();
-      }
+      if (e.key === 'Escape' && sheet.classList.contains('active')) closePopup();
     });
 
-    // keep recharge button enabled only when username + selection present
     tiktokIdInput.addEventListener('input', updateRechargeState);
 
-    // Recharge button behavior (client-side stub)
+    // Nút Recharge — client-side stub (chỉ mô phỏng, cần backend để thực sự xử lý)
     rechargeBtn.addEventListener('click', () => {
       const username = tiktokIdInput.value.trim();
       if (!username) {
-        alert('Please enter your TikTok username.');
+        alert('Vui lòng nhập tên người dùng TikTok.');
         tiktokIdInput.focus();
         return;
       }
       if (!(selectedCoins > 0 && selectedPrice > 0)) {
-        alert('Please choose an amount of coins to purchase.');
+        alert('Vui lòng chọn số xu cần nạp.');
         return;
       }
-      const summary = `Confirm recharge\n\nUsername: @${username}\nCoins: ${selectedCoins.toLocaleString()}\nTotal: $${selectedPrice.toFixed(2)}\n\nProceed?`;
+      const summary = `Xác nhận nạp\n\nUsername: @${username}\nCoins: ${selectedCoins.toLocaleString()}\nTotal: $${selectedPrice.toFixed(2)}\n\nTiếp tục?`;
       if (confirm(summary)) {
-        // NOTE: Replace this with a real API call to your backend/payment gateway.
-        // This is a client-side stub only.
+        // Thực hiện gọi API/payment gateway tại đây trong ứng dụng thật
         rechargeBtn.disabled = true;
+        const prevText = rechargeBtn.textContent;
         rechargeBtn.textContent = 'Processing...';
         setTimeout(() => {
-          alert('Recharge request simulated. Implement server-side payment to complete the flow.');
-          rechargeBtn.textContent = 'Recharge';
+          alert('Mô phỏng nạp hoàn tất. Thay thế bằng gọi API ở server để hoàn tất giao dịch.');
+          rechargeBtn.textContent = prevText;
           updateRechargeState();
         }, 1000);
       }
     });
 
-    // small accessibility: ensure focus returns to a sensible place when sheet closes
+    // Khi sheet đóng xong, focus về option đã được chọn
     sheet.addEventListener('transitionend', () => {
       if (!sheet.classList.contains('active')) {
-        // if custom was confirmed, focus the custom option; else focus the first option
         const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
         if (focused) focused.focus();
       }
