@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -132,17 +133,17 @@
     .coin-value img { width:18px; height:18px; }
     .coin-price { font-size:13px; color:#777; }
 
-    .payment-footer { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; background: #fff; border-top: 1px solid #eee; box-shadow: 0 -3px 10px rgba[...] }
+    .payment-footer { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; background: #fff; border-top: 1px solid #eee; box-shadow: 0 -3px 10px rgba(0,0,0,0.06); padding:12px 16px; box-sizing:border-box; }
     .payment-logos { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
     .pay-icon { height:14px; width:auto; object-fit:contain; }
-    .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; }
+    .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; margin:8px 0; }
     .done-btn { width:100%; background:#fe2c55; color:#fff; border:none; border-radius:8px; padding:13px; font-size:16px; cursor:pointer; }
     .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
     /* === Custom Popup Sheet === */
     .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transition: all .25s ease; z-index:1500; }
     .sheet-backdrop.active { opacity: 1; visibility: visible; }
-    .sheet { position: fixed; left: 0; right: 0; bottom: -100%; background: #fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); transition: b[...] }
+    .sheet { position: fixed; left: 0; right: 0; bottom: -100%; background: #fff; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); transition: bottom .25s ease; z-index:1501; }
     .sheet.active { bottom: 0; }
     .sheet-header { padding:16px 20px; text-align:center; font-size:18px; font-weight:700; border-bottom:1px solid #eee; position:relative; }
     .sheet-header button { position:absolute; right:20px; top:12px; border:none; background:none; font-size:22px; cursor:pointer; }
@@ -293,6 +294,18 @@
       if (!Number.isNaN(num)) balanceInput.value = num.toLocaleString();
     } catch (e) { /* ignore */ }
 
+    // Hàm cộng coins vào ví (cập nhật ô balanceAmount)
+    function addCoinsToBalance(coinsToAdd) {
+      try {
+        const raw = (balanceInput.value || '').toString().replace(/,/g, '');
+        const current = Number(raw) || 0;
+        const next = current + Number(coinsToAdd || 0);
+        balanceInput.value = next.toLocaleString();
+      } catch (e) {
+        // ignore errors silently
+      }
+    }
+
     const openSheet = () => {
       sheet.classList.add('active');
       sheetBackdrop.classList.add('active');
@@ -390,8 +403,14 @@
         rechargeBtn.disabled = true;
         const prevText = rechargeBtn.textContent;
         rechargeBtn.textContent = 'Processing...';
+        // Mô phỏng xử lý (thay bằng gọi API thực tế)
         setTimeout(() => {
+          // Nếu nạp thành công -> cộng coins vào ví
+          addCoinsToBalance(selectedCoins);
+
           alert('Mô phỏng nạp hoàn tất. Thay thế bằng gọi API ở server để hoàn tất giao dịch.');
+
+          // restore nút và trạng thái (ghi nhớ vẫn có thể tiếp tục nạp)
           rechargeBtn.textContent = prevText;
           updateRechargeState();
         }, 1000);
