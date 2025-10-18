@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -9,15 +7,8 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js').catch(err => {
-        console.warn('Service worker registration failed:', err);
-      });
-    }
-  </script>
-
   <style>
+    /* CSS giữ nguyên từ code của bạn */
     :root{
       --safe-left: env(safe-area-inset-left, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
@@ -138,11 +129,11 @@
       box-sizing:border-box;
       width:100%;
     }
-    .tiktok-logo { width:40px; height:40px; object-fit:contain; }
+    .tiktok-logo { width:40px; height:40px; object-fit:contain; background:#eee; border-radius:8px; }
     .balance-info { display:flex; flex-direction:column; gap:4px; }
     .recharge-text { font-size:18px; font-weight:700; color:#000; }
     .balance-line { display:flex; align-items:center; gap:8px; }
-    .coin-icon { width:18px; height:18px; }
+    .coin-icon { width:18px; height:18px; background:#ffd600; border-radius:50%; }
     #balanceAmount { font-size:15px; color:#111; border:none; background:transparent; }
 
     /* Recharge section */
@@ -214,7 +205,7 @@
       box-sizing: border-box;
     }
     .payment-logos { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
-    .pay-icon { height:14px; width:auto; object-fit:contain; }
+    .pay-icon { height:14px; width:auto; object-fit:contain; background:#f0f0f0; border-radius:2px; }
     .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; margin:8px 0; }
     .done-btn {
       width:100%;
@@ -261,11 +252,11 @@
     <div class="main-content">
       <main class="container" role="main">
         <div class="balance-box" aria-hidden="false">
-          <img src="tiktok.png" class="tiktok-logo" alt="TikTok logo">
+          <div class="tiktok-logo"></div>
           <div class="balance-info">
             <span class="recharge-text">Recharge</span>
             <div class="balance-line">
-              <img src="coin.png" class="coin-icon" alt="coin icon">
+              <div class="coin-icon"></div>
               <input type="text" id="balanceAmount" value="2,506,051" readonly aria-readonly="true" />
             </div>
           </div>
@@ -282,35 +273,35 @@
 
           <div class="coins-grid" role="list">
             <div class="coin-option" role="button" tabindex="0" data-coins="70" data-price="1.00">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">70</div>
+              <div class="coin-value"><div class="coin-icon"></div>70</div>
               <div class="coin-price">$1.00</div>
             </div>
             <div class="coin-option" role="button" tabindex="0" data-coins="350" data-price="5.00">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">350</div>
+              <div class="coin-value"><div class="coin-icon"></div>350</div>
               <div class="coin-price">$5.00</div>
             </div>
             <div class="coin-option" role="button" tabindex="0" data-coins="700" data-price="9.00">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">700</div>
+              <div class="coin-value"><div class="coin-icon"></div>700</div>
               <div class="coin-price">$9.00</div>
             </div>
             <div class="coin-option" role="button" tabindex="0" data-coins="1700" data-price="19.00">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">1,700</div>
+              <div class="coin-value"><div class="coin-icon"></div>1,700</div>
               <div class="coin-price">$19.00</div>
             </div>
             <div class="coin-option" role="button" tabindex="0" data-coins="3000" data-price="29.00">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">3,000</div>
+              <div class="coin-value"><div class="coin-icon"></div>3,000</div>
               <div class="coin-price">$29.00</div>
             </div>
             <div class="coin-option" role="button" tabindex="0" data-coins="7000" data-price="69.00">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">7,000</div>
+              <div class="coin-value"><div class="coin-icon"></div>7,000</div>
               <div class="coin-price">$69.00</div>
             </div>
             <div class="coin-option" role="button" tabindex="0" data-coins="17500" data-price="199.00">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">17,500</div>
+              <div class="coin-value"><div class="coin-icon"></div>17,500</div>
               <div class="coin-price">$199.00</div>
             </div>
             <div class="coin-option" id="customOption" role="button" tabindex="0" aria-label="Custom amount">
-              <div class="coin-value"><img src="coin.png" alt="coin icon">Custom</div>
+              <div class="coin-value"><div class="coin-icon"></div>Custom</div>
             </div>
           </div>
         </section>
@@ -319,14 +310,14 @@
       <div class="payment-footer" aria-live="polite">
         <div class="footer-inner">
           <div class="payment-logos" aria-hidden="true">
-            <img src="visa.png" class="pay-icon" alt="Visa">
-            <img src="mastercard.png" class="pay-icon" alt="Mastercard">
-            <img src="paypal.png" class="pay-icon" alt="PayPal">
-            <img src="applepay.png" class="pay-icon" alt="Apple Pay">
-            <img src="googlepay.png" class="pay-icon" alt="Google Pay">
-            <img src="zalopay.png" class="pay-icon" alt="ZaloPay">
-            <img src="momo.png" class="pay-icon" alt="MoMo">
-            <img src="vnpay.png" class="pay-icon" alt="VNPay">
+            <div class="pay-icon" style="width:30px;"></div>
+            <div class="pay-icon" style="width:30px;"></div>
+            <div class="pay-icon" style="width:30px;"></div>
+            <div class="pay-icon" style="width:30px;"></div>
+            <div class="pay-icon" style="width:30px;"></div>
+            <div class="pay-icon" style="width:30px;"></div>
+            <div class="pay-icon" style="width:30px;"></div>
+            <div class="pay-icon" style="width:30px;"></div>
           </div>
 
           <div class="total-line"><span>Total:</span><span id="totalAmount">$0.00</span></div>
@@ -345,7 +336,7 @@
       <div class="sheet-body">
         <h4>Number of Coins</h4>
         <div class="coin-input-row">
-          <img src="coin.png" alt="coin icon">
+          <div class="coin-icon"></div>
           <label for="customCoinInput" class="visually-hidden">Number of coins</label>
           <input type="text" id="customCoinInput" placeholder="Enter coins (e.g. 1,700)" aria-label="Number of coins" inputmode="numeric" pattern="[0-9,]*" />
         </div>
@@ -389,6 +380,7 @@
       if (!isFinite(n)) return String(n);
       return Number(n).toLocaleString('en-US');
     }
+
     function parseIntFromFormatted(str) {
       if (!str) return NaN;
       const digits = String(str).replace(/,/g, '').replace(/\s/g, '');
@@ -419,11 +411,13 @@
         } catch {}
       }
     }
+
     function saveBalance(num) {
       try {
         localStorage.setItem(STORAGE_KEY, String(Number(num) || 0));
       } catch (e) {}
     }
+
     function addCoinsToBalance(coinsToAdd) {
       try {
         const raw = (balanceInput.value || '').toString().replace(/,/g, '');
@@ -458,6 +452,7 @@
       customInput.value = '';
       setTimeout(() => customInput.focus(), 60);
     };
+
     const closePopup = () => {
       sheet.classList.remove('active');
       sheetBackdrop.classList.remove('active');
@@ -483,7 +478,6 @@
           openSheet();
         } else {
           option.classList.add('selected');
-          // data-coins is numeric string without commas
           const coins = parseInt(option.dataset.coins, 10);
           const price = parseFloat(option.dataset.price);
           selectedCoins = Number.isFinite(coins) ? coins : 0;
@@ -501,147 +495,93 @@
       });
     });
 
-    // custom input: allow commas as thousands separators, preserve caret position
-    function setCaretToDigitIndex(inputEl, digitIndex) {
-      // find position in inputEl.value where the digitIndex-th digit (1-based) occurs or next position
-      const val = inputEl.value || '';
-      let count = 0;
-      for (let i = 0; i < val.length; i++) {
-        if (/\d/.test(val[i])) count++;
-        if (count === digitIndex) {
-          // place caret after this digit
-          inputEl.setSelectionRange(i + 1, i + 1);
-          return;
-        }
-      }
-      // if not found, set caret at end
-      inputEl.setSelectionRange(val.length, val.length);
-    }
-
+    // custom input formatting
     customInput.addEventListener('input', (e) => {
       const el = customInput;
       const raw = el.value || '';
       const selectionStart = el.selectionStart || raw.length;
-      // count digits before caret
+      
       const digitsBefore = (raw.slice(0, selectionStart).match(/\d/g) || []).length;
-      // strip non-digits
       const digitsOnly = raw.replace(/[^\d]/g, '');
+      
       if (digitsOnly === '') {
         el.value = '';
         return;
       }
-      // remove leading zeros -> keep "0" if all zeros
-      const trimmed = digitsOnly.replace(/^0+(?=\d)/, '');
-      const formatted = trimmed.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      
+      const trimmed = digitsOnly.replace(/^0+(?=\d)/, '') || '0';
+      const formatted = parseInt(trimmed, 10).toLocaleString();
       el.value = formatted;
-      // restore caret relative to digitsBefore
-      setCaretToDigitIndex(el, digitsBefore);
+      
+      // Simple caret positioning
+      setTimeout(() => {
+        el.setSelectionRange(formatted.length, formatted.length);
+      }, 0);
     });
 
-    // handle paste: clean non-digits and format
-    customInput.addEventListener('paste', (e) => {
-      e.preventDefault();
-      const text = (e.clipboardData || window.clipboardData).getData('text') || '';
-      const digitsOnly = text.replace(/[^\d]/g, '');
-      if (!digitsOnly) return;
-      const formatted = digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      customInput.value = formatted;
-      // put caret at end
-      customInput.setSelectionRange(customInput.value.length, customInput.value.length);
-    });
-
-    // custom confirm
-    confirmCustom.addEventListener('click', () => {
-      const formatted = customInput.value || '';
-      const parsed = parseIntFromFormatted(formatted);
-      if (!Number.isInteger(parsed) || parsed <= 0) {
-        alert('Vui lòng nhập số xu hợp lệ (số nguyên dương). Ví dụ: 1,700');
-        customInput.focus();
-        return;
-      }
-      selectedCoins = parsed;
-      selectedPrice = +(parsed * DEFAULT_RATE);
-      totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
-      coinOptions.forEach(o => o.classList.remove('selected'));
-      customOption.classList.add('selected');
-      closePopup();
-      updateRechargeState();
-    });
-
+    // Event listeners
     closeSheet.addEventListener('click', closePopup);
     sheetBackdrop.addEventListener('click', closePopup);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && sheet.classList.contains('active')) closePopup();
-    });
 
-    // when user types username, re-enable options if they were disabled
-    tiktokIdInput.addEventListener('input', () => {
-      updateRechargeState();
-      if (coinOptionsDisabled && tiktokIdInput.value.trim().length > 0) {
-        setCoinOptionsDisabled(false);
+    confirmCustom.addEventListener('click', () => {
+      const coins = parseIntFromFormatted(customInput.value);
+      if (coins > 0) {
+        selectedCoins = coins;
+        selectedPrice = Math.round(coins * DEFAULT_RATE * 100) / 100;
+        totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
+        updateRechargeState();
+        closePopup();
+        
+        // Clear selection from other options
+        coinOptions.forEach(o => o.classList.remove('selected'));
       }
     });
 
-    // Recharge button behaviour (client-side simulation)
+    tiktokIdInput.addEventListener('input', updateRechargeState);
+
     rechargeBtn.addEventListener('click', () => {
-      const username = tiktokIdInput.value.trim();
-      if (!username) {
-        alert('Vui lòng nhập tên người dùng TikTok.');
-        tiktokIdInput.focus();
-        return;
-      }
-      if (!(selectedCoins > 0 && selectedPrice > 0)) {
-        alert('Vui lòng chọn số xu cần nạp.');
-        return;
-      }
-      const summary = `Xác nhận nạp\n\nUsername: @${username}\nCoins: ${selectedCoins.toLocaleString()}\nTotal: $${selectedPrice.toFixed(2)}\n\nTiếp tục?`;
-      if (!confirm(summary)) return;
-
-      rechargeBtn.disabled = true;
-      const prevText = rechargeBtn.textContent;
+      if (rechargeBtn.disabled) return;
+      
+      // Simulate recharge process
+      setCoinOptionsDisabled(true);
       rechargeBtn.textContent = 'Processing...';
-
-      // simulate API call
-      setTimeout(() => {
-        // success: add coins lũy tiến (persist)
+setTimeout(() => {
         addCoinsToBalance(selectedCoins);
-
-        // After success: only reset username, disable coin options, total -> 0, clear selection
-        tiktokIdInput.value = '';
+        alert(`Successfully recharged ${selectedCoins.toLocaleString()} coins for $${selectedPrice.toFixed(2)}!`);
+        
+        // Reset UI
         selectedCoins = 0;
         selectedPrice = 0;
         totalAmountEl.textContent = '$0.00';
         coinOptions.forEach(o => o.classList.remove('selected'));
-        setCoinOptionsDisabled(true);
-
-        alert('Mô phỏng nạp hoàn tất. (Trong thực tế hãy gọi API server để xử lý thanh toán và cập nhật số dư từ server.)');
-
-        rechargeBtn.textContent = prevText;
+        setCoinOptionsDisabled(false);
+        rechargeBtn.textContent = 'Recharge';
         updateRechargeState();
-      }, 900);
+      }, 1500);
     });
 
-    // back / more handlers
     backBtn.addEventListener('click', () => {
-      if (window.history.length > 1) window.history.back();
-    });
-    moreBtn.addEventListener('click', () => {
-      const items = ['Help', 'Terms', 'Contact'];
-      alert('Menu:\n' + items.join('\n'));
-    });
-
-    // restore focus after sheet transition
-    sheet.addEventListener('transitionend', () => {
-      if (!sheet.classList.contains('active')) {
-        const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
-        if (focused) focused.focus();
+      if (confirm('Are you sure you want to go back? Any unsaved changes will be lost.')) {
+        window.history.back();
       }
     });
 
-    // init
-    loadBalance();
-    // if you want options disabled by default until username entered, uncomment:
-    // setCoinOptionsDisabled(true);
+    moreBtn.addEventListener('click', () => {
+      alert('More options menu would open here');
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBalance();
+      updateRechargeState();
+    });
+
+    // Service Worker (optional)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(err => {
+        console.warn('Service worker registration failed:', err);
+      });
+    }
   </script>
 </body>
 </html>
