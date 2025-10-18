@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +8,10 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
   <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(err => {
+        console.warn('Service worker registration failed:', err);
+      });
     }
   </script>
 
@@ -38,6 +41,7 @@
 
     .coins-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-top:5px; }
     .coin-option { background:#e3e3e3; border:1.5px solid #d0d0d0; border-radius:10px; padding:15px 10px; text-align:center; cursor:pointer; transition:0.18s; }
+    .coin-option:focus { outline:3px solid rgba(254,44,85,0.18); }
     .coin-option.selected { border-color:#fe2c55; background:#fff2f5; }
     .coin-value { font-weight:600; font-size:18px; display:flex; align-items:center; justify-content:center; gap:6px; }
     .coin-value img { width:18px; height:18px; }
@@ -45,9 +49,10 @@
 
     .payment-footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; background:#fff; border-top:1px solid #eee; box-shadow:0 -3px 10px rgba(0,0,0,0.05); padding:10px 16px 20px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:1100; border-radius:16px 16px 0 0; }
     .payment-logos { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
-    .pay-icon { height:10px; width:auto; object-fit:contain; }
+    .pay-icon { height:14px; width:auto; object-fit:contain; }
     .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; }
     .done-btn { width:100%; background:#fe2c55; color:#fff; border:none; border-radius:8px; padding:13px; font-size:16px; cursor:pointer; }
+    .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
     /* === Custom Popup Sheet === */
     .sheet-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); opacity:0; visibility:hidden; transition:all .25s ease; z-index:1500; }
@@ -65,6 +70,8 @@
     .coin-input-row input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:16px; width:120px; text-align:center; outline:none; }
     .sheet .done-btn { margin-top:10px; }
 
+    .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
+
     @media (max-width:380px) {
       .ios-title { font-size:15px; }
     }
@@ -74,71 +81,79 @@
   <div class="phone">
 
     <header class="ios-header">
-      <span class="back-btn">&lt;</span>
+      <button class="back-btn" type="button" aria-label="Back">&lt;</button>
       <div class="ios-title">Get Coins to send Gifts to TikTok</div>
     </header>
 
     <div class="main-content">
       <main class="container">
-        <div class="balance-box">
-          <img src="tiktok.png" class="tiktok-logo">
+        <div class="balance-box" aria-hidden="false">
+          <img src="tiktok.png" class="tiktok-logo" alt="TikTok logo">
           <div class="balance-info">
             <span class="recharge-text">Recharge</span>
-            <div class="balance-line"><img src="coin.png" class="coin-icon"><input type="text" id="balanceAmount" value="2,506,051"></div>
+            <div class="balance-line">
+              <img src="coin.png" class="coin-icon" alt="coin icon">
+              <!-- balance shown as readonly input for easy copy but not editable -->
+              <input type="text" id="balanceAmount" value="2,506,051" readonly aria-readonly="true" />
+            </div>
           </div>
         </div>
 
-        <section class="recharge-section">
+        <section class="recharge-section" aria-label="Get Coins section">
           <h3>Get Coins</h3>
+
+          <label for="tiktokId" class="visually-hidden">TikTok username</label>
           <div class="tiktok-input-wrapper">
-            <span class="at-symbol">@</span>
-            <input type="text" id="tiktokId" placeholder="username">
+            <span class="at-symbol" aria-hidden="true">@</span>
+            <input type="text" id="tiktokId" placeholder="username" aria-label="TikTok username" autocomplete="username">
           </div>
 
-          <div class="coins-grid">
-            <div class="coin-option" data-coins="70" data-price="1.00"><div class="coin-value"><img src="coin.png">70</div><div class="coin-price">$1.00</div></div>
-            <div class="coin-option" data-coins="350" data-price="5.00"><div class="coin-value"><img src="coin.png">350</div><div class="coin-price">$5.00</div></div>
-            <div class="coin-option" data-coins="700" data-price="9.00"><div class="coin-value"><img src="coin.png">700</div><div class="coin-price">$9.00</div></div>
-            <div class="coin-option" data-coins="1700" data-price="19.00"><div class="coin-value"><img src="coin.png">1,700</div><div class="coin-price">$19.00</div></div>
-            <div class="coin-option" data-coins="3000" data-price="29.00"><div class="coin-value"><img src="coin.png">3,000</div><div class="coin-price">$29.00</div></div>
-            <div class="coin-option" data-coins="7000" data-price="69.00"><div class="coin-value"><img src="coin.png">7,000</div><div class="coin-price">$69.00</div></div>
-            <div class="coin-option" data-coins="17500" data-price="199.00"><div class="coin-value"><img src="coin.png">17,500</div><div class="coin-price">$199.00</div></div>
-            <div class="coin-option" id="customOption"><div class="coin-value"><img src="coin.png">Custom</div></div>
+          <div class="coins-grid" role="list">
+            <div class="coin-option" role="button" tabindex="0" data-coins="70" data-price="1.00"><div class="coin-value"><img src="coin.png" alt="coin icon">70</div><div class="coin-price">$1.00</div></div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="350" data-price="5.00"><div class="coin-value"><img src="coin.png" alt="coin icon">350</div><div class="coin-price">$5.00</div></div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="700" data-price="9.00"><div class="coin-value"><img src="coin.png" alt="coin icon">700</div><div class="coin-price">$9.00</div></div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="1700" data-price="19.00"><div class="coin-value"><img src="coin.png" alt="coin icon">1,700</div><div class="coin-price">$19.00</div></div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="3000" data-price="29.00"><div class="coin-value"><img src="coin.png" alt="coin icon">3,000</div><div class="coin-price">$29.00</div></div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="7000" data-price="69.00"><div class="coin-value"><img src="coin.png" alt="coin icon">7,000</div><div class="coin-price">$69.00</div></div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="17500" data-price="199.00"><div class="coin-value"><img src="coin.png" alt="coin icon">17,500</div><div class="coin-price">$199.00</div></div>
+            <div class="coin-option" id="customOption" role="button" tabindex="0"><div class="coin-value"><img src="coin.png" alt="coin icon">Custom</div></div>
           </div>
         </section>
       </main>
 
-      <div class="payment-footer">
-        <div class="payment-logos">
-          <img src="visa.png" class="pay-icon"><img src="mastercard.png" class="pay-icon"><img src="paypal.png" class="pay-icon"><img src="applepay.png" class="pay-icon"><img src="googlepay.png" class="pay-icon"><img src="zalopay.png" class="pay-icon"><img src="momo.png" class="pay-icon"><img src="vnpay.png" class="pay-icon">
+      <div class="payment-footer" aria-live="polite">
+        <div class="payment-logos" aria-hidden="true">
+          <img src="visa.png" class="pay-icon" alt="Visa"><img src="mastercard.png" class="pay-icon" alt="Mastercard"><img src="paypal.png" class="pay-icon" alt="PayPal"><img src="applepay.png" class="pay-icon" alt="Apple Pay"><img src="googlepay.png" class="pay-icon" alt="Google Pay"><img src="zalopay.png" class="pay-icon" alt="ZaloPay"><img src="momo.png" class="pay-icon" alt="MoMo"><img src="vnpay.png" class="pay-icon" alt="VNPay">
         </div>
         <div class="total-line"><span>Total:</span><span id="totalAmount">$0.00</span></div>
-        <button class="done-btn">Recharge</button>
+        <button class="done-btn" id="rechargeBtn" type="button" disabled>Recharge</button>
       </div>
     </div>
 
     <!-- === Custom Popup Sheet === -->
-    <div class="sheet-backdrop" id="sheetBackdrop"></div>
-    <div class="sheet" id="customSheet">
+    <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true"></div>
+    <div class="sheet" id="customSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="customTitle">
       <div class="sheet-header">
-        Custom
-        <button id="closeSheet">&times;</button>
+        <div id="customTitle">Custom</div>
+        <button id="closeSheet" type="button" aria-label="Close">&times;</button>
       </div>
       <div class="sheet-body">
         <h4>Number of Coins</h4>
         <div class="coin-input-row">
-          <img src="coin.png">
-          <input type="number" id="customCoinInput" placeholder="Enter coins">
+          <img src="coin.png" alt="coin icon">
+          <label for="customCoinInput" class="visually-hidden">Number of coins</label>
+          <input type="number" id="customCoinInput" placeholder="Enter coins" aria-label="Number of coins" min="1" step="1" inputmode="numeric">
         </div>
-        <button class="done-btn" id="confirmCustom">Recharge</button>
+        <button class="done-btn" id="confirmCustom" type="button">Recharge</button>
       </div>
     </div>
 
   </div>
 
   <script>
-    const PRICE_PER_COIN = 1.0 / 70;
-    const coinOptions = document.querySelectorAll('.coin-option');
+    // Pricing: derive a default per-coin rate from the first preset option (so custom price is consistent).
+    // If you want discounts, move pricing to server or add explicit per-option rate attributes.
+    const coinOptions = Array.from(document.querySelectorAll('.coin-option'));
     const customOption = document.getElementById('customOption');
     const totalAmountEl = document.getElementById('totalAmount');
     const sheet = document.getElementById('customSheet');
@@ -146,36 +161,151 @@
     const closeSheet = document.getElementById('closeSheet');
     const confirmCustom = document.getElementById('confirmCustom');
     const customInput = document.getElementById('customCoinInput');
-    let selectedCoins = 0, selectedPrice = 0;
+    const rechargeBtn = document.getElementById('rechargeBtn');
+    const tiktokIdInput = document.getElementById('tiktokId');
+    const balanceInput = document.getElementById('balanceAmount');
 
-    const openSheet = () => { sheet.classList.add('active'); sheetBackdrop.classList.add('active'); };
-    const closePopup = () => { sheet.classList.remove('active'); sheetBackdrop.classList.remove('active'); };
+    let selectedCoins = 0;
+    let selectedPrice = 0;
 
-    coinOptions.forEach(option=>{
-      option.addEventListener('click',()=>{
-        coinOptions.forEach(o=>o.classList.remove('selected'));
-        option.classList.add('selected');
-        if(option.id==='customOption') openSheet();
-        else {
-          selectedCoins=parseInt(option.dataset.coins);
-          selectedPrice=parseFloat(option.dataset.price);
-          totalAmountEl.textContent='$'+selectedPrice.toFixed(2);
+    // compute default per-coin rate from first option that has both data-coins and data-price
+    const firstPriced = coinOptions.find(o => o.dataset.coins && o.dataset.price);
+    const DEFAULT_RATE = (firstPriced && parseInt(firstPriced.dataset.coins, 10) > 0)
+      ? (parseFloat(firstPriced.dataset.price) / parseInt(firstPriced.dataset.coins, 10))
+      : (1.0 / 70);
+
+    // format balance nicely
+    try {
+      const raw = balanceInput.value.replace(/,/g, '');
+      const num = Number(raw);
+      if (!Number.isNaN(num)) balanceInput.value = num.toLocaleString();
+    } catch (e) { /* ignore */ }
+
+    const openSheet = () => {
+      sheet.classList.add('active');
+      sheetBackdrop.classList.add('active');
+      sheet.setAttribute('aria-hidden', 'false');
+      sheetBackdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden'; // disable background scroll
+      customInput.focus();
+    };
+    const closePopup = () => {
+      sheet.classList.remove('active');
+      sheetBackdrop.classList.remove('active');
+      sheet.setAttribute('aria-hidden', 'true');
+      sheetBackdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      // if user cancelled, ensure custom option is not selected
+      if (!customOption.classList.contains('selected')) {
+        // nothing
+      }
+    };
+
+    // helper to update recharge button state
+    function updateRechargeState() {
+      const hasUser = tiktokIdInput.value.trim().length > 0;
+      const hasSelection = selectedCoins > 0 && selectedPrice > 0;
+      rechargeBtn.disabled = !(hasUser && hasSelection);
+    }
+
+    // keyboard support for coin options (Enter/Space)
+    coinOptions.forEach(option => {
+      function selectOption() {
+        // deselect all
+        coinOptions.forEach(o => o.classList.remove('selected'));
+        if (option.id === 'customOption') {
+          // open sheet, do NOT mark selected yet
+          openSheet();
+          // leave selectedCoins/selectedPrice unchanged until confirm
+        } else {
+          option.classList.add('selected');
+          const coins = parseInt(option.dataset.coins, 10);
+          const price = parseFloat(option.dataset.price);
+          selectedCoins = Number.isFinite(coins) ? coins : 0;
+          selectedPrice = Number.isFinite(price) ? price : 0;
+          totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
+        }
+        updateRechargeState();
+      }
+
+      option.addEventListener('click', selectOption);
+      option.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectOption();
         }
       });
     });
 
-    confirmCustom.addEventListener('click',()=>{
-      const val=parseInt(customInput.value);
-      if(val && val>0){
-        selectedCoins=val;
-        selectedPrice=val*PRICE_PER_COIN;
-        totalAmountEl.textContent='$'+selectedPrice.toFixed(2);
+    confirmCustom.addEventListener('click', () => {
+      const val = parseInt(customInput.value, 10);
+      if (!Number.isInteger(val) || val <= 0) {
+        alert('Please enter a valid positive integer for coins.');
+        customInput.focus();
+        return;
+      }
+      selectedCoins = val;
+      selectedPrice = +(val * DEFAULT_RATE);
+      // set display
+      totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
+      // mark custom option selected
+      coinOptions.forEach(o => o.classList.remove('selected'));
+      customOption.classList.add('selected');
+      closePopup();
+      updateRechargeState();
+    });
+
+    closeSheet.addEventListener('click', () => {
+      closePopup();
+    });
+    sheetBackdrop.addEventListener('click', () => {
+      closePopup();
+    });
+
+    // allow Esc to close the sheet
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sheet.classList.contains('active')) {
         closePopup();
       }
     });
 
-    closeSheet.addEventListener('click',closePopup);
-    sheetBackdrop.addEventListener('click',closePopup);
+    // keep recharge button enabled only when username + selection present
+    tiktokIdInput.addEventListener('input', updateRechargeState);
+
+    // Recharge button behavior (client-side stub)
+    rechargeBtn.addEventListener('click', () => {
+      const username = tiktokIdInput.value.trim();
+      if (!username) {
+        alert('Please enter your TikTok username.');
+        tiktokIdInput.focus();
+        return;
+      }
+      if (!(selectedCoins > 0 && selectedPrice > 0)) {
+        alert('Please choose an amount of coins to purchase.');
+        return;
+      }
+      const summary = `Confirm recharge\n\nUsername: @${username}\nCoins: ${selectedCoins.toLocaleString()}\nTotal: $${selectedPrice.toFixed(2)}\n\nProceed?`;
+      if (confirm(summary)) {
+        // NOTE: Replace this with a real API call to your backend/payment gateway.
+        // This is a client-side stub only.
+        rechargeBtn.disabled = true;
+        rechargeBtn.textContent = 'Processing...';
+        setTimeout(() => {
+          alert('Recharge request simulated. Implement server-side payment to complete the flow.');
+          rechargeBtn.textContent = 'Recharge';
+          updateRechargeState();
+        }, 1000);
+      }
+    });
+
+    // small accessibility: ensure focus returns to a sensible place when sheet closes
+    sheet.addEventListener('transitionend', () => {
+      if (!sheet.classList.contains('active')) {
+        // if custom was confirmed, focus the custom option; else focus the first option
+        const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
+        if (focused) focused.focus();
+      }
+    });
   </script>
 </body>
 </html>
