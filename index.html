@@ -312,25 +312,25 @@
 </head>
 <body>
   <!-- wrapper to center content (optional) -->
-  <div class="phone">
+  ="phone">
 
     <!-- Header -->
     <header class="ios-header">
       <span class="back-btn">&lt;</span>
-      <div class="ios-title">Get Coins to send Gifts to TikTok</div>
+      ="ios-title">Get Coins to send Gifts to TikTok</div>
     </header>
-    <div class="main-content">
+    ="main-content">
    <!-- toàn bộ phần logo TikTok + Recharge + Get Coins ở đây -->
     </div>
 
 
     <!-- Main container -->
     <main class="container">
-      <div class="balance-box">
+      ="balance-box">
         <img src="tiktok.png" alt="TikTok Logo" class="tiktok-logo">
-        <div class="balance-info">
+        ="balance-info">
           <span class="recharge-text">Recharge</span>
-          <div class="balance-line">
+          ="balance-line">
             <img src="coin.png" alt="Coin" class="coin-icon">
             <input type="text" id="balanceAmount" value="2,506,051">
           </div>
@@ -339,21 +339,88 @@
 
       <section class="recharge-section">
         <h3>Get Coins</h3>
-        <div class="tiktok-input-wrapper">
+        ="tiktok-input-wrapper">
           <span class="at-symbol">@</span>
           <input type="text" id="tiktokId" placeholder="username">
         </div>
 
-        <div class="coins-grid">
-          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">70</div><div class="coin-price">$1.00</div></div>
-          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">350</div><div class="coin-price">$5.00</div></div>
-          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">700</div><div class="coin-price">$9.00</div></div>
-          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">1,700</div><div class="coin-price">$19.00</div></div>
-          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">3,000</div><div class="coin-price">$29.00</div></div>
-          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">7,000</div><div class="coin-price">$69.00</div></div>
-          <div class="coin-option"><div class="coin-value"><img src="coin.png" alt="coin">17,500</div><div class="coin-price">$199.00</div></div>
-          <div class="coin-option" id="customOption"><div class="coin-value"><img src="coin.png" alt="coin">Custom</div></div>
-        </div>
+<div class="coins-grid">
+  <div class="coin-option" data-coins="70" data-price="1.00">
+    <div class="coin-value"><img src="coin.png" alt="coin">70</div>
+    <div class="coin-price">$1.00</div>
+  </div>
+
+  <div class="coin-option" data-coins="350" data-price="5.00">
+    <div class="coin-value"><img src="coin.png" alt="coin">350</div>
+    <div class="coin-price">$5.00</div>
+  </div>
+
+  <div class="coin-option" data-coins="700" data-price="9.00">
+    <div class="coin-value"><img src="coin.png" alt="coin">700</div>
+    <div class="coin-price">$9.00</div>
+  </div>
+
+  <div class="coin-option" data-coins="1700" data-price="19.00">
+    <div class="coin-value"><img src="coin.png" alt="coin">1,700</div>
+    <div class="coin-price">$19.00</div>
+  </div>
+
+  <div class="coin-option" data-coins="3000" data-price="29.00">
+    <div class="coin-value"><img src="coin.png" alt="coin">3,000</div>
+    <div class="coin-price">$29.00</div>
+  </div>
+
+  <div class="coin-option" data-coins="7000" data-price="69.00">
+    <div class="coin-value"><img src="coin.png" alt="coin">7,000</div>
+    <div class="coin-price">$69.00</div>
+  </div>
+
+  <div class="coin-option" data-coins="17500" data-price="199.00">
+    <div class="coin-value"><img src="coin.png" alt="coin">17,500</div>
+    <div class="coin-price">$199.00</div>
+  </div>
+
+  <div class="coin-option" id="customOption">
+    <div class="coin-value"><img src="coin.png" alt="coin">Custom</div>
+    <!-- Popup nhập custom coins -->
+<div id="customPopup" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+  z-index:1500;
+">
+  <div style="
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    width:300px;
+    text-align:center;
+  ">
+    <h3>Enter custom coins</h3>
+    <input
+      type="number"
+      id="customCoinInput"
+      placeholder="e.g. 5000"
+      style="padding:8px; width:100%; margin:10px 0; border:1px solid #ccc; border-radius:6px;"
+    >
+    <button
+      id="confirmCustom"
+      style="background:#000; color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;"
+    >
+      Confirm
+    </button>
+  </div>
+</div>
+
+  </div>
+</div>
+
       </section>
     </main>
 
@@ -407,98 +474,153 @@
 
   <!-- JavaScript (giữ nguyên logic của bạn) -->
   <script>
-    const options = document.querySelectorAll('.coin-option');
-    const statusText = document.getElementById('status');
-    const doneBtn = document.querySelector('.done-btn');
-    const balanceInput = document.getElementById('balanceAmount');
-    const tiktokIdInput = document.getElementById('tiktokId');
-    const customOption = document.getElementById('customOption');
-    let selectedCoin = 0;
-    const totalAmountEl = document.getElementById('totalAmount');
-    const sheet = document.querySelector('.sheet');
-    const backdrop = document.querySelector('.sheet-backdrop');
-    const inputEl = document.getElementById('sheetInput');
-    const rechargeBtn = document.getElementById('sheetRecharge');
-    const backBtn = document.querySelector('.sheet-back');
-    const helpBtn = document.querySelector('.sheet-help');
+/* ====== XỬ LÝ CHỌN COIN, CUSTOM, VÀ MỞ POPUP ORDER SUMMARY ====== */
 
-    function openSheet() {
-      sheet.classList.add('active');
-      backdrop.classList.add('active');
-      setTimeout(() => inputEl.focus(), 300);
+/* --- Cấu hình giá: 
+   Các ô coin có data-coins và data-price (USD). 
+   Custom sử dụng tỷ lệ: 70 coins = $1.00 => 1 coin = 1/70 USD */
+const PRICE_PER_COIN = 1.0 / 70; // USD per coin for Custom input
+
+/* --- DOM elements chính (đã có trong HTML của bạn) */
+const coinOptions = document.querySelectorAll('.coin-option');
+const customOption = document.getElementById('customOption'); // ô Custom
+// popup custom (bạn sẽ thêm id="customPopup" theo hướng dẫn trước)
+const customPopup = document.getElementById('customPopup');
+const customInput = document.getElementById('customCoinInput');
+const confirmCustom = document.getElementById('confirmCustom');
+
+/* các phần tử ở footer / popup order */
+const footerRechargeBtn = document.querySelector('.done-btn'); // nút Recharge chính
+const orderPopup = document.getElementById('orderPopup'); // popup Order Summary
+const closeBtn = orderPopup ? orderPopup.querySelector('.close-btn') : null;
+const totalAmountEl = document.getElementById('totalAmount'); // hiển thị tổng $ ở footer
+const tiktokIdInput = document.getElementById('tiktokId'); // username input
+const balanceInput = document.getElementById('balanceAmount'); // balance hiển thị (nếu cần update)
+
+/* trạng thái lựa chọn */
+let selectedCoins = 0;
+let selectedPrice = 0.00;
+
+/* --- Hàm tiện ích */
+function formatUSD(num) {
+  return '$' + Number(num).toFixed(2);
+}
+function formatWithComma(n) {
+  return Number(n).toLocaleString();
+}
+
+/* --- Khi click 1 ô coin (bao gồm custom) --- */
+coinOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    // bỏ highlight cũ, set highlight mới
+    coinOptions.forEach(o => o.classList.remove('selected'));
+    option.classList.add('selected');
+
+    // nếu là custom -> mở popup nhập custom
+    if (option.id === 'customOption') {
+      if (customPopup) customPopup.style.display = 'flex';
+      // reset custom input
+      if (customInput) customInput.value = '';
+      // reset selected values until user confirm
+      selectedCoins = 0;
+      selectedPrice = 0;
+      totalAmountEl.textContent = formatUSD(0);
+      return;
     }
 
-    function closeSheet() {
-      sheet.classList.remove('active');
-      backdrop.classList.remove('active');
+    // lấy dữ liệu từ data-attributes
+    const coins = option.dataset.coins ? parseInt(option.dataset.coins) : 0;
+    const price = option.dataset.price ? parseFloat(option.dataset.price) : 0.00;
+
+    selectedCoins = coins;
+    selectedPrice = price;
+
+    // cập nhật footer total
+    if (totalAmountEl) totalAmountEl.textContent = formatUSD(price);
+  });
+});
+
+/* --- Xử lý confirm custom (trong customPopup) --- */
+if (confirmCustom) {
+  confirmCustom.addEventListener('click', () => {
+    const val = parseInt(customInput.value);
+    if (!val || val <= 0) {
+      alert('Please enter a valid number of coins');
+      return;
+    }
+    selectedCoins = val;
+    // tính giá theo tỉ lệ PRICE_PER_COIN
+    selectedPrice = Number((val * PRICE_PER_COIN).toFixed(2));
+
+    // cập nhật footer và đóng popup
+    if (totalAmountEl) totalAmountEl.textContent = formatUSD(selectedPrice);
+    if (customPopup) customPopup.style.display = 'none';
+
+    // highlight custom option (giữ selected class)
+    coinOptions.forEach(o => o.classList.remove('selected'));
+    if (customOption) customOption.classList.add('selected');
+  });
+}
+
+/* --- Nếu người dùng đóng custom popup bằng cách click ngoài --- */
+if (customPopup) {
+  customPopup.addEventListener('click', (e) => {
+    if (e.target === customPopup) customPopup.style.display = 'none';
+  });
+}
+
+/* --- Khi bấm nút Recharge ở footer -> hiển thị Order Summary (và cập nhật nội dung) --- */
+if (footerRechargeBtn) {
+  footerRechargeBtn.addEventListener('click', () => {
+    const usernameRaw = tiktokIdInput ? tiktokIdInput.value.trim() : '';
+    if (!usernameRaw) {
+      alert('Please enter your TikTok username');
+      return;
+    }
+    if (!selectedCoins || selectedCoins <= 0) {
+      alert('Please select a coin package or enter a custom amount');
+      return;
     }
 
-    backdrop.addEventListener('click', closeSheet);
-    backBtn.addEventListener('click', closeSheet);
+    // cập nhật nội dung popup
+    // trong HTML popup, mình giả sử có 3 block "info" theo thứ tự: (1) Account, (2) Total, (3) Coins
+    // ta sẽ tìm các div có justify-content:space-between (cũng giống cấu trúc bạn dùng)
+    const infoBlocks = orderPopup.querySelectorAll('.order-row');
 
-    helpBtn.addEventListener('click', () => {
-      alert("Enter the number of TikTok coins you want to recharge.");
-    });
+    // Account
+    const accountSpan = orderPopup.querySelector('#popupUsername') || infoBlocks[0].querySelectorAll('span')[1];
+    if (accountSpan) accountSpan.textContent = '@' + usernameRaw;
 
-    rechargeBtn.addEventListener('click', () => {
-      const val = parseInt(inputEl.value);
-      if (isNaN(val) || val <= 0) {
-        alert("Please enter a valid number of coins");
-        return;
-      }
-      selectedCoin = val;
-      totalAmountEl.textContent = "$" + (val * 0.014).toFixed(2);
-      closeSheet();
-      inputEl.value = "";
-    });
+    // Total
+    const totalSpan = orderPopup.querySelector('#popupTotal') || infoBlocks[1].querySelectorAll('span')[1];
+    if (totalSpan) totalSpan.textContent = formatUSD(selectedPrice);
 
-    options.forEach(opt => {
-      function selectOption() {
-        options.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        if (opt === customOption) {
-          openSheet();
-        } else {
-          selectedCoin = parseInt(opt.querySelector('.coin-value').textContent.replace(/,/g,'')) || 0;
-          const priceText = opt.querySelector('.coin-price')?.textContent || "$0.00";
-          totalAmountEl.textContent = priceText;
-        }
-      }
-      opt.addEventListener('click', selectOption);
-    });
+    // Coins line (show "X coins" left and USD right)
+    const coinsSpan = orderPopup.querySelector('#popupCoins') || infoBlocks[2].querySelectorAll('span')[1];
+    if (coinsSpan) coinsSpan.textContent = formatWithComma(selectedCoins) + ' coins';
 
-    function parseNumber(str){
-      return parseInt(str.replace(/,/g,'')) || 0;
-    }
+    // also update the right-side price in the coins row if you have it in popup:
+    const coinsRowRight = orderPopup.querySelector('#popupCoinsPrice');
+    if (coinsRowRight) coinsRowRight.textContent = formatUSD(selectedPrice);
 
-    function formatNumberWithComma(num){
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+    // mở popup
+    orderPopup.style.display = 'flex';
+  });
+}
 
-    doneBtn.addEventListener('click', () => {
-      const userId = '@' + tiktokIdInput.value.trim();
-      if (selectedCoin <= 0) {
-        statusText.textContent = "Please select coin amount";
-        statusText.style.color = "red";
-        return;
-      }
-      if (userId === '@') {
-        statusText.textContent = "Please enter a valid TikTok ID";
-        statusText.style.color = "red";
-        return;
-      }
-      statusText.textContent = "Processing payment...";
-      statusText.style.color = "#777";
-      setTimeout(() => {
-        let current = parseNumber(balanceInput.value);
-        current -= selectedCoin;
-        if (current < 0) current = 0;
-        balanceInput.value = formatNumberWithComma(current);
-        statusText.textContent = `Payment successful ✅ for ${userId}`;
-        statusText.style.color = "green";
-      }, 1500);
-    });
-  </script>
+/* --- Đóng popup Order Summary --- */
+if (closeBtn) {
+  closeBtn.addEventListener('click', () => {
+    orderPopup.style.display = 'none';
+  });
+}
+window.addEventListener('click', (e) => {
+  if (e.target === orderPopup) orderPopup.style.display = 'none';
+});
+
+/* ===== End script ===== */
+</script>
+
   <!-- Popup Order Summary -->
 <div id="orderPopup" class="order-popup">
   <div class="order-content">
@@ -674,6 +796,7 @@ window.addEventListener('click', (e) => {
 
 </body>
 </html>
+
 
 
 
