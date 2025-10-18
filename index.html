@@ -148,9 +148,14 @@
       background:#f9f9f9;
       box-sizing:border-box;
       width:100%;
+      transition: border-color 0.2s ease;
+    }
+    .tiktok-input-wrapper:focus-within {
+      border-color: #007AFF;
+      background: #fff;
     }
     .tiktok-input-wrapper .at-symbol { margin-right:8px; color:#666; }
-    .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; width:100%; }
+    .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; width:100; }
 
     /* Coins grid */
     .coins-grid {
@@ -226,15 +231,16 @@
     .sheet-header { padding:16px 20px; text-align:center; font-size:18px; font-weight:700; border-bottom:1px solid #eee; position:relative; }
     .sheet-header button { position:absolute; right:20px; top:12px; border:none; background:none; font-size:22px; cursor:pointer; }
     .sheet-body { padding:20px; display:flex; flex-direction:column; gap:15px; }
-    .coin-input-row { display:flex; align-items:center; justify-content:center; gap:8px; }
-    .coin-input-row input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:16px; width:140px; text-align:center; outline:none; }
+    .coin-input-row { display:flex; align-items:center; gap:12px; }
+    .coin-input-row input { border:none; outline:none; font-size:18px; padding:8px 0; background:transparent; width:100%; text-align:left; }
+    .sheet-title-row { display:flex; align-items:center; gap:8px; cursor:pointer; }
+    .arrow-down { width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:5px solid #333; }
 
     .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
 
     @media (max-width: 340px) {
       .coin-value { font-size:16px; }
       .coin-price { font-size:12px; }
-      .coin-input-row input { width:120px; }
     }
   </style>
 </head>
@@ -333,11 +339,14 @@
         <button id="closeSheet" type="button" aria-label="Close">&times;</button>
       </div>
       <div class="sheet-body">
-        <h4>Number of Coins</h4>
+        <div class="sheet-title-row">
+          <div class="arrow-down"></div>
+          <h4 style="margin:0;">Number of Coins</h4>
+        </div>
         <div class="coin-input-row">
           <img src="coin.png" alt="coin icon">
           <label for="customCoinInput" class="visually-hidden">Number of coins</label>
-          <input type="text" id="customCoinInput" placeholder="Enter coins (e.g. 1,700)" aria-label="Number of coins" inputmode="numeric" pattern="[0-9,]*" />
+          <input type="text" id="customCoinInput" placeholder="Enter coins (e.g. 1,700)" aria-label="Number of coins" inputmode="numeric" />
         </div>
         <button class="done-btn" id="confirmCustom" type="button">Recharge</button>
       </div>
@@ -387,6 +396,49 @@
       return parseInt(integerPart, 10);
     }
 
+    // Improved number formatting with caret position preservation
+    function formatNumberInput(input) {
+      const value = input.value;
+      const cursorPosition = input.selectionStart;
+      
+      // Count digits before cursor
+      const digitsBeforeCursor = (value.substring(0, cursorPosition).match(/\d/g) || []).length;
+      
+      // Remove all non-digits
+      const digitsOnly = value.replace(/\D/g, '');
+      
+      if (digitsOnly === '') {
+        input.value = '';
+        return { value: '', cursorPosition: 0 };
+      }
+      
+      // Format with commas
+      const number = parseInt(digitsOnly, 10);
+      const formatted = number.toLocaleString('en-US');
+      input.value = formatted;
+      
+      // Calculate new cursor position
+      let newCursorPosition = 0;
+      let digitCount = 0;
+      
+      for (let i = 0; i < formatted.length; i++) {
+        if (/\d/.test(formatted[i])) {
+          digitCount++;
+        }
+        if (digitCount === digitsBeforeCursor) {
+          newCursorPosition = i + 1;
+          break;
+        }
+      }
+      
+      // If not found, set to end
+      if (newCursorPosition === 0) {
+        newCursorPosition = formatted.length;
+      }
+      
+      return { value: formatted, cursorPosition: newCursorPosition };
+    }
+
     // load/save balance persistent
     function loadBalance() {
       try {
@@ -394,19 +446,19 @@
         if (stored !== null) {
           const num = Number(stored);
           if (!Number.isNaN(num)) {
-            balanceInput.value = num.toLocaleString();
+            balanceInput.value = formatNumberWithCommas(num);
             return;
           }
         }
         const raw = (balanceInput.value || '').toString().replace(/,/g, '');
         const num = Number(raw) || 0;
         localStorage.setItem(STORAGE_KEY, String(num));
-        balanceInput.value = num.toLocaleString();
+        balanceInput.value = formatNumberWithCommas(num);
       } catch (e) {
         try {
           const raw = (balanceInput.value || '').toString().replace(/,/g, '');
           const num = Number(raw) || 0;
-          balanceInput.value = num.toLocaleString();
+          balanceInput.value = formatNumberWithCommas(num);
         } catch {}
       }
     }
@@ -422,7 +474,7 @@
         const raw = (balanceInput.value || '').toString().replace(/,/g, '');
         const current = Number(raw) || 0;
         const next = current + Number(coinsToAdd || 0);
-        balanceInput.value = next.toLocaleString();
+        balanceInput.value = formatNumberWithCommas(next);
         saveBalance(next);
       } catch (e) {}
     }
@@ -449,7 +501,13 @@
       sheetBackdrop.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       customInput.value = '';
-      setTimeout(() => customInput.focus(), 60);
+      
+      // Focus and open keyboard immediately
+      setTimeout(() => {
+        customInput.focus();
+        // Force numeric keyboard on mobile
+        customInput.setAttribute('inputmode', 'numeric');
+      }, 100);
     };
 
     const closePopup = () => {
@@ -494,27 +552,11 @@
       });
     });
 
-    // custom input formatting
+    // custom input formatting with proper caret handling
     customInput.addEventListener('input', (e) => {
-      const el = customInput;
-      const raw = el.value || '';
-      const selectionStart = el.selectionStart || raw.length;
-      
-      const digitsBefore = (raw.slice(0, selectionStart).match(/\d/g) || []).length;
-      const digitsOnly = raw.replace(/[^\d]/g, '');
-      
-      if (digitsOnly === '') {
-        el.value = '';
-        return;
-      }
-      
-      const trimmed = digitsOnly.replace(/^0+(?=\d)/, '') || '0';
-      const formatted = parseInt(trimmed, 10).toLocaleString();
-      el.value = formatted;
-      
-      // Simple caret positioning
+      const result = formatNumberInput(customInput);
       setTimeout(() => {
-        el.setSelectionRange(formatted.length, formatted.length);
+        customInput.setSelectionRange(result.cursorPosition, result.cursorPosition);
       }, 0);
     });
 
@@ -547,7 +589,7 @@
       
       setTimeout(() => {
         addCoinsToBalance(selectedCoins);
-        alert(`Successfully recharged ${selectedCoins.toLocaleString()} coins for $${selectedPrice.toFixed(2)}!`);
+        alert(`Successfully recharged ${formatNumberWithCommas(selectedCoins)} coins for $${selectedPrice.toFixed(2)}!`);
         
         // Reset UI
         selectedCoins = 0;
