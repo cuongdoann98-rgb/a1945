@@ -80,14 +80,36 @@
     .tiktok-input-wrapper { display:flex; align-items:center; border:1.5px solid #d0d0d0; border-radius:10px; padding:0 10px; background:#f9f9f9; }
     .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; }
 
-    .coins-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-top:5px; }
-    .coin-option { background:#e3e3e3; border:1.5px solid #d0d0d0; border-radius:10px; padding:15px 10px; text-align:center; cursor:pointer; transition:0.18s; }
-    .coin-option:focus { outline:3px solid rgba(254,44,85,0.18); }
-    .coin-option.selected { border-color:#fe2c55; background:#fff2f5; }
-    .coin-value { font-weight:600; font-size:18px; display:flex; align-items:center; justify-content:center; gap:6px; }
-    .coin-value img { width:18px; height:18px; }
-    .coin-price { font-size:13px; color:#777; }
+    /* responsive coins grid */
+.coins-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap:12px;
+  margin-top:8px;
+  align-items:start;
+}
 
+/* nhỏ gọn ô coin khi cần */
+.coin-option {
+  background:#e3e3e3;
+  border:1.5px solid #d0d0d0;
+  border-radius:10px;
+  padding:12px 8px; /* giảm padding */
+  text-align:center;
+  cursor:pointer;
+  transition:0.18s;
+  box-sizing:border-box;
+}
+
+/* trên màn hình rất nhỏ dùng 1 cột */
+@media (max-width:360px) {
+  .coins-grid {
+    grid-template-columns: 1fr;
+    gap:10px;
+  }
+  .coin-value { font-size:16px; }
+  .coin-price { font-size:12px; }
+}
     .payment-footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; background:#fff; border-top:1px solid #eee; box-shadow:0 -3px 10px rgba(0,0,0,0.05); padding:10px 16px 20px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:1100; border-radius:16px 16px 0 0; }
     .payment-logos { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
     .pay-icon { height:14px; width:auto; object-fit:contain; }
