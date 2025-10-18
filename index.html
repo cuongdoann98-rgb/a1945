@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -24,7 +25,6 @@
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    /* Global */
     html, body {
       height: 100%;
       margin: 0;
@@ -47,7 +47,7 @@
       background: transparent;
     }
 
-    /* Header — avoid transform centering; use inner wrapper */
+    /* Header */
     header.ios-header {
       position: fixed;
       left: 0;
@@ -63,22 +63,29 @@
       margin: 0 auto;
       padding: calc(8px + var(--safe-top)) 16px 8px;
       display: grid;
-      grid-template-columns: 48px 1fr 48px;
+      grid-template-columns: 56px 1fr 56px;
       align-items: center;
+      gap: 8px;
       box-sizing: border-box;
     }
     .back-btn {
-      width: 48px;
-      height: 36px;
       display: inline-flex;
       align-items: center;
-      justify-content:flex-start;
-      padding-left: 8px;
-      font-size: 22px;
-      background: none;
+      justify-content: flex-start;
+      width: 56px;
+      height: 40px;
+      padding-left: 6px;
       border: none;
+      background: transparent;
+      color: #000;
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 1;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
+    .back-btn:active { opacity: 0.7; }
+
     .ios-title {
       text-align: center;
       font-size: 18px;
@@ -86,15 +93,33 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      padding: 0 6px;
     }
 
-    /* Main container: same horizontal padding as footer-inner so visuals align */
-    .main-content { margin-top: 70px; } /* header approximate height */
+    .more-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 56px;
+      height: 40px;
+      padding-right: 6px;
+      border: none;
+      background: transparent;
+      color: #333;
+      font-size: 22px;
+      font-weight: 500;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .more-btn:active { opacity: 0.75; }
+
+    /* Main container */
+    .main-content { margin-top: 72px; }
     .container {
       margin: 0 auto;
       max-width: 420px;
       width: 100%;
-      padding: 20px 16px 220px; /* bottom padding to avoid overlap with footer */
+      padding: 20px 16px 220px;
       box-sizing: border-box;
       display:flex;
       flex-direction:column;
@@ -137,7 +162,7 @@
     .tiktok-input-wrapper .at-symbol { margin-right:8px; color:#666; }
     .tiktok-input-wrapper input { border:none; outline:none; flex:1; font-size:14px; padding:10px 0; background:transparent; width:100%; }
 
-    /* Coins grid: 2 columns that span full content width (which matches footer-inner) */
+    /* Coins grid */
     .coins-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -170,7 +195,7 @@
     .coin-value img { width:18px; height:18px; }
     .coin-price { font-size:13px; color:#777; }
 
-    /* Footer: fixed full width; inner centers and uses same horizontal padding as container */
+    /* Footer */
     .payment-footer {
       position: fixed;
       left: 0;
@@ -212,13 +237,14 @@
     .sheet-header button { position:absolute; right:20px; top:12px; border:none; background:none; font-size:22px; cursor:pointer; }
     .sheet-body { padding:20px; display:flex; flex-direction:column; gap:15px; }
     .coin-input-row { display:flex; align-items:center; justify-content:center; gap:8px; }
-    .coin-input-row input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:16px; width:120px; text-align:center; outline:none; }
+    .coin-input-row input { border:1.5px solid #ccc; border-radius:10px; padding:10px; font-size:16px; width:140px; text-align:center; outline:none; }
 
     .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
 
     @media (max-width: 340px) {
       .coin-value { font-size:16px; }
       .coin-price { font-size:12px; }
+      .coin-input-row input { width:120px; }
     }
   </style>
 </head>
@@ -226,9 +252,9 @@
   <div class="phone">
     <header class="ios-header" role="banner">
       <div class="header-inner">
-        <button class="back-btn" type="button" aria-label="Trở lại">&lt;</button>
-        <div class="ios-title">Get Coins to send Gifts to TikTok</div>
-        <div style="width:48px;" aria-hidden="true"></div>
+        <button class="back-btn" id="backBtn" aria-label="Trở lại">&lsaquo;</button>
+        <div class="ios-title" id="pageTitle">Get Coins to send Gifts to TikTok</div>
+        <button class="more-btn" id="moreBtn" aria-label="Thêm tùy chọn">⋯</button>
       </div>
     </header>
 
@@ -321,7 +347,7 @@
         <div class="coin-input-row">
           <img src="coin.png" alt="coin icon">
           <label for="customCoinInput" class="visually-hidden">Number of coins</label>
-          <input type="number" id="customCoinInput" placeholder="Enter coins" aria-label="Number of coins" min="1" step="1" inputmode="numeric">
+          <input type="text" id="customCoinInput" placeholder="Enter coins (e.g. 1,700)" aria-label="Number of coins" inputmode="numeric" pattern="[0-9,]*" />
         </div>
         <button class="done-btn" id="confirmCustom" type="button">Recharge</button>
       </div>
@@ -343,18 +369,34 @@
     const tiktokIdInput = document.getElementById('tiktokId');
     const balanceInput = document.getElementById('balanceAmount');
 
+    const backBtn = document.getElementById('backBtn');
+    const moreBtn = document.getElementById('moreBtn');
+
     let selectedCoins = 0;
     let selectedPrice = 0;
     let coinOptionsDisabled = false;
     const STORAGE_KEY = 'recharge_balance';
 
-    // default rate from first priced option
+    // default rate
     const firstPriced = coinOptions.find(o => o.dataset.coins && o.dataset.price);
     const DEFAULT_RATE = (firstPriced && parseInt(firstPriced.dataset.coins, 10) > 0)
       ? (parseFloat(firstPriced.dataset.price) / parseInt(firstPriced.dataset.coins, 10))
       : (1.0 / 70);
 
-    // localStorage helpers
+    // formatting helpers
+    function formatNumberWithCommas(n) {
+      if (n === null || n === undefined) return '';
+      if (!isFinite(n)) return String(n);
+      return Number(n).toLocaleString('en-US');
+    }
+    function parseIntFromFormatted(str) {
+      if (!str) return NaN;
+      const digits = String(str).replace(/,/g, '').replace(/\s/g, '');
+      const integerPart = digits.split('.')[0];
+      return parseInt(integerPart, 10);
+    }
+
+    // load/save balance persistent
     function loadBalance() {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -365,13 +407,11 @@
             return;
           }
         }
-        // fallback: parse initial DOM value and persist
         const raw = (balanceInput.value || '').toString().replace(/,/g, '');
         const num = Number(raw) || 0;
         localStorage.setItem(STORAGE_KEY, String(num));
         balanceInput.value = num.toLocaleString();
       } catch (e) {
-        // ignore localStorage errors; still format DOM value
         try {
           const raw = (balanceInput.value || '').toString().replace(/,/g, '');
           const num = Number(raw) || 0;
@@ -379,13 +419,11 @@
         } catch {}
       }
     }
-
     function saveBalance(num) {
       try {
         localStorage.setItem(STORAGE_KEY, String(Number(num) || 0));
-      } catch (e) { /* ignore */ }
+      } catch (e) {}
     }
-
     function addCoinsToBalance(coinsToAdd) {
       try {
         const raw = (balanceInput.value || '').toString().replace(/,/g, '');
@@ -393,7 +431,7 @@
         const next = current + Number(coinsToAdd || 0);
         balanceInput.value = next.toLocaleString();
         saveBalance(next);
-      } catch (e) { /* ignore */ }
+      } catch (e) {}
     }
 
     function setCoinOptionsDisabled(disabled) {
@@ -420,7 +458,6 @@
       customInput.value = '';
       setTimeout(() => customInput.focus(), 60);
     };
-
     const closePopup = () => {
       sheet.classList.remove('active');
       sheetBackdrop.classList.remove('active');
@@ -446,6 +483,7 @@
           openSheet();
         } else {
           option.classList.add('selected');
+          // data-coins is numeric string without commas
           const coins = parseInt(option.dataset.coins, 10);
           const price = parseFloat(option.dataset.price);
           selectedCoins = Number.isFinite(coins) ? coins : 0;
@@ -463,16 +501,66 @@
       });
     });
 
+    // custom input: allow commas as thousands separators, preserve caret position
+    function setCaretToDigitIndex(inputEl, digitIndex) {
+      // find position in inputEl.value where the digitIndex-th digit (1-based) occurs or next position
+      const val = inputEl.value || '';
+      let count = 0;
+      for (let i = 0; i < val.length; i++) {
+        if (/\d/.test(val[i])) count++;
+        if (count === digitIndex) {
+          // place caret after this digit
+          inputEl.setSelectionRange(i + 1, i + 1);
+          return;
+        }
+      }
+      // if not found, set caret at end
+      inputEl.setSelectionRange(val.length, val.length);
+    }
+
+    customInput.addEventListener('input', (e) => {
+      const el = customInput;
+      const raw = el.value || '';
+      const selectionStart = el.selectionStart || raw.length;
+      // count digits before caret
+      const digitsBefore = (raw.slice(0, selectionStart).match(/\d/g) || []).length;
+      // strip non-digits
+      const digitsOnly = raw.replace(/[^\d]/g, '');
+      if (digitsOnly === '') {
+        el.value = '';
+        return;
+      }
+      // remove leading zeros -> keep "0" if all zeros
+      const trimmed = digitsOnly.replace(/^0+(?=\d)/, '');
+      const formatted = trimmed.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      el.value = formatted;
+      // restore caret relative to digitsBefore
+      setCaretToDigitIndex(el, digitsBefore);
+    });
+
+    // handle paste: clean non-digits and format
+    customInput.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text') || '';
+      const digitsOnly = text.replace(/[^\d]/g, '');
+      if (!digitsOnly) return;
+      const formatted = digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      customInput.value = formatted;
+      // put caret at end
+      customInput.setSelectionRange(customInput.value.length, customInput.value.length);
+    });
+
     // custom confirm
     confirmCustom.addEventListener('click', () => {
-      const val = parseInt(customInput.value, 10);
-      if (!Number.isInteger(val) || val <= 0) {
-        alert('Vui lòng nhập số xu hợp lệ (số nguyên dương).');
+      const formatted = customInput.value || '';
+      const parsed = parseIntFromFormatted(formatted);
+      if (!Number.isInteger(parsed) || parsed <= 0) {
+        alert('Vui lòng nhập số xu hợp lệ (số nguyên dương). Ví dụ: 1,700');
         customInput.focus();
         return;
       }
-      selectedCoins = val;
-      selectedPrice = +(val * DEFAULT_RATE);
+      selectedCoins = parsed;
+      selectedPrice = +(parsed * DEFAULT_RATE);
       totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
       coinOptions.forEach(o => o.classList.remove('selected'));
       customOption.classList.add('selected');
@@ -533,7 +621,16 @@
       }, 900);
     });
 
-    // ensure focus returns after sheet transition
+    // back / more handlers
+    backBtn.addEventListener('click', () => {
+      if (window.history.length > 1) window.history.back();
+    });
+    moreBtn.addEventListener('click', () => {
+      const items = ['Help', 'Terms', 'Contact'];
+      alert('Menu:\n' + items.join('\n'));
+    });
+
+    // restore focus after sheet transition
     sheet.addEventListener('transitionend', () => {
       if (!sheet.classList.contains('active')) {
         const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
@@ -543,7 +640,7 @@
 
     // init
     loadBalance();
-    // If you prefer options disabled until username entered, uncomment next line:
+    // if you want options disabled by default until username entered, uncomment:
     // setCoinOptionsDisabled(true);
   </script>
 </body>
