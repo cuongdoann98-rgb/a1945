@@ -240,7 +240,7 @@
     }
     .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
-    /* Sheet - Updated to match the image */
+    /* Sheet - Updated to match the new image */
     .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transition: all .25s ease; z-index:1500; }
     .sheet-backdrop.active { opacity: 1; visibility: visible; }
     .sheet { 
@@ -254,68 +254,95 @@
       box-shadow: 0 -5px 20px rgba(0,0,0,0.2); 
       transition: bottom .25s ease; 
       z-index:1501;
-      height: 70vh;
+      height: 75vh;
       display: flex;
       flex-direction: column;
     }
     .sheet.active { bottom: 0; }
     .sheet-header { 
-      padding:16px 20px; 
-      text-align:center; 
-      font-size:18px; 
-      font-weight:700; 
-      border-bottom:1px solid #eee; 
-      position:relative; 
+      padding: 16px 20px; 
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
     }
-    .sheet-header button { position:absolute; right:20px; top:12px; border:none; background:none; font-size:22px; cursor:pointer; }
+    .sheet-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .help-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #666;
+    }
+    .sheet-title {
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      flex: 1;
+      margin-right: 40px;
+    }
+    .sheet-header button { 
+      border:none; 
+      background:none; 
+      font-size:22px; 
+      cursor:pointer;
+      color: #333;
+    }
+    
     .sheet-body { 
-      padding:20px; 
+      padding: 20px;
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 20px;
     }
     
-    .sheet-title-row {
+    .coin-limit {
+      color: #666;
+      font-size: 14px;
+      margin: 10px 0 20px 0;
+      text-align: center;
+    }
+    
+    .coin-input-section {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    
-    .arrow-down {
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 5px solid #333;
-    }
-    
-    .custom-display {
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+      padding: 15px;
       background: #f8f8f8;
       border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 20px;
     }
     
-    .custom-amount {
-      font-size: 32px;
-      font-weight: bold;
-      color: #000;
-      margin: 10px 0;
-    }
-    
-    .custom-price {
+    .coin-input {
+      border: none;
+      background: transparent;
       font-size: 24px;
       font-weight: bold;
-      color: #fe2c55;
+      text-align: center;
+      outline: none;
+      width: 150px;
+    }
+    
+    .coin-placeholder {
+      color: #ccc;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 5px;
     }
     
     .keypad {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
       margin: 20px 0;
     }
     
@@ -324,21 +351,33 @@
       border: none;
       border-radius: 12px;
       padding: 15px;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: bold;
       cursor: pointer;
       transition: background 0.2s;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .keypad-btn:active {
       background: #e0e0e0;
     }
     
+    .keypad-btn.zero {
+      grid-column: span 2;
+    }
+    
+    .keypad-btn.double-zero {
+      grid-column: span 1;
+    }
+    
     .special-offer {
       background: #fff2f5;
       border-radius: 12px;
-      padding: 15px;
-      margin: 15px 0;
+      padding: 12px 15px;
+      margin: 10px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -360,7 +399,6 @@
       justify-content: space-between;
       align-items: center;
       padding: 15px 0;
-      border-top: 1px solid #eee;
       margin-top: 10px;
     }
     
@@ -370,9 +408,117 @@
     }
     
     .total-value {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
-      color: #fe2c55;
+      color: #000;
+    }
+
+    /* Order Summary Popup */
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .popup-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .order-popup {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      width: 90%;
+      max-width: 320px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+    
+    .popup-backdrop.active .order-popup {
+      transform: scale(1);
+    }
+    
+    .popup-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .popup-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .order-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .order-label {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .order-value {
+      font-weight: 600;
+    }
+    
+    .order-divider {
+      height: 1px;
+      background: #eee;
+      margin: 10px 0;
+    }
+    
+    .popup-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .popup-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .popup-cancel {
+      flex: 1;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    .popup-confirm {
+      flex: 1;
+      background: #fe2c55;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
     }
 
     .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
@@ -380,6 +526,7 @@
     @media (max-width: 340px) {
       .coin-value { font-size:16px; }
       .coin-price { font-size:12px; }
+      .keypad-btn { font-size: 18px; padding: 12px; }
     }
   </style>
 </head>
@@ -470,37 +617,44 @@
       </div>
     </div>
 
-    <!-- Custom sheet - Updated to match the image -->
+    <!-- Custom sheet - Updated to match the new image -->
     <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true"></div>
     <div class="sheet" id="customSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="customTitle">
       <div class="sheet-header">
-        <div id="customTitle">Custom</div>
+        <div class="sheet-header-left">
+          <button class="back-btn" id="sheetBackBtn" aria-label="Trở lại">&lsaquo;</button>
+          <div class="help-icon">?</div>
+        </div>
+        <div class="sheet-title">Custom</div>
         <button id="closeSheet" type="button" aria-label="Close">&times;</button>
       </div>
       <div class="sheet-body">
         <div class="sheet-title-row">
-          <div class="arrow-down"></div>
-          <h4 style="margin:0;">Number of Coins</h4>
+          <h4 style="margin:0; font-size: 16px;">Number of Coins</h4>
+          <div class="arrow-down">▼</div>
         </div>
         
-        <div class="custom-display">
-          <div class="custom-amount" id="customDisplayAmount">2,000,000</div>
-          <div class="custom-price" id="customDisplayPrice">₫649,193,800</div>
+        <div class="coin-limit">⚠️ 30 - 2,500,000</div>
+        
+        <div class="coin-input-section">
+          <img src="coin.png" alt="coin icon" style="width: 24px; height: 24px;">
+          <input type="text" class="coin-input" id="customCoinInput" value="0" aria-label="Number of coins" inputmode="numeric" />
         </div>
+        <div class="coin-placeholder">30 - 2,500,000</div>
         
         <div class="keypad">
           <button class="keypad-btn" data-key="1">1</button>
           <button class="keypad-btn" data-key="2">2</button>
           <button class="keypad-btn" data-key="3">3</button>
+          <button class="keypad-btn" data-key="000">000</button>
           <button class="keypad-btn" data-key="4">4</button>
           <button class="keypad-btn" data-key="5">5</button>
           <button class="keypad-btn" data-key="6">6</button>
+          <button class="keypad-btn" id="backspaceBtn">⌫</button>
           <button class="keypad-btn" data-key="7">7</button>
           <button class="keypad-btn" data-key="8">8</button>
           <button class="keypad-btn" data-key="9">9</button>
-          <button class="keypad-btn" style="visibility: hidden;"></button>
-          <button class="keypad-btn" data-key="0">0</button>
-          <button class="keypad-btn" id="backspaceBtn">⌫</button>
+          <button class="keypad-btn zero" data-key="0">0</button>
         </div>
         
         <div class="special-offer">
@@ -515,10 +669,42 @@
         
         <div class="sheet-total">
           <span class="total-label">Total</span>
-          <span class="total-value" id="sheetTotalAmount">₫649,193,800</span>
+          <span class="total-value" id="sheetTotalAmount">$0</span>
         </div>
         
         <button class="done-btn" id="confirmCustom" type="button">Recharge</button>
+      </div>
+    </div>
+
+    <!-- Order Summary Popup -->
+    <div class="popup-backdrop" id="orderPopup">
+      <div class="order-popup">
+        <div class="popup-header">
+          <div class="popup-title">Order Summary</div>
+        </div>
+        <div class="order-details">
+          <div class="order-row">
+            <span class="order-label">Coins:</span>
+            <span class="order-value" id="popupCoins">0</span>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Price:</span>
+            <span class="order-value" id="popupPrice">$0.00</span>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Username:</span>
+            <span class="order-value" id="popupUsername">@username</span>
+          </div>
+          <div class="order-divider"></div>
+          <div class="popup-total">
+            <span>Total:</span>
+            <span id="popupTotal">$0.00</span>
+          </div>
+        </div>
+        <div class="popup-buttons">
+          <button class="popup-cancel" id="cancelOrder">Cancel</button>
+          <button class="popup-confirm" id="confirmOrder">Confirm Payment</button>
+        </div>
       </div>
     </div>
 
@@ -532,17 +718,26 @@
     const sheet = document.getElementById('customSheet');
     const sheetBackdrop = document.getElementById('sheetBackdrop');
     const closeSheet = document.getElementById('closeSheet');
+    const sheetBackBtn = document.getElementById('sheetBackBtn');
     const confirmCustom = document.getElementById('confirmCustom');
     const rechargeBtn = document.getElementById('rechargeBtn');
     const tiktokIdInput = document.getElementById('tiktokId');
     const balanceInput = document.getElementById('balanceAmount');
     
     // Custom sheet elements
-    const customDisplayAmount = document.getElementById('customDisplayAmount');
-    const customDisplayPrice = document.getElementById('customDisplayPrice');
+    const customCoinInput = document.getElementById('customCoinInput');
     const sheetTotalAmount = document.getElementById('sheetTotalAmount');
     const keypadBtns = document.querySelectorAll('.keypad-btn');
     const backspaceBtn = document.getElementById('backspaceBtn');
+
+    // Order popup elements
+    const orderPopup = document.getElementById('orderPopup');
+    const popupCoins = document.getElementById('popupCoins');
+    const popupPrice = document.getElementById('popupPrice');
+    const popupUsername = document.getElementById('popupUsername');
+    const popupTotal = document.getElementById('popupTotal');
+    const cancelOrder = document.getElementById('cancelOrder');
+    const confirmOrder = document.getElementById('confirmOrder');
 
     const backBtn = document.getElementById('backBtn');
     const moreBtn = document.getElementById('moreBtn');
@@ -553,7 +748,7 @@
     const STORAGE_KEY = 'recharge_balance';
     
     // Custom amount state
-    let customAmount = 2000000; // Default 2,000,000
+    let customAmount = 0;
 
     // default rate
     const firstPriced = coinOptions.find(o => o.dataset.coins && o.dataset.price);
@@ -561,18 +756,11 @@
       ? (parseFloat(firstPriced.dataset.price) / parseInt(firstPriced.dataset.coins, 10))
       : (1.0 / 70);
 
-    // VND rate (approximate)
-    const VND_RATE = 324.5969; // $1 = ~324.6 VND
-
     // formatting helpers
     function formatNumberWithCommas(n) {
       if (n === null || n === undefined) return '';
       if (!isFinite(n)) return String(n);
       return Number(n).toLocaleString('en-US');
-    }
-
-    function formatVND(amount) {
-      return '₫' + formatNumberWithCommas(Math.round(amount));
     }
 
     function parseIntFromFormatted(str) {
@@ -586,11 +774,9 @@
     function updateCustomDisplay() {
       const coins = customAmount;
       const priceUSD = coins * DEFAULT_RATE;
-      const priceVND = priceUSD * VND_RATE;
       
-      customDisplayAmount.textContent = formatNumberWithCommas(coins);
-      customDisplayPrice.textContent = formatVND(priceVND);
-      sheetTotalAmount.textContent = formatVND(priceVND);
+      customCoinInput.value = formatNumberWithCommas(coins);
+      sheetTotalAmount.textContent = '$' + priceUSD.toFixed(2);
     }
 
     // Handle keypad input
@@ -598,18 +784,45 @@
       if (key === '⌫') {
         // Backspace - remove last digit
         customAmount = Math.floor(customAmount / 10);
+      } else if (key === '000') {
+        // Triple zero - add 000
+        customAmount = customAmount * 1000;
       } else {
         // Number input - append digit
         const digit = parseInt(key, 10);
         customAmount = customAmount * 10 + digit;
-        
-        // Limit to reasonable number
-        if (customAmount > 1000000000) {
-          customAmount = 1000000000;
-        }
+      }
+      
+      // Limit to 2,500,000 as per requirement
+      if (customAmount > 2500000) {
+        customAmount = 2500000;
+      }
+      
+      // Minimum 30 coins
+      if (customAmount < 30 && customAmount > 0) {
+        customAmount = 30;
       }
       
       updateCustomDisplay();
+    }
+
+    // Show order summary popup
+    function showOrderSummary() {
+      const coins = customAmount > 0 ? customAmount : selectedCoins;
+      const price = customAmount > 0 ? (customAmount * DEFAULT_RATE) : selectedPrice;
+      const username = tiktokIdInput.value || 'username';
+      
+      popupCoins.textContent = formatNumberWithCommas(coins);
+      popupPrice.textContent = '$' + price.toFixed(2);
+      popupUsername.textContent = '@' + username;
+      popupTotal.textContent = '$' + price.toFixed(2);
+      
+      orderPopup.classList.add('active');
+    }
+
+    // Close order summary popup
+    function closeOrderSummary() {
+      orderPopup.classList.remove('active');
     }
 
     // load/save balance persistent
@@ -674,8 +887,8 @@
       sheetBackdrop.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       
-      // Reset to default amount
-      customAmount = 2000000;
+      // Reset to 0
+      customAmount = 0;
       updateCustomDisplay();
     };
 
@@ -734,9 +947,10 @@
     // Event listeners
     closeSheet.addEventListener('click', closePopup);
     sheetBackdrop.addEventListener('click', closePopup);
+    sheetBackBtn.addEventListener('click', closePopup);
 
     confirmCustom.addEventListener('click', () => {
-      if (customAmount > 0) {
+      if (customAmount >= 30) {
         selectedCoins = customAmount;
         selectedPrice = customAmount * DEFAULT_RATE;
         totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
@@ -745,21 +959,30 @@
         
         // Clear selection from other options
         coinOptions.forEach(o => o.classList.remove('selected'));
+        
+        // Show order summary
+        showOrderSummary();
       }
     });
 
-    tiktokIdInput.addEventListener('input', updateRechargeState);
-
+    // Recharge button shows order summary
     rechargeBtn.addEventListener('click', () => {
       if (rechargeBtn.disabled) return;
-      
-      // Simulate recharge process
+      showOrderSummary();
+    });
+
+    // Order popup handlers
+    cancelOrder.addEventListener('click', closeOrderSummary);
+    confirmOrder.addEventListener('click', () => {
+      // Simulate payment processing
       setCoinOptionsDisabled(true);
       rechargeBtn.textContent = 'Processing...';
+      confirmOrder.textContent = 'Processing...';
+      confirmOrder.disabled = true;
       
       setTimeout(() => {
         addCoinsToBalance(selectedCoins);
-        alert(`Successfully recharged ${formatNumberWithCommas(selectedCoins)} coins for $${selectedPrice.toFixed(2)}!`);
+        alert(`Payment successful! ${formatNumberWithCommas(selectedCoins)} coins have been added to your account.`);
         
         // Reset UI
         selectedCoins = 0;
@@ -768,9 +991,15 @@
         coinOptions.forEach(o => o.classList.remove('selected'));
         setCoinOptionsDisabled(false);
         rechargeBtn.textContent = 'Recharge';
+        confirmOrder.textContent = 'Confirm Payment';
+        confirmOrder.disabled = false;
         updateRechargeState();
-      }, 1500);
+        
+        closeOrderSummary();
+      }, 2000);
     });
+
+    tiktokIdInput.addEventListener('input', updateRechargeState);
 
     backBtn.addEventListener('click', () => {
       if (confirm('Are you sure you want to go back? Any unsaved changes will be lost.')) {
