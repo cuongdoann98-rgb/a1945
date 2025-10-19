@@ -240,7 +240,7 @@
     }
     .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
-    /* Sheet - Updated to match the new image */
+    /* Sheet - Updated to match requirements */
     .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transition: all .25s ease; z-index:1500; }
     .sheet-backdrop.active { opacity: 1; visibility: visible; }
     .sheet { 
@@ -254,7 +254,7 @@
       box-shadow: 0 -5px 20px rgba(0,0,0,0.2); 
       transition: bottom .25s ease; 
       z-index:1501;
-      height: 75vh;
+      height: 70vh;
       display: flex;
       flex-direction: column;
     }
@@ -272,29 +272,22 @@
       gap: 10px;
     }
     .help-icon {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      border: 1px solid #ccc;
+      border: 1.5px solid #333;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      color: #666;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
     }
     .sheet-title {
       font-size: 18px;
       font-weight: 700;
       text-align: center;
       flex: 1;
-      margin-right: 40px;
-    }
-    .sheet-header button { 
-      border:none; 
-      background:none; 
-      font-size:22px; 
-      cursor:pointer;
-      color: #333;
     }
     
     .sheet-body { 
@@ -304,11 +297,23 @@
       flex-direction: column;
     }
     
-    .coin-limit {
-      color: #666;
+    .number-of-coins-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    
+    .number-of-coins-text {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .thin-arrow {
       font-size: 14px;
-      margin: 10px 0 20px 0;
-      text-align: center;
+      color: #666;
+      font-weight: 300;
     }
     
     .coin-input-section {
@@ -329,26 +334,20 @@
       font-weight: bold;
       text-align: center;
       outline: none;
-      width: 150px;
-    }
-    
-    .coin-placeholder {
-      color: #ccc;
-      font-size: 14px;
-      text-align: center;
-      margin-top: 5px;
+      width: 200px;
+      color: #000;
     }
     
     .keypad {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 12px;
       margin: 20px 0;
     }
     
     .keypad-btn {
-      background: #f0f0f0;
-      border: none;
+      background: #fff;
+      border: 1.5px solid #e0e0e0;
       border-radius: 12px;
       padding: 15px;
       font-size: 20px;
@@ -359,39 +358,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #000;
     }
     
     .keypad-btn:active {
-      background: #e0e0e0;
+      background: #f0f0f0;
     }
     
-    .keypad-btn.zero {
-      grid-column: span 2;
-    }
-    
-    .keypad-btn.double-zero {
-      grid-column: span 1;
-    }
-    
-    .special-offer {
-      background: #fff2f5;
-      border-radius: 12px;
-      padding: 12px 15px;
-      margin: 10px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .offer-text {
-      font-size: 14px;
-      color: #fe2c55;
-      font-weight: 600;
-    }
-    
-    .offer-arrow {
-      color: #fe2c55;
-      font-weight: bold;
+    .keypad-btn.backspace {
+      font-size: 18px;
     }
     
     .sheet-total {
@@ -399,7 +374,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 15px 0;
-      margin-top: 10px;
+      margin: 10px 0;
     }
     
     .total-label {
@@ -617,59 +592,48 @@
       </div>
     </div>
 
-    <!-- Custom sheet - Updated to match the new image -->
+    <!-- Custom sheet - Updated to match requirements -->
     <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true"></div>
     <div class="sheet" id="customSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="customTitle">
       <div class="sheet-header">
-        <div class="sheet-header-left">
-          <button class="back-btn" id="sheetBackBtn" aria-label="Trở lại">&lsaquo;</button>
-          <div class="help-icon">?</div>
-        </div>
+        <button class="back-btn" id="sheetBackBtn" aria-label="Trở lại">&lsaquo;</button>
         <div class="sheet-title">Custom</div>
-        <button id="closeSheet" type="button" aria-label="Close">&times;</button>
+        <div class="help-icon">?</div>
       </div>
       <div class="sheet-body">
-        <div class="sheet-title-row">
-          <h4 style="margin:0; font-size: 16px;">Number of Coins</h4>
-          <div class="arrow-down">▼</div>
+        <div class="number-of-coins-row">
+          <div class="number-of-coins-text">Number of Coins</div>
+          <div class="thin-arrow">▼</div>
         </div>
-        
-        <div class="coin-limit">⚠️ 30 - 2,500,000</div>
         
         <div class="coin-input-section">
           <img src="coin.png" alt="coin icon" style="width: 24px; height: 24px;">
           <input type="text" class="coin-input" id="customCoinInput" value="0" aria-label="Number of coins" inputmode="numeric" />
         </div>
-        <div class="coin-placeholder">30 - 2,500,000</div>
         
         <div class="keypad">
+          <!-- Row 1: 1, 2, 3, Backspace -->
           <button class="keypad-btn" data-key="1">1</button>
           <button class="keypad-btn" data-key="2">2</button>
           <button class="keypad-btn" data-key="3">3</button>
-          <button class="keypad-btn" data-key="000">000</button>
+          <button class="keypad-btn backspace" id="backspaceBtn">⌫</button>
+          
+          <!-- Row 2: 4, 5, 6, 000 -->
           <button class="keypad-btn" data-key="4">4</button>
           <button class="keypad-btn" data-key="5">5</button>
           <button class="keypad-btn" data-key="6">6</button>
-          <button class="keypad-btn" id="backspaceBtn">⌫</button>
+          <button class="keypad-btn" data-key="000">000</button>
+          
+          <!-- Row 3: 7, 8, 9, 0 -->
           <button class="keypad-btn" data-key="7">7</button>
           <button class="keypad-btn" data-key="8">8</button>
           <button class="keypad-btn" data-key="9">9</button>
-          <button class="keypad-btn zero" data-key="0">0</button>
-        </div>
-        
-        <div class="special-offer">
-          <span class="offer-text">Special offer</span>
-          <span class="offer-arrow">></span>
-        </div>
-        
-        <div class="special-offer">
-          <span class="offer-text">Unlock 5% cashback</span>
-          <span class="offer-arrow">></span>
+          <button class="keypad-btn" data-key="0">0</button>
         </div>
         
         <div class="sheet-total">
-          <span class="total-label">Total</span>
-          <span class="total-value" id="sheetTotalAmount">$0</span>
+          <span class="total-label">Total:</span>
+          <span class="total-value" id="sheetTotalAmount">$0.00</span>
         </div>
         
         <button class="done-btn" id="confirmCustom" type="button">Recharge</button>
@@ -717,7 +681,6 @@
     const totalAmountEl = document.getElementById('totalAmount');
     const sheet = document.getElementById('customSheet');
     const sheetBackdrop = document.getElementById('sheetBackdrop');
-    const closeSheet = document.getElementById('closeSheet');
     const sheetBackBtn = document.getElementById('sheetBackBtn');
     const confirmCustom = document.getElementById('confirmCustom');
     const rechargeBtn = document.getElementById('rechargeBtn');
@@ -793,16 +756,7 @@
         customAmount = customAmount * 10 + digit;
       }
       
-      // Limit to 2,500,000 as per requirement
-      if (customAmount > 2500000) {
-        customAmount = 2500000;
-      }
-      
-      // Minimum 30 coins
-      if (customAmount < 30 && customAmount > 0) {
-        customAmount = 30;
-      }
-      
+      // Allow any value, no limits
       updateCustomDisplay();
     }
 
@@ -945,12 +899,11 @@
     });
 
     // Event listeners
-    closeSheet.addEventListener('click', closePopup);
     sheetBackdrop.addEventListener('click', closePopup);
     sheetBackBtn.addEventListener('click', closePopup);
 
     confirmCustom.addEventListener('click', () => {
-      if (customAmount >= 30) {
+      if (customAmount > 0) {
         selectedCoins = customAmount;
         selectedPrice = customAmount * DEFAULT_RATE;
         totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
