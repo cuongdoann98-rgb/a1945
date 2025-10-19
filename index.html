@@ -1147,30 +1147,32 @@
     }
 
     // Show success popup
-    function showSuccessPopup() {
-      processingPopup.classList.remove('active');
-      const coins = customAmount > 0 ? customAmount : selectedCoins;
-      successMessage.textContent = `You recharged ${formatNumberWithCommas(coins)} Coins from Get Coins to send Gifts to TikTok`;
-      successPopup.classList.add('active');
-      
-      // Add coins to balance after successful payment
-      addCoinsToBalance(coins);
-      
-      // Reset form sau khi hiển thị success popup
-      // Sử dụng setTimeout để reset sau khi popup đã hiển thị
-      setTimeout(() => {
-        resetForm();
-      }, 500);
-    }
+function showSuccessPopup() {
+  processingPopup.classList.remove('active');
+  const coins = customAmount > 0 ? customAmount : selectedCoins;
+  successMessage.textContent = `You recharged ${formatNumberWithCommas(coins)} Coins from Get Coins to send Gifts to TikTok`;
+  successPopup.classList.add('active');
+  
+  // Add coins to balance after successful payment
+  addCoinsToBalance(coins);
+  
+  // Tự động đóng sau 3 giây và reset form
+  setTimeout(() => {
+    closeAllPopups();
+    resetForm();
+  }, 3000);
+}
 
-    // Close all popups
-    function closeAllPopups() {
-      orderPopup.classList.remove('active');
-      processingPopup.classList.remove('active');
-      successPopup.classList.remove('active');
-      clearInterval(countdownInterval);
-      resetForm(); // Reset form khi đóng popup
-    }
+// Close all popups
+function closeAllPopups() {
+  orderPopup.classList.remove('active');
+  processingPopup.classList.remove('active');
+  successPopup.classList.remove('active');
+  clearInterval(countdownInterval);
+}
+
+// Success popup - chỉ đóng khi click
+successPopup.addEventListener('click', closeAllPopups);
 
     // load/save balance persistent
     function loadBalance() {
