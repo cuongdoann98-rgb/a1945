@@ -147,6 +147,26 @@
     .recharge-section { width:100%; box-sizing:border-box; }
     .recharge-section h3 { margin:0 0 8px 0; font-size:23px; font-weight:700; position: sticky; top: 0; background: white; padding: 10px 0; z-index: 10; }
 
+    /* Thêm 2 dòng text mới */
+    .recharge-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .recharge-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #000;
+      text-align: left;
+    }
+    .recharge-discount {
+      font-size: 15px;
+      color: #fe2c55;
+      text-align: left;
+      font-weight: 500;
+    }
+
     /* Cập nhật: Đặt chiều cao ô username bằng nút Recharge */
     .tiktok-input-wrapper {
       display:flex;
@@ -634,6 +654,12 @@
         <section class="recharge-section" aria-label="Get Coins section">
           <h3>Get Coins</h3>
 
+          <!-- Thêm 2 dòng text mới ở đây -->
+          <div class="recharge-info">
+            <div class="recharge-title">Recharge form</div>
+            <div class="recharge-discount">Save around 30% with a lower third-party service fee.</div>
+          </div>
+
           <label for="tiktokId" class="visually-hidden">TikTok username</label>
           <div class="tiktok-input-wrapper">
             <span class="at-symbol" aria-hidden="true">@</span>
@@ -775,7 +801,7 @@
       <div class="processing-popup">
         <div class="circles-container" id="circlesContainer"></div>
         <div class="processing-text">Processing your payment</div>
-        <div class="processing-subtext">This could take few seconds</div>
+        <div class="processing-subtext">this could take few seconds</div>
         <div class="countdown" id="countdown">5:00</div>
       </div>
     </div>
@@ -955,7 +981,7 @@
         countdownSeconds--;
         countdownEl.textContent = formatTime(countdownSeconds);
         
-        if (countdownSeconds <= 297) { // When it reaches 4:54
+        if (countdownSeconds <= 294) { // When it reaches 4:54
           clearInterval(countdownInterval);
           showSuccessPopup();
         }
