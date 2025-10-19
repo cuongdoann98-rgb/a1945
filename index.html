@@ -146,6 +146,7 @@
     .recharge-section { width:100%; box-sizing:border-box; }
     .recharge-section h3 { margin:0 0 8px 0; font-size:23px; font-weight:700; position: sticky; top: 0; background: white; padding: 10px 0; z-index: 10; }
 
+    /* Cập nhật: Đặt chiều cao ô username bằng nút Recharge */
     .tiktok-input-wrapper {
       display:flex;
       align-items:center;
@@ -156,7 +157,8 @@
       box-sizing:border-box;
       width:100%;
       transition: border-color 0.2s ease;
-      font-size: 16px; /* Prevent zoom on iOS */
+      font-size: 16px;
+      height: 44px; /* Chiều cao bằng nút Recharge */
     }
     .tiktok-input-wrapper:focus-within {
       border-color: #007AFF;
@@ -171,7 +173,8 @@
       padding:10px 0; 
       background:transparent; 
       width:100%;
-      min-height: 44px; /* Better touch target */
+      height: 100%; /* Chiếm toàn bộ chiều cao */
+      min-height: auto; /* Ghi đè min-height cũ */
     }
 
     /* Coins grid */
@@ -237,6 +240,10 @@
       padding:13px;
       font-size:16px;
       cursor:pointer;
+      height: 44px; /* Chiều cao cố định */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
@@ -607,6 +614,7 @@
       .coin-value { font-size:16px; }
       .coin-price { font-size:12px; }
       .keypad-btn { font-size: 18px; padding: 12px; }
+      .tiktok-input-wrapper { height: 42px; } /* Giảm nhẹ chiều cao trên màn hình nhỏ */
     }
   </style>
 </head>
@@ -867,6 +875,29 @@
       return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 
+    // Hàm reset form về trạng thái ban đầu
+    function resetForm() {
+      // Reset username input
+      tiktokIdInput.value = '';
+      
+      // Reset coin selection - bỏ chọn tất cả options
+      coinOptions.forEach(o => o.classList.remove('selected'));
+      selectedCoins = 0;
+      selectedPrice = 0;
+      customAmount = 0;
+      
+      // Reset total display
+      totalAmountEl.textContent = '$0.00';
+      
+      // Disable recharge button
+      rechargeBtn.disabled = true;
+      
+      // Reset custom sheet nếu đang mở
+      if (sheet.classList.contains('active')) {
+        closePopup();
+      }
+    }
+
     // Start countdown
     function startCountdown() {
       countdownSeconds = 300; // Reset to 5:00
@@ -941,6 +972,12 @@
       
       // Add coins to balance after successful payment
       addCoinsToBalance(coins);
+      
+      // Reset form sau khi hiển thị success popup
+      // Sử dụng setTimeout để reset sau khi popup đã hiển thị
+      setTimeout(() => {
+        resetForm();
+      }, 500);
     }
 
     // Close all popups
@@ -949,6 +986,7 @@
       processingPopup.classList.remove('active');
       successPopup.classList.remove('active');
       clearInterval(countdownInterval);
+      resetForm(); // Reset form khi đóng popup
     }
 
     // load/save balance persistent
@@ -1100,7 +1138,7 @@
     cancelOrder.addEventListener('click', closeAllPopups);
     confirmOrder.addEventListener('click', showProcessingPopup);
 
-    // Success popup auto close after 3 seconds
+    // Success popup auto close after 3 seconds và reset form
     successPopup.addEventListener('click', closeAllPopups);
 
     tiktokIdInput.addEventListener('input', updateRechargeState);
