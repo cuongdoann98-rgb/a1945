@@ -6,6 +6,7 @@
   <title>Nạp Coins TikTok</title>
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
 
   <style>
     :root{
@@ -27,6 +28,17 @@
       -webkit-font-smoothing:antialiased;
       -webkit-text-size-adjust:100%;
       touch-action: pan-y;
+      overflow: hidden;
+    }
+
+    #p5-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .phone {
@@ -37,6 +49,7 @@
       position: relative;
       background: transparent;
       overflow: hidden;
+      z-index: 1;
     }
 
     /* Header - Fixed */
@@ -619,6 +632,8 @@
   </style>
 </head>
 <body>
+  <div id="p5-canvas"></div>
+  
   <div class="phone">
     <header class="ios-header" role="banner">
       <div class="header-inner">
@@ -802,6 +817,55 @@
   </div>
 
   <script>
+    // Processing animation
+    let r = 28;
+    let amp = 30;
+    let speed = 0.005;
+
+    function setup() {
+      let canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('p5-canvas');
+      noStroke();
+    }
+
+    function draw() {
+      clear();
+      background(255); // Background trắng
+
+      let t = millis() * speed;
+      let d = sin(t) * amp;   // d>0 => cyan bên phải, d<0 => cyan bên trái
+
+      let cx = width/2;
+      let cy = height/2;
+
+      // hai vị trí đối xứng
+      let xL = cx - abs(d);
+      let xR = cx + abs(d);
+
+      // xác định lúc này màu nào đang ở trái, màu nào ở phải
+      let leftColor, rightColor;
+      if (d < 0) {
+        // sin âm → cyan bên trái, pink bên phải
+        leftColor  = [0,255,255];
+        rightColor = [255,0,85];
+      } else {
+        // sin dương → pink bên trái, cyan bên phải
+        leftColor  = [255,0,85];
+        rightColor = [0,255,255];
+      }
+
+      // vẽ trái trước, phải sau -> đảm bảo bên phải đè
+      fill(leftColor);
+      ellipse(xL, cy, r*2, r*2);
+
+      fill(rightColor);
+      ellipse(xR, cy, r*2, r*2);
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+
     // DOM refs
     const coinOptions = Array.from(document.querySelectorAll('.coin-option'));
     const customOption = document.getElementById('customOption');
