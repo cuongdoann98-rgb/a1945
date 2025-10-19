@@ -265,6 +265,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      justify-content: center; /* THÊM DÒNG NÀY */
+      gap: 4px; /* THÊM DÒNG NÀY - khoảng cách giữa icon và chữ */
     }
     .done-btn[disabled] { opacity:0.6; cursor:not-allowed; }
 
@@ -720,6 +722,19 @@
       .keypad-btn { font-size: 18px; padding: 12px; }
       .tiktok-input-wrapper { height: 42px; } /* Giảm nhẹ chiều cao trên màn hình nhỏ */
     }
+    /* Protect icon styles */
+.protect-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.done-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Thêm khoảng cách giữa icon và chữ */
+}
   </style>
 </head>
 <body>
@@ -810,7 +825,10 @@
           </div>
 
           <div class="total-line"><span>Total:</span><span id="totalAmount">$0.00</span></div>
-          <button class="done-btn" id="rechargeBtn" type="button" disabled>Recharge</button>
+          <button class="done-btn" id="rechargeBtn" type="button" disabled>
+              <img src="protect.png" alt="protect icon" class="protect-icon">
+              Recharge
+            </button>
         </div>
       </div>
     </div>
@@ -857,7 +875,10 @@
           <span class="total-value" id="sheetTotalAmount">$0.00</span>
         </div>
         
-        <button class="done-btn" id="confirmCustom" type="button">Recharge</button>
+        <button class="done-btn" id="confirmCustom" type="button">
+          <img src="protect.png" alt="protect icon" class="protect-icon">
+          Recharge
+        </button>
       </div>
     </div>
 
