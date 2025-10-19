@@ -325,12 +325,13 @@
       flex-direction: column;
     }
     
+    /* Cập nhật: Number of Coins và mũi tên thanh mỏng căn trái */
     .number-of-coins-row {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 20px;
-      justify-content: center;
+      justify-content: flex-start; /* Căn trái */
     }
     
     .number-of-coins-text {
@@ -338,20 +339,24 @@
       font-weight: 500;
     }
     
-    .thin-arrow {
+    .arrow-symbol {
       font-size: 14px;
       color: #666;
       font-weight: 300;
+      transform: scale(1.3);
+      display: inline-block;
     }
     
+    /* Cập nhật: Coin input section căn trái */
     .coin-input-section {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start; /* Căn trái */
       gap: 10px;
       margin: 20px 0;
       padding: 15px;
-      background: #f8f8f8;
+      background: #fff; /* Đổi màu nền thành trắng */
+      border: 1.5px solid #e0e0e0;
       border-radius: 12px;
     }
     
@@ -360,21 +365,25 @@
       background: transparent;
       font-size: 24px;
       font-weight: bold;
-      text-align: center;
+      text-align: left; /* Căn trái */
       outline: none;
-      width: 200px;
+      width: 100%;
       color: #000;
     }
     
+    /* Cập nhật: Keypad với màu nền xám */
     .keypad {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
       margin: 20px 0;
+      background: #f8f8f8; /* Màu nền xám cho bàn phím */
+      padding: 15px;
+      border-radius: 12px;
     }
     
     .keypad-btn {
-      background: #fff;
+      background: #fff; /* Nút bàn phím màu trắng */
       border: 1.5px solid #e0e0e0;
       border-radius: 12px;
       padding: 15px;
@@ -730,16 +739,19 @@
         <div class="help-icon">?</div>
       </div>
       <div class="sheet-body">
+        <!-- Cập nhật: Number of Coins và mũi tên thanh mỏng căn trái -->
         <div class="number-of-coins-row">
           <div class="number-of-coins-text">Number of Coins</div>
-          <div class="thin-arrow">▼</div>
+          <div class="arrow-symbol">▼</div> <!-- Mũi tên thanh mỏng hướng xuống -->
         </div>
         
+        <!-- Cập nhật: Coin input section căn trái -->
         <div class="coin-input-section">
           <img src="coin.png" alt="coin icon" style="width: 24px; height: 24px;">
           <input type="text" class="coin-input" id="customCoinInput" value="0" aria-label="Number of coins" inputmode="numeric" />
         </div>
         
+        <!-- Cập nhật: Keypad với màu nền xám -->
         <div class="keypad">
           <button class="keypad-btn" data-key="1">1</button>
           <button class="keypad-btn" data-key="2">2</button>
@@ -1203,7 +1215,7 @@
         // Show order summary
         showOrderSummary();
       }
-    });
+    }
 
     // Recharge button shows order summary
     rechargeBtn.addEventListener('click', () => {
