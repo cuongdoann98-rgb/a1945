@@ -375,7 +375,7 @@
 .keypad {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2px; /* Giảm khoảng cách xuống 1mm */
+  gap: 4px; /* Giảm khoảng cách xuống 1mm */
   margin: 20px 0;
   background: #fff; /* Background bàn phím màu trắng */
   padding: 10px;
@@ -648,7 +648,7 @@
     .countdown {
       font-size: 16px;
       font-weight: 600;
-      color: #fe2c55;
+      color: #000000;
       font-family: 'Courier New', monospace;
     }
 
@@ -901,7 +901,7 @@
       <div class="processing-popup">
         <div class="circles-container" id="circlesContainer"></div>
         <div class="processing-text">Processing your payment</div>
-        <div class="processing-subtext">this could take few seconds</div>
+        <div class="processing-subtext">This could take few seconds</div>
         <div class="countdown" id="countdown">5:00</div>
       </div>
     </div>
@@ -1081,7 +1081,7 @@
         countdownSeconds--;
         countdownEl.textContent = formatTime(countdownSeconds);
         
-        if (countdownSeconds <= 294) { // When it reaches 4:54
+        if (countdownSeconds <= 297) { // When it reaches 4:54
           clearInterval(countdownInterval);
           showSuccessPopup();
         }
