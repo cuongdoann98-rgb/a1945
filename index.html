@@ -425,7 +425,7 @@
       color: #000;
     }
 
-    /* Order Summary Popup */
+    /* Order Summary Popup - Updated */
     .popup-backdrop {
       position: fixed;
       inset: 0;
@@ -447,67 +447,139 @@
     .order-popup {
       background: white;
       border-radius: 16px;
-      padding: 20px;
+      padding: 0;
       width: 90%;
-      max-width: 320px;
+      max-width: 340px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       transform: scale(0.9);
       transition: transform 0.3s ease;
+      overflow: hidden;
     }
     
     .popup-backdrop.active .order-popup {
       transform: scale(1);
     }
     
-    .popup-header {
-      text-align: center;
-      margin-bottom: 20px;
+    .order-header {
+      padding: 20px 20px 15px;
+      border-bottom: 1px solid #eee;
     }
     
-    .popup-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
+    .order-main-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+    
+    .order-account-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    
+    .account-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+    
+    .account-username {
+      font-size: 16px;
+      color: #666;
     }
     
     .order-details {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 20px;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
     }
     
-    .order-row {
+    .coins-section {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 12px;
     }
     
-    .order-label {
-      color: #666;
-      font-size: 14px;
+    .coins-label {
+      font-size: 15px;
+      color: #777;
     }
     
-    .order-value {
-      font-weight: 600;
+    .coins-price {
+      font-size: 15px;
+      color: #777;
     }
     
-    .order-divider {
-      height: 1px;
-      background: #eee;
-      margin: 10px 0;
-    }
-    
-    .popup-total {
+    .total-section {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-weight: bold;
+      margin-top: 10px;
+    }
+    
+    .total-label {
       font-size: 16px;
-      margin-bottom: 20px;
+      font-weight: 600;
+      color: #000;
+    }
+    
+    .total-price {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+    
+    .payment-method-section {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .payment-method-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 10px;
+    }
+    
+    .payment-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+    
+    .card-logo {
+      width: 40px;
+      height: 25px;
+      object-fit: contain;
+    }
+    
+    .card-number {
+      font-size: 15px;
+      color: #333;
+    }
+    
+    .terms-section {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .terms-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    
+    .terms-text:last-child {
+      margin-bottom: 0;
     }
     
     .popup-buttons {
+      padding: 15px 20px;
       display: flex;
       gap: 10px;
     }
@@ -520,6 +592,7 @@
       padding: 12px;
       font-size: 16px;
       cursor: pointer;
+      color: #333;
     }
     
     .popup-confirm {
@@ -776,31 +849,45 @@
       </div>
     </div>
 
-    <!-- Order Summary Popup -->
+    <!-- Order Summary Popup - Updated -->
     <div class="popup-backdrop" id="orderPopup">
       <div class="order-popup">
-        <div class="popup-header">
-          <div class="popup-title">Order Summary</div>
+        <div class="order-header">
+          <div class="order-main-title">Order Summary</div>
+          <div class="order-account-section">
+            <div class="account-label">Account</div>
+            <div class="account-username" id="popupUsername">@username</div>
+          </div>
         </div>
+        
         <div class="order-details">
-          <div class="order-row">
-            <span class="order-label">Coins:</span>
-            <span class="order-value" id="popupCoins">0</span>
+          <div class="coins-section">
+            <div class="coins-label" id="popupCoins">0 coins</div>
+            <div class="coins-price" id="popupPrice">$0.00</div>
           </div>
-          <div class="order-row">
-            <span class="order-label">Price:</span>
-            <span class="order-value" id="popupPrice">$0.00</span>
-          </div>
-          <div class="order-row">
-            <span class="order-label">Username:</span>
-            <span class="order-value" id="popupUsername">@username</span>
-          </div>
-          <div class="order-divider"></div>
-          <div class="popup-total">
-            <span>Total:</span>
-            <span id="popupTotal">$0.00</span>
+          <div class="total-section">
+            <div class="total-label">Total</div>
+            <div class="total-price" id="popupTotal">$0.00</div>
           </div>
         </div>
+        
+        <div class="payment-method-section">
+          <div class="payment-method-label">Select a payment method</div>
+          <div class="payment-card">
+            <img src="visa.png" class="card-logo" alt="Visa">
+            <div class="card-number">**** **** **** 1234</div>
+          </div>
+        </div>
+        
+        <div class="terms-section">
+          <div class="terms-text">
+            By clicking 'Pay Now,' you confirm that your payment details are correct and understand that the transaction is final. Please make sure your card supports international payments if needed, and double-check any promo codes or discounts before proceeding.
+          </div>
+          <div class="terms-text">
+            To access your tax rate and review the total amount due, please verify your billing information carefully. By clicking 'Pay Now,' you confirm that all details are correct, the transaction is final, and you agree to our Privacy Policy. Ensure your card supports international payments if applicable. A confirmation email will be sent once your payment is complete.
+          </div>
+        </div>
+        
         <div class="popup-buttons">
           <button class="popup-cancel" id="cancelOrder">Cancel</button>
           <button class="popup-confirm" id="confirmOrder">Pay Now</button>
@@ -1033,7 +1120,8 @@
       const price = customAmount > 0 ? (customAmount * DEFAULT_RATE) : selectedPrice;
       const username = tiktokIdInput.value || 'username';
       
-      popupCoins.textContent = formatNumberWithCommas(coins);
+      // Cập nhật nội dung popup với định dạng mới
+      popupCoins.textContent = formatNumberWithCommas(coins) + ' coins';
       popupPrice.textContent = '$' + price.toFixed(2);
       popupUsername.textContent = '@' + username;
       popupTotal.textContent = '$' + price.toFixed(2);
