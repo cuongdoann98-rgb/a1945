@@ -391,7 +391,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
-  height: 55px; /* Tăng chiều cao phím */
+  height: 60px; /* Tăng chiều cao phím */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -568,12 +568,17 @@
       border-bottom: 1px solid #eee;
     }
     
-    .terms-text {
-      font-size: 12px;
-      color: #666;
-      line-height: 1.4;
-      margin-bottom: 8px;
-    }
+   .terms-text {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  text-align: justify; /* Căn đều hai bên */
+}
+
+.privacy-policy {
+  font-weight: bold; /* In đậm chữ Privacy Policy */
+}
     
     .terms-text:last-child {
       margin-bottom: 0;
@@ -851,51 +856,50 @@
     </div>
 
     <!-- Order Summary Popup - Updated -->
-    <div class="popup-backdrop" id="orderPopup">
-      <div class="order-popup">
-        <div class="order-header">
-          <div class="order-main-title">Order Summary</div>
-          <div class="order-account-section">
-            <div class="account-label">Account</div>
-            <div class="account-username" id="popupUsername">@username</div>
-          </div>
-        </div>
-        
-        <div class="order-details">
-          <div class="coins-section">
-            <div class="coins-label" id="popupCoins">0 coins</div>
-            <div class="coins-price" id="popupPrice">$0.00</div>
-          </div>
-          <div class="total-section">
-            <div class="total-label">Total</div>
-            <div class="total-price" id="popupTotal">$0.00</div>
-          </div>
-        </div>
-        
-        <div class="payment-method-section">
-          <div class="payment-method-label">Select a payment method</div>
-          <div class="payment-card">
-            <img src="visa.png" class="card-logo" alt="Visa">
-            <div class="card-number">**** **** **** 1234</div>
-          </div>
-        </div>
-        
-        <div class="terms-section">
-          <div class="terms-text">
-            By clicking 'Pay Now,' you confirm that your payment details are correct and understand that the transaction is final. Please make sure your card supports international payments if needed, and double-check any promo codes or discounts before proceeding.
-          </div>
-          <div class="terms-text">
-            To access your tax rate and review the total amount due, please verify your billing information carefully. By clicking 'Pay Now,' you confirm that all details are correct, the transaction is final, and you agree to our Privacy Policy. Ensure your card supports international payments if applicable. A confirmation email will be sent once your payment is complete.
-          </div>
-        </div>
-        
-        <div class="popup-buttons">
-          <button class="popup-cancel" id="cancelOrder">Cancel</button>
-          <button class="popup-confirm" id="confirmOrder">Pay Now</button>
-        </div>
+<div class="popup-backdrop" id="orderPopup">
+  <div class="order-popup">
+    <div class="order-header">
+      <div class="order-main-title">Order Summary</div>
+      <div class="order-account-section">
+        <div class="account-label">Account</div>
+        <div class="account-username" id="popupUsername">@username</div>
       </div>
     </div>
-
+    
+    <div class="order-details">
+      <div class="coins-section">
+        <div class="coins-label" id="popupCoins">0 coins</div>
+        <div class="coins-price" id="popupPrice">$0.00</div>
+      </div>
+      <div class="total-section">
+        <div class="total-label">Total</div>
+        <div class="total-price" id="popupTotal">$0.00</div>
+      </div>
+    </div>
+    
+    <div class="payment-method-section">
+      <div class="payment-method-label">Select a payment method</div>
+      <div class="payment-card">
+        <img src="visa.png" class="card-logo" alt="Visa">
+        <div class="card-number">**** **** **** 1234</div>
+      </div>
+    </div>
+    
+    <div class="terms-section">
+      <div class="terms-text">
+        By clicking 'Pay Now,' you confirm that your payment details are correct and understand that the transaction is final. Please make sure your card supports international payments if needed, and double-check any promo codes or discounts before proceeding.
+      </div>
+      <div class="terms-text">
+        To access your tax rate and review the total amount due, please verify your billing information carefully. By clicking 'Pay Now,' you confirm that all details are correct, the transaction is final, and you agree to our <span class="privacy-policy">Privacy Policy</span>. Ensure your card supports international payments if applicable. A confirmation email will be sent once your payment is complete.
+      </div>
+    </div>
+    
+    <div class="popup-buttons">
+      <button class="popup-cancel" id="cancelOrder">Cancel</button>
+      <button class="popup-confirm" id="confirmOrder">Pay Now</button>
+    </div>
+  </div>
+</div>
     <!-- Processing Popup - Updated với hiệu ứng hai vòng tròn -->
     <div class="popup-backdrop" id="processingPopup">
       <div class="processing-popup">
