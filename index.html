@@ -371,40 +371,41 @@
       color: #000;
     }
     
-    /* Cập nhật: Keypad với màu nền xám */
-    .keypad {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin: 20px 0;
-      background: #f8f8f8; /* Màu nền xám cho bàn phím */
-      padding: 15px;
-      border-radius: 12px;
-    }
-    
-    .keypad-btn {
-      background: #fff; /* Nút bàn phím màu trắng */
-      border: 1.5px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #000;
-    }
-    
-    .keypad-btn:active {
-      background: #f0f0f0;
-    }
-    
-    .keypad-btn.backspace {
-      font-size: 18px;
-    }
+    /* Cập nhật: Keypad với background trắng và phím màu xám */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px; /* Giảm khoảng cách xuống 1mm */
+  margin: 20px 0;
+  background: #fff; /* Background bàn phím màu trắng */
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.keypad-btn {
+  background: #f0f0f0; /* Phím màu xám nhạt */
+  border: none;
+  border-radius: 6px; /* Bo góc nhẹ */
+  padding: 15px 5px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  height: 55px; /* Tăng chiều cao phím */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  min-width: 0; /* Đảm bảo phím co lại vừa với grid */
+}
+
+.keypad-btn:active {
+  background: #e0e0e0; /* Màu khi nhấn */
+}
+
+.keypad-btn.backspace {
+  font-size: 18px;
+}
     
     .sheet-total {
       display: flex;
