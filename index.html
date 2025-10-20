@@ -197,6 +197,17 @@
       height: 100%; /* Chiếm toàn bộ chiều cao */
       min-height: auto; /* Ghi đè min-height cũ */
     }
+    
+    /* Error message */
+    .error-message {
+      color: #fe2c55;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    .tiktok-input-wrapper.error {
+      border-color: #fe2c55;
+    }
 
     /* Coins grid */
     .coins-grid {
@@ -265,19 +276,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      justify-content: center; /* THÊM DÒNG NÀY */
-      gap: 4px; /* THÊM DÒNG NÀY - khoảng cách giữa icon và chữ */
+      gap: 4px; /* khoảng cách giữa icon và chữ */
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .done-btn[disabled] { opacity:1; cursor:not-allowed; }
+    .done-btn:not([disabled]):active {
+      transform: scale(0.98); /* Hiệu ứng nhấn */
+    }
+    .done-btn[disabled] { 
+      opacity: 0.6; 
+      cursor: not-allowed;
+    }
 
     /* Sheet - Updated to match requirements */
-    .sheet-backdrop {  position: fixed;
+    .sheet-backdrop {  
+      position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.4);
       opacity: 0;
       visibility: hidden;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Easing mượt hơn */
-      z-index:1500; }
+      z-index:1500; 
+    }
     .sheet-backdrop.active { opacity: 1; visibility: visible; }
     .sheet { 
       position: fixed; 
@@ -295,10 +314,12 @@
       flex-direction: column;
       transform: translateY(10px); /* Thêm transform ban đầu */
       opacity: 0; /* Thêm opacity ban đầu */
-}
-    .sheet.active { bottom: 0;
-                    transform: translateY(0); /* Reset transform */
-                    opacity: 1; }
+    }
+    .sheet.active { 
+      bottom: 0;
+      transform: translateY(0); /* Reset transform */
+      opacity: 1; 
+    }
     .sheet-header { 
       padding: 16px 20px; 
       display: flex;
@@ -384,40 +405,40 @@
     }
     
     /* Cập nhật: Keypad với background trắng và phím màu xám */
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px; /* Giảm khoảng cách xuống 1mm */
-  margin: 20px 0;
-  background: #fff; /* Background bàn phím màu trắng */
-  padding: 10px;
-  border-radius: 12px;
-}
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px; /* Giảm khoảng cách xuống 1mm */
+      margin: 20px 0;
+      background: #fff; /* Background bàn phím màu trắng */
+      padding: 10px;
+      border-radius: 12px;
+    }
 
-.keypad-btn {
-  background: #f0f0f0; /* Phím màu xám nhạt */
-  border: none;
-  border-radius: 6px; /* Bo góc nhẹ */
-  padding: 15px 5px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-  height: 55px; /* Tăng chiều cao phím */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
-  min-width: 0; /* Đảm bảo phím co lại vừa với grid */
-}
+    .keypad-btn {
+      background: #f0f0f0; /* Phím màu xám nhạt */
+      border: none;
+      border-radius: 6px; /* Bo góc nhẹ */
+      padding: 15px 5px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      height: 55px; /* Tăng chiều cao phím */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      min-width: 0; /* Đảm bảo phím co lại vừa với grid */
+    }
 
-.keypad-btn:active {
-  background: #e0e0e0; /* Màu khi nhấn */
-}
+    .keypad-btn:active {
+      background: #e0e0e0; /* Màu khi nhấn */
+    }
 
-.keypad-btn.backspace {
-  font-size: 18px;
-}
+    .keypad-btn.backspace {
+      font-size: 18px;
+    }
     
     .sheet-total {
       display: flex;
@@ -580,17 +601,17 @@
       border-bottom: 1px solid #eee;
     }
     
-   .terms-text {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.4;
-  margin-bottom: 8px;
-  text-align: justify; /* Căn đều hai bên */
-}
+    .terms-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      text-align: justify; /* Căn đều hai bên */
+    }
 
-.privacy-policy {
-  font-weight: bold; /* In đậm chữ Privacy Policy */
-}
+    .privacy-policy {
+      font-weight: bold; /* In đậm chữ Privacy Policy */
+    }
     
     .terms-text:last-child {
       margin-bottom: 0;
@@ -728,43 +749,30 @@
 
     .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
 
+    /* Protect icon styles */
+    .protect-icon {
+      width: 25px !important;
+      height: 27px !important;
+      margin-right: 0px !important;
+      display: block;
+      transform: translateY(1px);
+    }
+
+    /* Hiệu ứng cho coin options */
+    .coin-option {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .coin-option:active {
+      transform: scale(0.95);
+    }
+
     @media (max-width: 340px) {
       .coin-value { font-size:16px; }
       .coin-price { font-size:12px; }
       .keypad-btn { font-size: 18px; padding: 12px; }
       .tiktok-input-wrapper { height: 48px; } /* Giảm nhẹ chiều cao trên màn hình nhỏ */
     }
-    /* Protect icon styles */
-.protect-icon {
-  width: 25px !important;
-  height: 27px !important;
-  margin-right: 0px !important;
-  display: block;
-  transform: translateY(1px);
-}
-
-.done-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px; /* Thêm khoảng cách giữa icon và chữ */
-  /* Thêm hiệu ứng khi click nút */
-.done-btn:not([disabled]) {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.done-btn:not([disabled]):active {
-  transform: scale(0.98); /* Hiệu ứng nhấn */
-}
-
-/* Hiệu ứng cho coin options */
-.coin-option {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.coin-option:active {
-  transform: scale(0.95);
-}
   </style>
 </head>
 <body>
@@ -800,10 +808,11 @@
           </div>
 
           <label for="tiktokId" class="visually-hidden">TikTok username</label>
-          <div class="tiktok-input-wrapper">
+          <div class="tiktok-input-wrapper" id="usernameWrapper">
             <span class="at-symbol" aria-hidden="true">@</span>
             <input type="text" id="tiktokId" placeholder="username" aria-label="TikTok username" autocomplete="username">
           </div>
+          <div class="error-message" id="usernameError">Please enter a valid TikTok username</div>
 
           <div class="coins-grid" role="list">
             <div class="coin-option" role="button" tabindex="0" data-coins="70" data-price="1.00">
@@ -1046,6 +1055,8 @@
     const rechargeBtn = document.getElementById('rechargeBtn');
     const tiktokIdInput = document.getElementById('tiktokId');
     const balanceInput = document.getElementById('balanceAmount');
+    const usernameWrapper = document.getElementById('usernameWrapper');
+    const usernameError = document.getElementById('usernameError');
     
     // Custom sheet elements
     const customCoinInput = document.getElementById('customCoinInput');
@@ -1113,6 +1124,7 @@
     function resetForm() {
       // Reset username input
       tiktokIdInput.value = '';
+      hideUsernameError();
       
       // Reset coin selection - bỏ chọn tất cả options
       coinOptions.forEach(o => o.classList.remove('selected'));
@@ -1130,6 +1142,25 @@
       if (sheet.classList.contains('active')) {
         closePopup();
       }
+    }
+
+    // Hiển thị lỗi username
+    function showUsernameError() {
+      usernameWrapper.classList.add('error');
+      usernameError.style.display = 'block';
+    }
+
+    // Ẩn lỗi username
+    function hideUsernameError() {
+      usernameWrapper.classList.remove('error');
+      usernameError.style.display = 'none';
+    }
+
+    // Kiểm tra username hợp lệ
+    function validateUsername(username) {
+      // Username TikTok thường có độ dài từ 2-24 ký tự, chỉ chứa chữ cái, số, dấu gạch dưới và dấu chấm
+      const usernameRegex = /^[a-zA-Z0-9._]{2,24}$/;
+      return usernameRegex.test(username);
     }
 
     // Start countdown
@@ -1203,33 +1234,30 @@
     }
 
     // Show success popup
-function showSuccessPopup() {
-  processingPopup.classList.remove('active');
-  const coins = customAmount > 0 ? customAmount : selectedCoins;
-  successMessage.textContent = `You recharged ${formatNumberWithCommas(coins)} Coins from Get Coins to send Gifts to TikTok`;
-  successPopup.classList.add('active');
-  
-  // Add coins to balance after successful payment
-  addCoinsToBalance(coins);
-  
-  // SỬA PHẦN NÀY - Gọi closeAllPopups() thay vì closeAllPopups() và resetForm() riêng
-  setTimeout(() => {
-    closeAllPopups(); // Đã bao gồm resetForm() rồi
-  }, 3000);
-}
+    function showSuccessPopup() {
+      processingPopup.classList.remove('active');
+      const coins = customAmount > 0 ? customAmount : selectedCoins;
+      successMessage.textContent = `You recharged ${formatNumberWithCommas(coins)} Coins from Get Coins to send Gifts to TikTok`;
+      successPopup.classList.add('active');
+      
+      // Add coins to balance after successful payment
+      addCoinsToBalance(coins);
+      
+      // SỬA PHẦN NÀY - Gọi closeAllPopups() thay vì closeAllPopups() và resetForm() riêng
+      setTimeout(() => {
+        closeAllPopups(); // Đã bao gồm resetForm() rồi
+      }, 3000);
+    }
 
-// Close all popups
-function closeAllPopups() {
-  orderPopup.classList.remove('active');
-  processingPopup.classList.remove('active');
-  successPopup.classList.remove('active');
-  clearInterval(countdownInterval);
-  // THÊM DÒNG NÀY - Reset form ngay lập tức
-  resetForm();
-}
-
-// Success popup - chỉ đóng khi click
-successPopup.addEventListener('click', closeAllPopups);
+    // Close all popups
+    function closeAllPopups() {
+      orderPopup.classList.remove('active');
+      processingPopup.classList.remove('active');
+      successPopup.classList.remove('active');
+      clearInterval(countdownInterval);
+      // THÊM DÒNG NÀY - Reset form ngay lập tức
+      resetForm();
+    }
 
     // load/save balance persistent
     function loadBalance() {
@@ -1309,8 +1337,19 @@ successPopup.addEventListener('click', closeAllPopups);
     };
 
     function updateRechargeState() {
-      const hasUser = tiktokIdInput.value.trim().length > 0;
+      const username = tiktokIdInput.value.trim();
+      const hasUser = username.length > 0;
       const hasSelection = selectedCoins > 0 && selectedPrice > 0;
+      
+      // Kiểm tra username hợp lệ
+      if (hasUser && !validateUsername(username)) {
+        showUsernameError();
+        rechargeBtn.disabled = true;
+        return;
+      } else {
+        hideUsernameError();
+      }
+      
       rechargeBtn.disabled = !(hasUser && hasSelection);
     }
 
@@ -1373,6 +1412,14 @@ successPopup.addEventListener('click', closeAllPopups);
     // Recharge button shows order summary
     rechargeBtn.addEventListener('click', () => {
       if (rechargeBtn.disabled) return;
+      
+      // Kiểm tra username trước khi hiển thị popup
+      const username = tiktokIdInput.value.trim();
+      if (!validateUsername(username)) {
+        showUsernameError();
+        return;
+      }
+      
       showOrderSummary();
     });
 
