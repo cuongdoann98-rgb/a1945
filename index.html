@@ -271,7 +271,13 @@
     .done-btn[disabled] { opacity:1; cursor:not-allowed; }
 
     /* Sheet - Updated to match requirements */
-    .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transition: all .25s ease; z-index:1500; }
+    .sheet-backdrop {  position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Easing mượt hơn */
+      z-index:1500; }
     .sheet-backdrop.active { opacity: 1; visibility: visible; }
     .sheet { 
       position: fixed; 
@@ -282,13 +288,17 @@
       border-top-left-radius:20px; 
       border-top-right-radius:20px; 
       box-shadow: 0 -5px 20px rgba(0,0,0,0.2); 
-      transition: bottom .25s ease; 
+      transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Easing mượt hơn */
       z-index:1501;
       height: 70vh;
       display: flex;
       flex-direction: column;
-    }
-    .sheet.active { bottom: 0; }
+      transform: translateY(10px); /* Thêm transform ban đầu */
+      opacity: 0; /* Thêm opacity ban đầu */
+}
+    .sheet.active { bottom: 0;
+                    transform: translateY(0); /* Reset transform */
+                    opacity: 1; }
     .sheet-header { 
       padding: 16px 20px; 
       display: flex;
@@ -439,7 +449,7 @@
       z-index: 2000;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Thêm easing */
     }
     
     .popup-backdrop.active {
@@ -637,6 +647,7 @@
       height: 80px;
       margin: 0 auto 20px;
       position: relative;
+      transition: opacity 0.3s ease
     }
     
     .processing-text {
@@ -667,17 +678,18 @@
     .success-popup {
       background: white;
       border-radius: 16px;
-      padding: 40px 30px;
+      padding: 0;
       width: 90%;
-      max-width: 300px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      transform: scale(0.9);
-      transition: transform 0.3s ease;
-      text-align: center;
+      max-width: 340px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transform: scale(0.8) translateY(20px); /* Thêm translateY */
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 0; /* Thêm opacity ban đầu */
     }
     
     .popup-backdrop.active .success-popup {
-      transform: scale(1);
+       transform: scale(1) translateY(0); /* Reset translateY */
+        opacity: 1;
     }
     
     .success-icon {
@@ -736,6 +748,22 @@
   align-items: center;
   justify-content: center;
   gap: 8px; /* Thêm khoảng cách giữa icon và chữ */
+  /* Thêm hiệu ứng khi click nút */
+.done-btn:not([disabled]) {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.done-btn:not([disabled]):active {
+  transform: scale(0.98); /* Hiệu ứng nhấn */
+}
+
+/* Hiệu ứng cho coin options */
+.coin-option {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.coin-option:active {
+  transform: scale(0.95);
 }
   </style>
 </head>
