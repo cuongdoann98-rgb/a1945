@@ -1184,10 +1184,9 @@ function showSuccessPopup() {
   // Add coins to balance after successful payment
   addCoinsToBalance(coins);
   
-  // Tự động đóng sau 3 giây và reset form
+  // SỬA PHẦN NÀY - Gọi closeAllPopups() thay vì closeAllPopups() và resetForm() riêng
   setTimeout(() => {
-    closeAllPopups();
-    resetForm();
+    closeAllPopups(); // Đã bao gồm resetForm() rồi
   }, 3000);
 }
 
@@ -1197,6 +1196,8 @@ function closeAllPopups() {
   processingPopup.classList.remove('active');
   successPopup.classList.remove('active');
   clearInterval(countdownInterval);
+  // THÊM DÒNG NÀY - Reset form ngay lập tức
+  resetForm();
 }
 
 // Success popup - chỉ đóng khi click
