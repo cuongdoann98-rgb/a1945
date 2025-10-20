@@ -282,9 +282,11 @@
     .done-btn:not([disabled]):active {
       transform: scale(0.98); /* Hiệu ứng nhấn */
     }
+    /* SỬA: Loại bỏ trạng thái disabled mờ */
     .done-btn[disabled] { 
-      opacity: 0.6; 
-      cursor: not-allowed;
+      opacity: 1; /* Thay đổi từ 0.6 thành 1 */
+      cursor: pointer; /* Thay đổi từ not-allowed thành pointer */
+      background: #fe2c55; /* Giữ nguyên màu nền */
     }
 
     /* Sheet - Updated to match requirements */
@@ -864,7 +866,8 @@
           </div>
 
           <div class="total-line"><span>Total:</span><span id="totalAmount">$0.00</span></div>
-          <button class="done-btn" id="rechargeBtn" type="button" disabled>
+          <!-- SỬA: Loại bỏ disabled khỏi nút Recharge -->
+          <button class="done-btn" id="rechargeBtn" type="button">
               <img src="protect.png" alt="protect icon" class="protect-icon">
               Recharge
             </button>
@@ -1135,9 +1138,6 @@
       // Reset total display
       totalAmountEl.textContent = '$0.00';
       
-      // Disable recharge button
-      rechargeBtn.disabled = true;
-      
       // Reset custom sheet nếu đang mở
       if (sheet.classList.contains('active')) {
         closePopup();
@@ -1243,9 +1243,8 @@
       // Add coins to balance after successful payment
       addCoinsToBalance(coins);
       
-      // SỬA PHẦN NÀY - Gọi closeAllPopups() thay vì closeAllPopups() và resetForm() riêng
       setTimeout(() => {
-        closeAllPopups(); // Đã bao gồm resetForm() rồi
+        closeAllPopups();
       }, 3000);
     }
 
@@ -1255,7 +1254,6 @@
       processingPopup.classList.remove('active');
       successPopup.classList.remove('active');
       clearInterval(countdownInterval);
-      // THÊM DÒNG NÀY - Reset form ngay lập tức
       resetForm();
     }
 
@@ -1336,7 +1334,8 @@
       if (focused) focused.focus();
     };
 
-    function updateRechargeState() {
+    // Kiểm tra điều kiện để hiển thị popup
+    function canProceedToPayment() {
       const username = tiktokIdInput.value.trim();
       const hasUser = username.length > 0;
       const hasSelection = selectedCoins > 0 && selectedPrice > 0;
@@ -1344,13 +1343,12 @@
       // Kiểm tra username hợp lệ
       if (hasUser && !validateUsername(username)) {
         showUsernameError();
-        rechargeBtn.disabled = true;
-        return;
+        return false;
       } else {
         hideUsernameError();
       }
       
-      rechargeBtn.disabled = !(hasUser && hasSelection);
+      return hasUser && hasSelection;
     }
 
     // option handlers
@@ -1367,7 +1365,6 @@
           selectedCoins = Number.isFinite(coins) ? coins : 0;
           selectedPrice = Number.isFinite(price) ? price : 0;
           totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
-          updateRechargeState();
         }
       }
       option.addEventListener('click', selectOption);
@@ -1398,25 +1395,18 @@
         selectedCoins = customAmount;
         selectedPrice = customAmount * DEFAULT_RATE;
         totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
-        updateRechargeState();
         closePopup();
         
         // Clear selection from other options
         coinOptions.forEach(o => o.classList.remove('selected'));
-        
-        // Show order summary
-        showOrderSummary();
       }
     });
 
-    // Recharge button shows order summary
+    // Recharge button shows order summary - SỬA: Luôn click được
     rechargeBtn.addEventListener('click', () => {
-      if (rechargeBtn.disabled) return;
-      
-      // Kiểm tra username trước khi hiển thị popup
-      const username = tiktokIdInput.value.trim();
-      if (!validateUsername(username)) {
-        showUsernameError();
+      // Kiểm tra điều kiện trước khi hiển thị popup
+      if (!canProceedToPayment()) {
+        alert('Please enter a valid TikTok username and select a coin package');
         return;
       }
       
@@ -1429,8 +1419,6 @@
 
     // Success popup auto close after 3 seconds và reset form
     successPopup.addEventListener('click', closeAllPopups);
-
-    tiktokIdInput.addEventListener('input', updateRechargeState);
 
     backBtn.addEventListener('click', () => {
       if (confirm('Are you sure you want to go back? Any unsaved changes will be lost.')) {
@@ -1452,7 +1440,6 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       loadBalance();
-      updateRechargeState();
       updateCustomDisplay();
     });
 
