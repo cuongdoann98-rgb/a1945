@@ -765,11 +765,6 @@
 .coin-option:active {
   transform: scale(0.95);
 }
-  /* Thêm dòng chữ thông báo xử lý */
-.processing-notice {
-  margin-top: 8px;
-  font-style: italic;
-}
   </style>
 </head>
 <body>
@@ -978,8 +973,8 @@
         <div class="success-icon"></div>
         <div class="success-title">Payment Completed</div>
         <div class="success-message" id="successMessage">You recharged 0 Coins from Get Coins to send Gifts to TikTok</div>
-        <!-- THÊM DÒNG NÀY -->
-        <div class="success-message processing-notice">This operation has been completed. It will be processed within 24 hours.</div>
+        <!-- XÓA CLASS processing-notice, CHỈ DÙNG success-message -->
+        <div class="success-message">This operation has been completed. It will be processed within 24 hours.</div>
       </div>
     </div>
 
