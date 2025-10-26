@@ -1214,9 +1214,12 @@ function showSuccessPopup() {
   // Add coins to balance after successful payment
   addCoinsToBalance(coins);
   
-  // SỬA PHẦN NÀY - Gọi closeAllPopups() thay vì closeAllPopups() và resetForm() riêng
+ // SỬA PHẦN NÀY - CHỈ đóng popup sau 3s, KHÔNG reset form
   setTimeout(() => {
-    closeAllPopups(); // Đã bao gồm resetForm() rồi
+    // Chỉ đóng popup, không gọi closeAllPopups() (vì nó reset form)
+    processingPopup.classList.remove('active');
+    successPopup.classList.remove('active');
+    clearInterval(countdownInterval);
   }, 3000);
 }
 
@@ -1230,8 +1233,10 @@ function closeAllPopups() {
   resetForm();
 }
 
-// Success popup - chỉ đóng khi click
-successPopup.addEventListener('click', closeAllPopups);
+// Success popup - khi click thì đóng VÀ reset form
+successPopup.addEventListener('click', function() {
+  closeAllPopups(); // Đóng popup và reset form ngay lập tức
+});
 
     // load/save balance persistent
     function loadBalance() {
