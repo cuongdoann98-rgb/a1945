@@ -678,7 +678,7 @@
     .success-popup {
       background: white;
       border-radius: 16px;
-      padding: 40px 30px;
+      padding: 30px 25px;
       width: 90%;
       max-width: 320px; /* Tăng từ 300px lên 320px */
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -726,6 +726,30 @@
       text-align: center;
     }
 
+    /* STYLE CHO NÚT GO BACK MÀU HỒNG GIỐNG RECHARGE */
+    .go-back-btn {
+      width: 100%;
+      background: #fe2c55;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+    }
+
+    .go-back-btn:active {
+      transform: scale(0.98);
+      background: #e0264a;
+    }
+
     .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
 
     @media (max-width: 340px) {
@@ -748,7 +772,9 @@
   align-items: center;
   justify-content: center;
   gap: 8px; /* Thêm khoảng cách giữa icon và chữ */
-  /* Thêm hiệu ứng khi click nút */
+}
+
+/* Thêm hiệu ứng khi click nút */
 .done-btn:not([disabled]) {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -967,14 +993,16 @@
       </div>
     </div>
 
-    <!-- Success Popup -->
+    <!-- Success Popup với nút Go Back -->
     <div class="popup-backdrop" id="successPopup">
       <div class="success-popup">
         <div class="success-icon"></div>
         <div class="success-title">Payment Completed</div>
         <div class="success-message" id="successMessage">You recharged 0 Coins from Get Coins to send Gifts to TikTok</div>
-        <!-- XÓA CLASS processing-notice, CHỈ DÙNG success-message -->
         <div class="success-message">This operation has been completed. It will be processed within 24 hours.</div>
+        
+        <!-- NÚT GO BACK MÀU HỒNG -->
+        <button class="go-back-btn" id="goBackBtn">Go Back</button>
       </div>
     </div>
 
@@ -1068,6 +1096,7 @@
     const countdownEl = document.getElementById('countdown');
     const successMessage = document.getElementById('successMessage');
     const circlesContainer = document.getElementById('circlesContainer');
+    const goBackBtn = document.getElementById('goBackBtn'); // NÚT GO BACK MỚI
 
     const backBtn = document.getElementById('backBtn');
     const moreBtn = document.getElementById('moreBtn');
@@ -1132,6 +1161,18 @@
       if (sheet.classList.contains('active')) {
         closePopup();
       }
+    }
+
+    // HÀM MỚI - Chỉ đóng success popup
+    function closeSuccessPopupOnly() {
+      successPopup.classList.remove('active');
+      clearInterval(countdownInterval);
+    }
+
+    // HÀM MỚI - Xử lý khi click Go Back (đóng + reset)
+    function handleGoBack() {
+      closeSuccessPopupOnly();
+      resetForm();
     }
 
     // Start countdown
@@ -1204,39 +1245,26 @@
       startCountdown();
     }
 
-    // Show success popup
-function showSuccessPopup() {
-  processingPopup.classList.remove('active');
-  const coins = customAmount > 0 ? customAmount : selectedCoins;
-  successMessage.textContent = `You recharged ${formatNumberWithCommas(coins)} Coins from Get Coins to send Gifts to TikTok`;
-  successPopup.classList.add('active');
-  
-  // Add coins to balance after successful payment
-  addCoinsToBalance(coins);
-  
- // SỬA PHẦN NÀY - CHỈ đóng popup sau 3s, KHÔNG reset form
-  setTimeout(() => {
-    // Chỉ đóng popup, không gọi closeAllPopups() (vì nó reset form)
-    processingPopup.classList.remove('active');
-    successPopup.classList.remove('active');
-    clearInterval(countdownInterval);
-  }, 3000);
-}
+    // Show success popup - ĐÃ SỬA
+    function showSuccessPopup() {
+      processingPopup.classList.remove('active');
+      const coins = customAmount > 0 ? customAmount : selectedCoins;
+      successMessage.textContent = `You recharged ${formatNumberWithCommas(coins)} Coins from Get Coins to send Gifts to TikTok`;
+      successPopup.classList.add('active');
+      
+      // Add coins to balance after successful payment
+      addCoinsToBalance(coins);
+      
+      // KHÔNG CÓ timeout tự động đóng
+    }
 
-// Close all popups
-function closeAllPopups() {
-  orderPopup.classList.remove('active');
-  processingPopup.classList.remove('active');
-  successPopup.classList.remove('active');
-  clearInterval(countdownInterval);
-  // THÊM DÒNG NÀY - Reset form ngay lập tức
-  resetForm();
-}
-
-// Success popup - khi click thì đóng VÀ reset form
-successPopup.addEventListener('click', function() {
-  closeAllPopups(); // Đóng popup và reset form ngay lập tức
-});
+    // Close all popups - ĐÃ SỬA
+    function closeAllPopups() {
+      orderPopup.classList.remove('active');
+      processingPopup.classList.remove('active');
+      successPopup.classList.remove('active');
+      clearInterval(countdownInterval);
+    }
 
     // load/save balance persistent
     function loadBalance() {
@@ -1387,8 +1415,15 @@ successPopup.addEventListener('click', function() {
     cancelOrder.addEventListener('click', closeAllPopups);
     confirmOrder.addEventListener('click', showProcessingPopup);
 
-    // Success popup auto close after 3 seconds và reset form
-    successPopup.addEventListener('click', closeAllPopups);
+    // EVENT LISTENER MỚI CHO NÚT GO BACK
+    goBackBtn.addEventListener('click', handleGoBack);
+
+    // Success popup - chỉ đóng khi click background, không reset
+    successPopup.addEventListener('click', function(e) {
+      if (e.target === successPopup) {
+        closeSuccessPopupOnly(); // Chỉ đóng, không reset
+      }
+    });
 
     tiktokIdInput.addEventListener('input', updateRechargeState);
 
