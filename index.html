@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AhaMove Driver Demo</title>
+    <title>AhaMove Cam - Driver App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="https://img.icons8.com/color/96/delivery--v1.png" type="image/x-icon">
     <style>
         * {
             margin: 0;
@@ -14,18 +13,20 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #f1f5f9;
+            background-color: #fff8f0;
             color: #333;
             padding-bottom: 80px;
             max-width: 500px;
             margin: 0 auto;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
         }
         .header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: linear-gradient(135deg, #f97316, #fb923c);
             color: white;
             padding: 25px 20px;
             text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
         }
         .header h1 {
             font-size: 28px;
@@ -48,10 +49,11 @@
             margin: 15px;
             padding: 15px;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            border: 2px solid #fed7aa;
         }
         .status-online {
-            background: #10b981;
+            background: #22c55e;
             color: white;
             padding: 8px 15px;
             border-radius: 20px;
@@ -65,7 +67,8 @@
             margin: 15px;
             padding: 20px;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            border: 2px solid #fed7aa;
         }
         .stat-item {
             text-align: center;
@@ -73,7 +76,7 @@
         .stat-value {
             font-size: 28px;
             font-weight: bold;
-            color: #4f46e5;
+            color: #f97316;
         }
         .stat-label {
             font-size: 14px;
@@ -81,7 +84,7 @@
             margin-top: 5px;
         }
         .map-placeholder {
-            background: linear-gradient(to bottom, #a5b4fc, #818cf8);
+            background: linear-gradient(to bottom, #fdba74, #fb923c);
             height: 200px;
             margin: 15px;
             border-radius: 20px;
@@ -92,12 +95,13 @@
             font-size: 18px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.2);
+            border: 2px solid #fdba74;
         }
         .map-overlay {
             z-index: 1;
             text-align: center;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
             padding: 20px;
             border-radius: 15px;
@@ -107,7 +111,7 @@
         }
         .order-list h3 {
             margin-bottom: 15px;
-            color: #4f46e5;
+            color: #ea580c;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -117,8 +121,9 @@
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-left: 5px solid #10b981;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            border-left: 5px solid #f97316;
+            border: 2px solid #fed7aa;
             transition: transform 0.3s;
         }
         .order-item:hover {
@@ -132,11 +137,11 @@
         }
         .order-id {
             font-weight: bold;
-            color: #4f46e5;
+            color: #ea580c;
             font-size: 18px;
         }
         .order-price {
-            background: linear-gradient(to right, #10b981, #34d399);
+            background: linear-gradient(to right, #f97316, #fb923c);
             color: white;
             padding: 8px 20px;
             border-radius: 20px;
@@ -152,11 +157,11 @@
         }
         .order-info i {
             margin-right: 12px;
-            color: #7c3aed;
+            color: #f97316;
             width: 20px;
         }
         .btn-accept {
-            background: linear-gradient(to right, #4f46e5, #7c3aed);
+            background: linear-gradient(to right, #f97316, #fb923c);
             color: white;
             border: none;
             padding: 15px 0;
@@ -171,11 +176,12 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            border: 2px solid #fdba74;
         }
         .btn-accept:hover {
             opacity: 0.9;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 6px 12px rgba(249, 115, 22, 0.3);
         }
         .bottom-nav {
             position: fixed;
@@ -189,6 +195,7 @@
             box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
             max-width: 500px;
             margin: 0 auto;
+            border-top: 2px solid #fed7aa;
         }
         .nav-item {
             text-align: center;
@@ -199,8 +206,8 @@
             border-radius: 10px;
         }
         .nav-item.active, .nav-item:hover {
-            color: #4f46e5;
-            background: #f1f5f9;
+            color: #f97316;
+            background: #ffedd5;
         }
         .nav-item i {
             font-size: 22px;
@@ -233,12 +240,21 @@
             100% { transform: scale(1); }
         }
         .new-order-badge {
-            background: #f59e0b;
+            background: #f97316;
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 12px;
             margin-left: 10px;
+        }
+        .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
         }
     </style>
 </head>
@@ -247,31 +263,31 @@
     
     <div class="header">
         <h1><i class="fas fa-shipping-fast"></i> AhaMove Driver</h1>
-        <p>Xin chào, Nguyễn Văn Tài!</p>
-        <p><i class="fas fa-motorcycle"></i> Xe máy • Biển số: 51G-12345</p>
+        <p><span class="online-dot"></span>Đang trực tuyến - Sẵn sàng nhận đơn</p>
+        <!-- ĐÃ XOÁ THÔNG TIN TÀI XẾ VÀ XE MÁY Ở ĐÂY -->
     </div>
 
     <div class="driver-status">
         <div>
-            <div style="font-weight: bold; font-size: 16px;">Trạng thái</div>
-            <div style="color: #666; font-size: 14px;">Khu vực: Quận 1, TP.HCM</div>
+            <div style="font-weight: bold; font-size: 16px;">Khu vực hoạt động</div>
+            <div style="color: #666; font-size: 14px;">Quận 1, Quận 3, Quận 5 - TP.HCM</div>
         </div>
         <div class="status-online">
-            <i class="fas fa-wifi"></i> ĐANG TRỰC TUYẾN
+            <i class="fas fa-bolt"></i> ONLINE
         </div>
     </div>
 
     <div class="stats">
         <div class="stat-item">
-            <div class="stat-value">12</div>
+            <div class="stat-value">0</div>
             <div class="stat-label">Đơn hôm nay</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">₫1.25M</div>
+            <div class="stat-value">₫0</div>
             <div class="stat-label">Thu nhập</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">4.8 <i class="fas fa-star" style="color: #fbbf24;"></i></div>
+            <div class="stat-value">5.0 <i class="fas fa-star" style="color: #fbbf24;"></i></div>
             <div class="stat-label">Đánh giá</div>
         </div>
     </div>
@@ -279,17 +295,17 @@
     <div class="map-placeholder">
         <div class="map-overlay">
             <i class="fas fa-map-marked-alt" style="font-size: 48px; margin-bottom: 10px;"></i>
-            <p>Bản đồ khu vực Quận 1</p>
-            <small><i class="fas fa-circle" style="color: #10b981; font-size: 8px;"></i> 5 đơn hàng gần bạn</small>
+            <p>Bản đồ khu vực trung tâm</p>
+            <small><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> Đang tìm đơn hàng...</small>
         </div>
     </div>
 
     <div class="order-list">
-        <h3><i class="fas fa-bolt"></i> Đơn hàng gần bạn <span class="new-order-badge">MỚI</span></h3>
+        <h3><i class="fas fa-bolt" style="color: #f97316;"></i> Đơn hàng có sẵn <span class="new-order-badge">MỚI</span></h3>
         
         <div class="order-item">
             <div class="order-header">
-                <span class="order-id">#AHM23456</span>
+                <span class="order-id">#AHM001</span>
                 <span class="order-price">₫45.000</span>
             </div>
             <div class="order-info">
@@ -302,20 +318,20 @@
             </div>
             <div class="order-info">
                 <i class="fas fa-box"></i>
-                <span>Tài liệu • 0.5kg</span>
+                <span>Tài liệu văn phòng • 0.5kg</span>
             </div>
             <div class="order-info">
                 <i class="far fa-clock"></i>
                 <span>Nhận trong 10 phút</span>
             </div>
-            <button class="btn-accept" onclick="acceptOrder('AHM23456')">
+            <button class="btn-accept" onclick="acceptOrder('AHM001')">
                 <i class="fas fa-check-circle"></i> NHẬN ĐƠN NÀY
             </button>
         </div>
 
         <div class="order-item">
             <div class="order-header">
-                <span class="order-id">#AHM23457</span>
+                <span class="order-id">#AHM002</span>
                 <span class="order-price">₫68.000</span>
             </div>
             <div class="order-info">
@@ -334,8 +350,34 @@
                 <i class="fas fa-crown" style="color: #fbbf24;"></i>
                 <span>Ưu tiên • Thưởng thêm ₫10.000</span>
             </div>
-            <button class="btn-accept" onclick="acceptOrder('AHM23457')">
+            <button class="btn-accept" onclick="acceptOrder('AHM002')">
                 <i class="fas fa-bolt"></i> NHẬN NGAY
+            </button>
+        </div>
+
+        <div class="order-item">
+            <div class="order-header">
+                <span class="order-id">#AHM003</span>
+                <span class="order-price">₫35.000</span>
+            </div>
+            <div class="order-info">
+                <i class="fas fa-map-marker-alt"></i>
+                <span><strong>Lấy:</strong> 555 Nguyễn Văn Linh, Q7 → <strong>Giao:</strong> 777 Tôn Dật Tiên, Q7</span>
+            </div>
+            <div class="order-info">
+                <i class="fas fa-route"></i>
+                <span>1.8 km • 12 phút</span>
+            </div>
+            <div class="order-info">
+                <i class="fas fa-box"></i>
+                <span>Thực phẩm • 1.2kg</span>
+            </div>
+            <div class="order-info">
+                <i class="far fa-clock"></i>
+                <span>Nhận trong 15 phút</span>
+            </div>
+            <button class="btn-accept" onclick="acceptOrder('AHM003')">
+                <i class="fas fa-check-circle"></i> NHẬN ĐƠN
             </button>
         </div>
     </div>
@@ -361,50 +403,65 @@
 
     <script>
         function acceptOrder(orderId) {
-            const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3');
-            audio.play();
+            // Tăng số đơn hôm nay
+            const todayOrders = document.querySelector('.stat-value');
+            todayOrders.textContent = parseInt(todayOrders.textContent) + 1;
             
-            document.querySelector(`.order-item:has(.order-id:contains("${orderId}"))`).style.borderLeftColor = '#f59e0b';
+            // Tăng thu nhập
+            const earnings = document.querySelectorAll('.stat-value')[1];
+            const currentEarnings = parseInt(earnings.textContent.replace('₫', '').replace('K', '000'));
+            const orderPrice = parseInt(document.querySelector(`.order-id:contains("${orderId}")`)
+                .closest('.order-item')
+                .querySelector('.order-price')
+                .textContent
+                .replace('₫', '')
+                .replace('.', ''));
             
-            Swal.fire({
-                title: '🎉 Đã nhận đơn!',
-                text: `Bạn đã nhận đơn hàng ${orderId}. Hãy đến điểm lấy hàng trong vòng 10 phút.`,
-                icon: 'success',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#4f46e5'
-            });
+            earnings.textContent = '₫' + (currentEarnings + orderPrice);
+            
+            // Hiệu ứng visual
+            const orderElement = document.querySelector(`.order-id:contains("${orderId}")`).closest('.order-item');
+            orderElement.style.borderLeftColor = '#22c55e';
+            orderElement.style.opacity = '0.7';
+            
+            // Thông báo
+            alert(`✅ Bạn đã nhận đơn hàng ${orderId}!\n\nHãy đến điểm lấy hàng trong vòng 10 phút.\nChúc bạn giao hàng an toàn!`);
+            
+            // Xoá thông báo
+            const notif = document.querySelector('.notification');
+            notif.textContent = Math.max(0, parseInt(notif.textContent) - 1);
         }
 
         function showPage(page) {
-            const pages = {
-                'orders': 'Quản lý đơn hàng',
-                'earnings': 'Thống kê thu nhập',
-                'account': 'Thông tin tài khoản'
+            const pageNames = {
+                'orders': '📋 Quản lý đơn hàng',
+                'earnings': '💰 Thống kê thu nhập',
+                'account': '👤 Thông tin tài khoản'
             };
             
-            Swal.fire({
-                title: '📱 ' + pages[page],
-                text: 'Tính năng này đang được phát triển. Phiên bản đầy đủ sẽ có sớm!',
-                icon: 'info',
-                confirmButtonText: 'Đóng',
-                confirmButtonColor: '#4f46e5'
-            });
+            alert(`${pageNames[page]}\n\nTính năng đang được phát triển.\nPhiên bản đầy đủ sẽ có sớm!`);
         }
 
-        // Simulate new orders
+        // Simulate new orders every 30 giây
         setInterval(() => {
-            const orderCount = document.querySelector('.stat-value');
-            const current = parseInt(orderCount.textContent);
-            orderCount.textContent = current + 1;
+            const notif = document.querySelector('.notification');
+            notif.textContent = parseInt(notif.textContent) + 1;
             
-            document.querySelector('.notification').textContent = 
-                parseInt(document.querySelector('.notification').textContent) + 1;
+            // Thêm hiệu ứng cho badge MỚI
+            const badge = document.querySelector('.new-order-badge');
+            badge.style.animation = 'pulse 0.5s 3';
+            
+            console.log('🔄 Đang tìm đơn hàng mới...');
         }, 30000);
 
-        // Load SweetAlert2 for beautiful alerts
-        const sweetAlertScript = document.createElement('script');
-        sweetAlertScript.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
-        document.head.appendChild(sweetAlertScript);
+        // Thêm hiệu ứng chấm xanh online
+        setInterval(() => {
+            const dot = document.querySelector('.online-dot');
+            dot.style.animation = 'none';
+            setTimeout(() => {
+                dot.style.animation = 'pulse 1.5s infinite';
+            }, 10);
+        }, 5000);
     </script>
 </body>
 </html>
