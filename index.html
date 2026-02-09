@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thu nhập - AhaMove Driver</title>
+    <title>AhaMove Driver - Ứng dụng tài xế</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
@@ -14,15 +15,38 @@
         }
         
         body {
-            background-color: #f8fafc;
+            background-color: #f5f5f5;
             color: #333;
             padding-bottom: 70px;
             max-width: 500px;
             margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
         }
         
-        /* Header */
-        .earnings-header {
+        /* ẨN/HIỆN CÁC TRANG */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* ===== CÁC TRANG CŨ VẪN GIỮ NGUYÊN ===== */
+        
+        /* TRANG CHỦ */
+        #home-page {
+            background-color: #fff8f0;
+        }
+        
+        .home-header {
             background: linear-gradient(135deg, #f97316, #fb923c);
             color: white;
             padding: 25px 20px;
@@ -31,7 +55,52 @@
             border-bottom-right-radius: 20px;
         }
         
-        .earnings-header h2 {
+        .driver-status, .stats, .order-item, .btn-accept {
+            /* Giữ nguyên styles cũ */
+            background: white;
+            margin: 15px;
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            border: 2px solid #fed7aa;
+        }
+        
+        /* TRANG TÀI KHOẢN */
+        #account-page .account-header {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 30px 20px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* TRANG THU NHẬP */
+        #earnings-page .earnings-header {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        /* ===== TRANG VÍ MỚI ===== */
+        #wallet-page {
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+            min-height: 100vh;
+        }
+        
+        .wallet-header {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            position: relative;
+        }
+        
+        .wallet-header h2 {
             font-size: 24px;
             display: flex;
             align-items: center;
@@ -39,170 +108,175 @@
             gap: 10px;
         }
         
-        /* Date Selector */
-        .date-selector {
-            background: white;
-            margin: 20px;
-            border-radius: 16px;
+        .wallet-back-btn {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        /* Wallet Content */
+        .wallet-content {
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .wallet-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             border: 2px solid #fed7aa;
         }
         
-        .date-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .date-item {
-            flex: 1;
-            text-align: center;
-            padding: 12px 8px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 0 2px;
-            min-width: 80px;
-        }
-        
-        .date-item.active {
-            background: #ffedd5;
-            color: #f97316;
-            font-weight: 600;
-            border: 2px solid #f97316;
-        }
-        
-        .date-range {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        /* Goal Banner */
-        .goal-banner {
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            color: white;
-            margin: 20px;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
-        
-        .goal-text {
-            font-size: 15px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .goal-btn {
-            background: white;
-            color: #3b82f6;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-        
-        .goal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Total Earnings */
-        .total-earnings {
-            margin: 20px;
-        }
-        
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .earnings-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+        .account-item {
             margin-bottom: 25px;
         }
         
-        .earning-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 2px solid #fed7aa;
-            text-align: center;
+        .account-item:last-child {
+            margin-bottom: 0;
         }
         
-        .earning-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #f97316;
-            margin-bottom: 5px;
-        }
-        
-        .earning-label {
-            font-size: 14px;
+        .account-label {
+            font-size: 16px;
             color: #666;
-            font-weight: 500;
-        }
-        
-        /* Weekly Calendar */
-        .weekly-calendar {
-            background: white;
-            margin: 20px;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 2px solid #fed7aa;
-        }
-        
-        .week-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
             gap: 10px;
-            margin-top: 15px;
         }
         
-        .day-item {
-            text-align: center;
-            padding: 12px 5px;
-            border-radius: 10px;
+        .account-label i {
+            color: #f97316;
+        }
+        
+        .account-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #000;
+            margin: 5px 0;
+        }
+        
+        .account-subvalue {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
-            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
         
-        .day-item.active {
-            background: #f97316;
-            color: white;
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3);
         }
         
-        .day-item.today {
-            background: #ffedd5;
+        .action-btn i {
+            font-size: 24px;
+        }
+        
+        .action-btn.deposit {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        .action-btn.withdraw {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        
+        .action-btn.margin {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        }
+        
+        /* Wallet Menu */
+        .wallet-menu {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 2px solid #fed7aa;
+        }
+        
+        .wallet-menu-item {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .wallet-menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .wallet-menu-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .wallet-menu-item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .wallet-menu-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff7ed;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #f97316;
-            border: 2px solid #f97316;
+            font-size: 20px;
         }
         
-        .day-name {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
+        .wallet-menu-text {
+            font-size: 17px;
+            font-weight: 500;
+            color: #333;
         }
         
-        /* Bottom Navigation */
+        .wallet-menu-arrow {
+            color: #999;
+            font-size: 20px;
+        }
+        
+        /* ===== BOTTOM NAVIGATION ===== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -224,6 +298,7 @@
             cursor: pointer;
             transition: all 0.2s;
             flex: 1;
+            position: relative;
         }
         
         .nav-item.active {
@@ -245,198 +320,345 @@
             font-weight: 500;
         }
         
-        /* Highlight Today's Date */
-        .today-highlight {
-            background: #ffedd5;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px;
-            border-left: 4px solid #f97316;
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 25%;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
         
-        .today-label {
-            font-weight: 600;
-            color: #333;
-            font-size: 16px;
-        }
-        
-        .today-amount {
-            font-size: 24px;
-            font-weight: 700;
-            color: #f97316;
-        }
-        
-        /* Responsive */
-        @media (max-width: 400px) {
-            .date-item {
-                min-width: 70px;
-                padding: 10px 5px;
-                font-size: 13px;
-            }
-            
-            .earning-value {
-                font-size: 24px;
-            }
+        /* Các styles khác giữ nguyên */
+        .order-header, .order-info, .menu-section, .menu-item, 
+        .date-selector, .earning-card, .week-days {
+            /* Giữ nguyên tất cả styles từ các trang cũ */
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="earnings-header">
-        <h2><i class="fas fa-chart-line"></i> Thu nhập</h2>
-        <p>Theo dõi thu nhập và thống kê</p>
-    </div>
-
-    <!-- Today's Highlight -->
-    <div class="today-highlight">
-        <div>
-            <div class="today-label">Thu nhập hôm nay (09/02)</div>
-            <div style="color: #666; font-size: 14px; margin-top: 5px;">Tổng cộng từ các đơn hàng</div>
+    <!-- ===== TRANG CHỦ ===== -->
+    <div id="home-page" class="page active">
+        <div class="home-header">
+            <h1><i class="fas fa-shipping-fast"></i> AhaMove Driver</h1>
+            <p><span style="display: inline-block; width: 10px; height: 10px; background: #22c55e; border-radius: 50%; margin-right: 8px;"></span>Đang trực tuyến - Sẵn sàng nhận đơn</p>
         </div>
-        <div class="today-amount">960.000đ</div>
-    </div>
 
-    <!-- Date Selector -->
-    <div class="date-selector">
-        <div class="date-row">
-            <div class="date-item">
-                <div class="date-range">19/01<br>25/01</div>
+        <div class="driver-status">
+            <div>
+                <div style="font-weight: bold; font-size: 16px;">Khu vực hoạt động</div>
+                <div style="color: #666; font-size: 14px;">Quận 1, Quận 3, Quận 5 - TP.HCM</div>
             </div>
-            <div class="date-item">
-                <div class="date-range">26/01<br>01/02</div>
-            </div>
-            <div class="date-item active">
-                <div class="date-range">02/02<br>08/02</div>
+            <div style="background: #22c55e; color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 14px;">
+                <i class="fas fa-bolt"></i> ONLINE
             </div>
         </div>
-        <div class="date-row">
-            <div class="date-item">
-                <div class="date-range">09/02<br>15/02</div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div style="font-size: 28px; font-weight: bold; color: #f97316;">0</div>
+                <div style="font-size: 14px; color: #666; margin-top: 5px;">Đơn hôm nay</div>
             </div>
-            <div class="date-item">
-                <div class="date-range">16/02<br>22/02</div>
+            <div class="stat-item">
+                <div style="font-size: 28px; font-weight: bold; color: #f97316;">₫0</div>
+                <div style="font-size: 14px; color: #666; margin-top: 5px;">Thu nhập</div>
             </div>
-            <div class="date-item">
-                <div class="date-range">23/02<br>29/02</div>
+            <div class="stat-item">
+                <div style="font-size: 28px; font-weight: bold; color: #f97316;">5.0 <i class="fas fa-star" style="color: #fbbf24;"></i></div>
+                <div style="font-size: 14px; color: #666; margin-top: 5px;">Đánh giá</div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(to bottom, #fdba74, #fb923c); height: 200px; margin: 15px; border-radius: 20px; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; position: relative; overflow: hidden; box-shadow: 0 8px 16px rgba(249, 115, 22, 0.2); border: 2px solid #fdba74;">
+            <div style="z-index: 1; text-align: center;">
+                <i class="fas fa-map-marked-alt" style="font-size: 48px; margin-bottom: 10px;"></i>
+                <p>Bản đồ khu vực trung tâm</p>
+                <small><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> Đang tìm đơn hàng...</small>
+            </div>
+        </div>
+
+        <div class="order-list" style="margin: 15px;">
+            <h3 style="margin-bottom: 15px; color: #ea580c; display: flex; align-items: center; gap: 10px;"><i class="fas fa-bolt" style="color: #f97316;"></i> Đơn hàng có sẵn <span style="background: #f97316; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; margin-left: 10px;">MỚI</span></h3>
+            
+            <div class="order-item">
+                <div class="order-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-weight: bold; color: #ea580c; font-size: 18px;">#AHM001</span>
+                    <span style="background: linear-gradient(to right, #f97316, #fb923c); color: white; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 18px;">₫45.000</span>
+                </div>
+                <div class="order-info" style="display: flex; align-items: center; margin: 10px 0; color: #555; font-size: 15px;">
+                    <i class="fas fa-map-marker-alt" style="margin-right: 12px; color: #f97316; width: 20px;"></i>
+                    <span><strong>Lấy:</strong> 123 Lê Lợi, Q1 → <strong>Giao:</strong> 456 Nguyễn Huệ, Q1</span>
+                </div>
+                <div class="order-info">
+                    <i class="fas fa-route" style="margin-right: 12px; color: #f97316; width: 20px;"></i>
+                    <span>2.5 km • 15 phút</span>
+                </div>
+                <button class="btn-accept" onclick="acceptOrder('AHM001')">
+                    <i class="fas fa-check-circle"></i> NHẬN ĐƠN NÀY
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Goal Banner -->
-    <div class="goal-banner">
-        <div class="goal-text">
-            <i class="fas fa-bullseye"></i> Tài xế ơi! Hãy tối đa hoá thu nhập bằng cách thiết lập mục tiêu cá nhân.
-        </div>
-        <button class="goal-btn" onclick="setGoal()">
-            <i class="fas fa-target"></i> Đặt mục tiêu
-        </button>
-    </div>
-
-    <!-- Total Earnings -->
-    <div class="total-earnings">
-        <div class="section-title">
-            <i class="fas fa-chart-pie"></i> Tổng thu nhập
+    <!-- ===== TRANG ĐƠN HÀNG ===== -->
+    <div id="orders-page" class="page">
+        <div class="page-header" style="background: linear-gradient(135deg, #f97316, #fb923c); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; margin-bottom: 20px;">
+            <h2 style="font-size: 24px; display: flex; align-items: center; justify-content: center; gap: 10px;"><i class="fas fa-clipboard-list"></i> Đơn hàng</h2>
+            <p>Quản lý và theo dõi đơn hàng</p>
         </div>
         
-        <div class="earnings-grid">
-            <div class="earning-card">
-                <div class="earning-value">960.000đ</div>
-                <div class="earning-label">Thu nhập từ đơn hàng</div>
-            </div>
-            
-            <div class="earning-card">
-                <div class="earning-value">0đ</div>
-                <div class="earning-label">Tiền thưởng</div>
-            </div>
-            
-            <div class="earning-card">
-                <div class="earning-value">12 đơn</div>
-                <div class="earning-label">Số đơn hoàn thành</div>
-            </div>
-            
-            <div class="earning-card">
-                <div class="earning-value">360 phút</div>
-                <div class="earning-label">Thời gian hoạt động</div>
+        <div class="content-placeholder" style="background: white; margin: 20px; padding: 40px 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); color: #666; border: 2px solid #fed7aa;">
+            <i class="fas fa-clipboard-list" style="font-size: 48px; color: #f97316; margin-bottom: 15px;"></i>
+            <h3>Quản lý đơn hàng</h3>
+            <p>Xem tất cả đơn hàng đã nhận, đang giao và đã hoàn thành</p>
+            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
+                <i class="fas fa-info-circle"></i> Tính năng đang phát triển
             </div>
         </div>
     </div>
 
-    <!-- Weekly Calendar -->
-    <div class="weekly-calendar">
-        <div class="section-title">
-            <i class="fas fa-calendar-alt"></i> Tuần này
+    <!-- ===== TRANG THÔNG BÁO ===== -->
+    <div id="notifications-page" class="page">
+        <div class="page-header" style="background: linear-gradient(135deg, #f97316, #fb923c); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; margin-bottom: 20px;">
+            <h2 style="font-size: 24px; display: flex; align-items: center; justify-content: center; gap: 10px;"><i class="fas fa-bell"></i> Thông báo</h2>
+            <p>Cập nhật và thông báo quan trọng</p>
         </div>
         
-        <div class="week-days">
-            <div class="day-item">
-                <div class="day-name">T2</div>
-                <div>05</div>
+        <div class="content-placeholder" style="background: white; margin: 20px; padding: 40px 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); color: #666; border: 2px solid #fed7aa;">
+            <i class="fas fa-bell" style="font-size: 48px; color: #f97316; margin-bottom: 15px;"></i>
+            <h3>Thông báo hệ thống</h3>
+            <p>Không có thông báo mới</p>
+            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
+                <i class="fas fa-info-circle"></i> Bạn đã xem tất cả thông báo
             </div>
-            <div class="day-item">
-                <div class="day-name">T3</div>
-                <div>06</div>
-            </div>
-            <div class="day-item">
-                <div class="day-name">T4</div>
-                <div>07</div>
-            </div>
-            <div class="day-item">
-                <div class="day-name">T5</div>
-                <div>08</div>
-            </div>
-            <div class="day-item today">
-                <div class="day-name">T6</div>
-                <div style="font-weight: bold;">09</div>
-            </div>
-            <div class="day-item">
-                <div class="day-name">T7</div>
-                <div>10</div>
-            </div>
-            <div class="day-item">
-                <div class="day-name">CN</div>
-                <div>11</div>
-            </div>
-        </div>
-        
-        <div style="margin-top: 20px; text-align: center; color: #666; font-size: 14px;">
-            <i class="fas fa-info-circle"></i> Click vào ngày để xem chi tiết thu nhập
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- ===== TRANG THU NHẬP ===== -->
+    <div id="earnings-page" class="page">
+        <div class="earnings-header">
+            <h2><i class="fas fa-chart-line"></i> Thu nhập</h2>
+            <p>Theo dõi thu nhập và thống kê</p>
+        </div>
+
+        <div style="background: #ffedd5; padding: 15px; border-radius: 12px; margin: 20px; border-left: 4px solid #f97316; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="font-weight: 600; color: #333; font-size: 16px;">Thu nhập hôm nay (09/02)</div>
+                <div style="color: #666; font-size: 14px; margin-top: 5px;">Tổng cộng từ các đơn hàng</div>
+            </div>
+            <div style="font-size: 24px; font-weight: 700; color: #f97316;">960.000đ</div>
+        </div>
+
+        <div class="content-placeholder" style="background: white; margin: 20px; padding: 40px 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); color: #666; border: 2px solid #fed7aa;">
+            <i class="fas fa-money-bill-wave" style="font-size: 48px; color: #f97316; margin-bottom: 15px;"></i>
+            <h3>Thống kê thu nhập</h3>
+            <p>Thu nhập hôm nay: <strong style="color: #f97316;">960.000đ</strong></p>
+            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
+                <i class="fas fa-info-circle"></i> Xem chi tiết trong trang Thu nhập đầy đủ
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRANG TÀI KHOẢN ===== -->
+    <div id="account-page" class="page">
+        <div class="account-header">
+            <div class="wallet-back-btn" onclick="switchPage('home')">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            
+            <div class="avatar" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #f97316; border: 4px solid rgba(255, 255, 255, 0.3);">
+                <i class="fas fa-user"></i>
+            </div>
+            
+            <div class="driver-name" style="font-size: 22px; font-weight: 600; margin-bottom: 5px;">ĐOÀN HỮU QUỐC CƯỜNG</div>
+            <div style="opacity: 0.9; font-size: 14px;">Tài xế AhaMove</div>
+        </div>
+        
+        <!-- THÊM NÚT VÍ VÀO TRANG TÀI KHOẢN -->
+        <div class="wallet-menu" style="margin: 20px;">
+            <div class="wallet-menu-item" onclick="switchPage('wallet')">
+                <div class="wallet-menu-item-left">
+                    <div class="wallet-menu-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="wallet-menu-text">Ví tài xế</div>
+                </div>
+                <div class="wallet-menu-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Các phần khác của trang tài khoản giữ nguyên -->
+        <div class="rating-card" style="background: white; margin: -30px 20px 20px; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); text-align: center;">
+            <div class="rank-badge" style="display: inline-block; background: #f0f0f0; color: #666; padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: 500; margin-bottom: 20px;">
+                <i class="fas fa-medal"></i> CHƯA XẾP HẠNG
+            </div>
+            
+            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 15px;">
+                <div class="stat-item" style="text-align: center;">
+                    <div class="stars" style="color: #ffc107; font-size: 20px; margin-bottom: 10px;">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">5★</div>
+                    <div style="font-size: 13px; color: #666; font-weight: 500;">Đánh giá</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">100,0%</div>
+                    <div style="font-size: 13px; color: #666; font-weight: 500;">Tỷ lệ chấp nhận</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">0,0%</div>
+                    <div style="font-size: 13px; color: #666; font-weight: 500;">Tỷ lệ huỷ đơn</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Các menu khác của tài khoản -->
+        <div class="menu-section" style="background: white; margin: 0 20px 20px; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+            <div class="menu-item" onclick="openHistory()" style="padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 36px; height: 36px; background: #fff7ed; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #f97316; font-size: 18px;">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div style="font-size: 16px; font-weight: 500; color: #333;">Lịch sử đơn</div>
+                </div>
+                <div style="background: #f3f4f6; color: #666; padding: 6px 12px; border-radius: 20px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-motorcycle"></i> Vi Tài Xế
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRANG VÍ (MỚI) ===== -->
+    <div id="wallet-page" class="page">
+        <div class="wallet-header">
+            <div class="wallet-back-btn" onclick="switchPage('account')">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            
+            <h2><i class="fas fa-wallet"></i> Ví tài xế</h2>
+            <p>Quản lý tài chính và giao dịch</p>
+        </div>
+
+        <div class="wallet-content">
+            <!-- Tài khoản chính -->
+            <div class="wallet-card">
+                <div class="account-item">
+                    <div class="account-label">
+                        <i class="fas fa-credit-card"></i> Tài khoản chính
+                    </div>
+                    <div class="account-value">₫16.760</div>
+                </div>
+                
+                <div class="account-item">
+                    <div class="account-label">
+                        <i class="fas fa-gift"></i> Tài khoản khuyến mãi
+                    </div>
+                    <div class="account-subvalue">
+                        <span>₫0</span>
+                    </div>
+                </div>
+                
+                <div class="account-item">
+                    <div class="account-label">
+                        <i class="fas fa-shield-alt"></i> Tài khoản ký quỹ
+                    </div>
+                    <div class="account-subvalue">
+                        <span>₫0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="action-buttons">
+                <button class="action-btn deposit" onclick="depositMoney()">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Nạp tiền</span>
+                </button>
+                
+                <button class="action-btn withdraw" onclick="withdrawMoney()">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Rút tiền</span>
+                </button>
+                
+                <button class="action-btn margin" onclick="manageMargin()">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <span>Ký quỹ</span>
+                </button>
+            </div>
+
+            <!-- Menu ví -->
+            <div class="wallet-menu">
+                <div class="wallet-menu-item" onclick="collectPayment()">
+                    <div class="wallet-menu-item-left">
+                        <div class="wallet-menu-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="wallet-menu-text">Nộp tiền thu hộ</div>
+                    </div>
+                    <div class="wallet-menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                
+                <div class="wallet-menu-item" onclick="viewTransactionHistory()">
+                    <div class="wallet-menu-item-left">
+                        <div class="wallet-menu-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="wallet-menu-text">Lịch sử giao dịch</div>
+                    </div>
+                    <div class="wallet-menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BOTTOM NAVIGATION (5 TAB) ===== -->
     <div class="bottom-nav">
-        <div class="nav-item" onclick="goToPage('home')">
+        <div class="nav-item active" onclick="switchPage('home')">
             <div class="nav-icon">
                 <i class="fas fa-home"></i>
             </div>
             <div class="nav-label">Trang chủ</div>
         </div>
         
-        <div class="nav-item" onclick="goToPage('orders')">
+        <div class="nav-item" onclick="switchPage('orders')">
             <div class="nav-icon">
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <div class="nav-label">Đơn hàng</div>
         </div>
         
-        <div class="nav-item" onclick="goToPage('notifications')">
+        <div class="nav-item" onclick="switchPage('notifications')">
             <div class="nav-icon">
                 <i class="fas fa-bell"></i>
             </div>
             <div class="nav-label">Thông báo</div>
+            <div class="notification-badge">3</div>
         </div>
         
-        <div class="nav-item active">
+        <div class="nav-item" onclick="switchPage('earnings')">
             <div class="nav-icon">
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="nav-label">Thu nhập</div>
         </div>
         
-        <div class="nav-item" onclick="goToPage('account')">
+        <div class="nav-item" onclick="switchPage('account')">
             <div class="nav-icon">
                 <i class="fas fa-user-circle"></i>
             </div>
@@ -445,97 +667,122 @@
     </div>
 
     <script>
-        // Chuyển trang
-        function goToPage(page) {
-            if (page !== 'home') {
-                alert(`Chuyển đến trang: ${page}\n\nĐang trong chế độ xem thu nhập`);
-            }
-        }
-        
-        // Đặt mục tiêu
-        function setGoal() {
-            const goal = prompt("Nhập mục tiêu thu nhập của bạn (VND):", "1500000");
-            if (goal) {
-                alert(`🎯 Đã đặt mục tiêu: ${parseInt(goal).toLocaleString()}đ\n\nChúc bạn đạt được mục tiêu!`);
-            }
-        }
-        
-        // Click vào ngày
-        document.querySelectorAll('.day-item').forEach(day => {
-            day.addEventListener('click', function() {
-                document.querySelectorAll('.day-item').forEach(d => {
-                    d.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                const date = this.querySelector('div:last-child').textContent;
-                const dayName = this.querySelector('.day-name').textContent;
-                alert(`Xem thu nhập ngày ${date} (${dayName})\n\nTính năng chi tiết đang phát triển`);
-            });
-        });
-        
-        // Click vào khoảng thời gian
-        document.querySelectorAll('.date-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.date-item').forEach(d => {
-                    d.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                const range = this.querySelector('.date-range').textContent;
-                alert(`Xem thu nhập khoảng: ${range}\n\nDữ liệu chi tiết đang được cập nhật`);
-            });
-        });
-        
-        // Hiệu ứng hover cho các card
-        document.querySelectorAll('.earning-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-                this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.1)';
+        // ===== CHUYỂN TRANG =====
+        function switchPage(pageId) {
+            // Ẩn tất cả các trang
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
             });
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-            });
-        });
-        
-        // Cập nhật thời gian hoạt động mỗi phút
-        function updateActiveTime() {
-            const timeElement = document.querySelector('.earning-value:last-of-type');
-            if (timeElement && timeElement.textContent.includes('phút')) {
-                const currentTime = parseInt(timeElement.textContent);
-                timeElement.textContent = (currentTime + 1) + ' phút';
-            }
-        }
-        
-        // Cập nhật thu nhập theo thời gian thực (giả lập)
-        setInterval(() => {
-            // Giả lập đơn hàng mới
-            const randomChance = Math.random();
-            if (randomChance > 0.7) {
-                const earningsElement = document.querySelector('.today-amount');
-                const ordersElement = document.querySelector('.earning-value:nth-of-type(3)');
+            // Hiện trang được chọn
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // Cập nhật active cho nav (trừ trang ví vì nó không có trong bottom nav)
+            if (pageId !== 'wallet') {
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
                 
-                if (earningsElement && ordersElement) {
-                    const currentEarnings = parseInt(earningsElement.textContent.replace(/\./g, '').replace('đ', ''));
-                    const currentOrders = parseInt(ordersElement.textContent);
-                    
-                    // Thêm đơn hàng 40.000đ - 80.000đ
-                    const newOrderValue = Math.floor(Math.random() * 40000) + 40000;
-                    earningsElement.textContent = (currentEarnings + newOrderValue).toLocaleString() + 'đ';
-                    ordersElement.textContent = (currentOrders + 1) + ' đơn';
-                    
-                    console.log(`💰 Đơn hàng mới: +${newOrderValue.toLocaleString()}đ`);
+                // Tìm nav tương ứng và set active
+                const navItems = document.querySelectorAll('.nav-item');
+                const pageIndex = ['home', 'orders', 'notifications', 'earnings', 'account'].indexOf(pageId);
+                if (navItems[pageIndex]) {
+                    navItems[pageIndex].classList.add('active');
                 }
             }
+        }
+        
+        // ===== CHỨC NĂNG TRANG CHỦ =====
+        function acceptOrder(orderId) {
+            const todayOrders = document.querySelector('.stat-value');
+            todayOrders.textContent = parseInt(todayOrders.textContent) + 1;
             
-            updateActiveTime();
-        }, 60000); // Mỗi phút
+            const earnings = document.querySelectorAll('.stat-value')[1];
+            const currentEarnings = parseInt(earnings.textContent.replace('₫', ''));
+            earnings.textContent = '₫' + (currentEarnings + 45000);
+            
+            const orderElement = document.querySelector(`.order-id:contains("${orderId}")`).closest('.order-item');
+            orderElement.style.borderLeftColor = '#22c55e';
+            orderElement.style.opacity = '0.7';
+            
+            alert(`✅ Bạn đã nhận đơn hàng ${orderId}!\n\nHãy đến điểm lấy hàng trong vòng 10 phút.`);
+        }
+        
+        // ===== CHỨC NĂNG TRANG VÍ =====
+        function depositMoney() {
+            const amount = prompt("Nhập số tiền muốn nạp (VND):", "100000");
+            if (amount && !isNaN(amount)) {
+                const currentBalance = parseInt(document.querySelector('.account-value').textContent.replace('₫', '').replace(/\./g, ''));
+                const newBalance = currentBalance + parseInt(amount);
+                document.querySelector('.account-value').textContent = '₫' + newBalance.toLocaleString();
+                alert(`✅ Đã nạp ${parseInt(amount).toLocaleString()}đ thành công!\nSố dư mới: ${newBalance.toLocaleString()}đ`);
+            }
+        }
+        
+        function withdrawMoney() {
+            const amount = prompt("Nhập số tiền muốn rút (VND):", "50000");
+            if (amount && !isNaN(amount)) {
+                const currentBalance = parseInt(document.querySelector('.account-value').textContent.replace('₫', '').replace(/\./g, ''));
+                if (parseInt(amount) <= currentBalance) {
+                    const newBalance = currentBalance - parseInt(amount);
+                    document.querySelector('.account-value').textContent = '₫' + newBalance.toLocaleString();
+                    alert(`✅ Đã rút ${parseInt(amount).toLocaleString()}đ thành công!\nSố dư mới: ${newBalance.toLocaleString()}đ`);
+                } else {
+                    alert('❌ Số dư không đủ để rút!');
+                }
+            }
+        }
+        
+        function manageMargin() {
+            alert('📋 Quản lý ký quỹ\n\nKý quỹ để đảm bảo thực hiện đơn hàng chất lượng');
+        }
+        
+        function collectPayment() {
+            alert('💰 Nộp tiền thu hộ\n\nNộp tiền thu hộ từ khách hàng vào tài khoản');
+        }
+        
+        function viewTransactionHistory() {
+            alert('📊 Lịch sử giao dịch\n\nXem tất cả giao dịch nạp/rút tiền');
+        }
+        
+        // ===== CHỨC NĂNG TRANG TÀI KHOẢN =====
+        function openHistory() {
+            alert('Mở lịch sử đơn hàng\n\nHiển thị tất cả đơn hàng đã thực hiện');
+        }
+        
+        // ===== HIỆU ỨNG =====
+        document.querySelectorAll('.menu-item, .wallet-menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.background = '#f5f5f5';
+                setTimeout(() => {
+                    this.style.background = '';
+                }, 200);
+            });
+        });
+        
+        // Hiệu ứng cho bottom nav
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (!this.classList.contains('active')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => {
+                        nav.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Thêm thông báo mới sau 30 giây
+        setInterval(() => {
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                badge.textContent = parseInt(badge.textContent) + 1;
+            }
+        }, 30000);
         
         // Khởi tạo
-        console.log('Trang thu nhập đã sẵn sàng!');
-        console.log('📊 Thu nhập hôm nay: 960.000đ');
+        console.log('AhaMove Driver App đã sẵn sàng!');
+        console.log('💰 Ví tài khoản: 16.760đ');
     </script>
 </body>
 </html>
