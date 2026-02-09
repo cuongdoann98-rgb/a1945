@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tài khoản - AhaMove Driver</title>
+    <title>AhaMove Driver - Ứng dụng tài xế</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
@@ -19,11 +20,149 @@
             padding-bottom: 70px;
             max-width: 500px;
             margin: 0 auto;
-            background: #f5f5f5;
+            position: relative;
+            min-height: 100vh;
         }
         
-        /* Header */
-        .account-header {
+        /* ẨN/HIỆN CÁC TRANG */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* ===== TRANG CHỦ (HOME) ===== */
+        #home-page {
+            background-color: #fff8f0;
+        }
+        
+        .home-header {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        .home-header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .driver-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            margin: 15px;
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            border: 2px solid #fed7aa;
+        }
+        
+        .status-online {
+            background: #22c55e;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            border: 2px solid #fed7aa;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f97316;
+        }
+        
+        .map-placeholder {
+            background: linear-gradient(to bottom, #fdba74, #fb923c);
+            height: 200px;
+            margin: 15px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.2);
+            border: 2px solid #fdba74;
+        }
+        
+        .order-list {
+            margin: 15px;
+        }
+        
+        .order-list h3 {
+            margin-bottom: 15px;
+            color: #ea580c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .order-item {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            border-left: 5px solid #f97316;
+            border: 2px solid #fed7aa;
+            transition: transform 0.3s;
+        }
+        
+        .btn-accept {
+            background: linear-gradient(to right, #f97316, #fb923c);
+            color: white;
+            border: none;
+            padding: 15px 0;
+            width: 100%;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 2px solid #fdba74;
+        }
+        
+        /* ===== TRANG TÀI KHOẢN ===== */
+        #account-page .account-header {
             background: linear-gradient(135deg, #f97316, #fb923c);
             color: white;
             padding: 30px 20px 40px;
@@ -65,7 +204,6 @@
             margin-bottom: 5px;
         }
         
-        /* Rating Section */
         .rating-card {
             background: white;
             margin: -30px 20px 20px;
@@ -93,17 +231,6 @@
             margin-top: 15px;
         }
         
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #f97316;
-            margin-bottom: 5px;
-        }
-        
         .stat-label {
             font-size: 13px;
             color: #666;
@@ -116,7 +243,6 @@
             margin-bottom: 10px;
         }
         
-        /* Menu Items */
         .menu-section {
             background: white;
             margin: 0 20px 20px;
@@ -133,14 +259,6 @@
             border-bottom: 1px solid #f0f0f0;
             cursor: pointer;
             transition: background 0.2s;
-        }
-        
-        .menu-item:hover {
-            background: #f9f9f9;
-        }
-        
-        .menu-item:last-child {
-            border-bottom: none;
         }
         
         .menu-item-left {
@@ -172,16 +290,73 @@
             font-size: 18px;
         }
         
-        .menu-badge {
-            background: #f97316;
-            color: white;
-            padding: 3px 10px;
+        .insurance-section {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px;
             border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
         }
         
-        /* Bottom Navigation */
+        .section-title {
+            padding: 0 20px 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .history-badge {
+            background: #f3f4f6;
+            color: #666;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* ===== CÁC TRANG KHÁC ===== */
+        #orders-page, #notifications-page, #earnings-page {
+            padding-top: 20px;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .page-header h2 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .content-placeholder {
+            background: white;
+            margin: 20px;
+            padding: 40px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            color: #666;
+            border: 2px solid #fed7aa;
+        }
+        
+        .content-placeholder i {
+            font-size: 48px;
+            color: #f97316;
+            margin-bottom: 15px;
+        }
+        
+        /* ===== BOTTOM NAVIGATION ===== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -201,7 +376,7 @@
             text-align: center;
             color: #999;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.2s;
             flex: 1;
         }
         
@@ -212,6 +387,11 @@
         .nav-icon {
             font-size: 22px;
             margin-bottom: 4px;
+            transition: transform 0.2s;
+        }
+        
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
         }
         
         .nav-label {
@@ -219,198 +399,348 @@
             font-weight: 500;
         }
         
-        /* Insurance Section */
-        .insurance-section {
-            background: #f0f9ff;
-            border-left: 4px solid #3b82f6;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 12px;
-        }
-        
-        .insurance-title {
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 25%;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #1d4ed8;
-            font-weight: 600;
-            margin-bottom: 5px;
+            justify-content: center;
+            font-weight: bold;
         }
         
-        /* Loyalty Program */
-        .loyalty-section {
-            margin-top: 25px;
-        }
-        
-        .section-title {
-            padding: 0 20px 10px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        /* Divider */
-        .divider {
-            height: 1px;
-            background: #f0f0f0;
-            margin: 20px;
-        }
-        
-        /* History Badge */
-        .history-badge {
-            background: #f3f4f6;
-            color: #666;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            display: inline-flex;
+        /* Order item styles */
+        .order-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .order-id {
+            font-weight: bold;
+            color: #ea580c;
+            font-size: 18px;
+        }
+        
+        .order-price {
+            background: linear-gradient(to right, #f97316, #fb923c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .order-info {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            color: #555;
+            font-size: 15px;
+        }
+        
+        .order-info i {
+            margin-right: 12px;
+            color: #f97316;
+            width: 20px;
+        }
+        
+        .new-order-badge {
+            background: #f97316;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
-    <!-- Header với thông tin tài xế -->
-    <div class="account-header">
-        <div class="back-btn" onclick="goBack()">
-            <i class="fas fa-arrow-left"></i>
+    <!-- ===== TRANG CHỦ ===== -->
+    <div id="home-page" class="page active">
+        <div class="home-header">
+            <h1><i class="fas fa-shipping-fast"></i> AhaMove Driver</h1>
+            <p><span class="online-dot"></span>Đang trực tuyến - Sẵn sàng nhận đơn</p>
         </div>
-        
-        <div class="avatar">
-            <i class="fas fa-user"></i>
+
+        <div class="driver-status">
+            <div>
+                <div style="font-weight: bold; font-size: 16px;">Khu vực hoạt động</div>
+                <div style="color: #666; font-size: 14px;">Quận 1, Quận 3, Quận 5 - TP.HCM</div>
+            </div>
+            <div class="status-online">
+                <i class="fas fa-bolt"></i> ONLINE
+            </div>
         </div>
-        
-        <div class="driver-name">ĐOÀN HỮU QUỐC CƯỜNG</div>
-        <div style="opacity: 0.9; font-size: 14px;">Tài xế AhaMove</div>
-    </div>
-    
-    <!-- Thông tin xếp hạng và đánh giá -->
-    <div class="rating-card">
-        <div class="rank-badge">
-            <i class="fas fa-medal"></i> CHƯA XẾP HẠNG
-        </div>
-        
-        <div class="stats-grid">
+
+        <div class="stats">
             <div class="stat-item">
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="stat-value">5★</div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">Đơn hôm nay</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">₫0</div>
+                <div class="stat-label">Thu nhập</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">5.0 <i class="fas fa-star" style="color: #fbbf24;"></i></div>
                 <div class="stat-label">Đánh giá</div>
             </div>
+        </div>
+
+        <div class="map-placeholder">
+            <div style="z-index: 1; text-align: center;">
+                <i class="fas fa-map-marked-alt" style="font-size: 48px; margin-bottom: 10px;"></i>
+                <p>Bản đồ khu vực trung tâm</p>
+                <small><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> Đang tìm đơn hàng...</small>
+            </div>
+        </div>
+
+        <div class="order-list">
+            <h3><i class="fas fa-bolt" style="color: #f97316;"></i> Đơn hàng có sẵn <span class="new-order-badge">MỚI</span></h3>
             
-            <div class="stat-item">
-                <div class="stat-value">100,0%</div>
-                <div class="stat-label">Tỷ lệ chấp nhận</div>
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">#AHM001</span>
+                    <span class="order-price">₫45.000</span>
+                </div>
+                <div class="order-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span><strong>Lấy:</strong> 123 Lê Lợi, Q1 → <strong>Giao:</strong> 456 Nguyễn Huệ, Q1</span>
+                </div>
+                <div class="order-info">
+                    <i class="fas fa-route"></i>
+                    <span>2.5 km • 15 phút</span>
+                </div>
+                <div class="order-info">
+                    <i class="fas fa-box"></i>
+                    <span>Tài liệu văn phòng • 0.5kg</span>
+                </div>
+                <div class="order-info">
+                    <i class="far fa-clock"></i>
+                    <span>Nhận trong 10 phút</span>
+                </div>
+                <button class="btn-accept" onclick="acceptOrder('AHM001')">
+                    <i class="fas fa-check-circle"></i> NHẬN ĐƠN NÀY
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRANG ĐƠN HÀNG ===== -->
+    <div id="orders-page" class="page">
+        <div class="page-header">
+            <h2><i class="fas fa-clipboard-list"></i> Đơn hàng</h2>
+            <p>Quản lý và theo dõi đơn hàng</p>
+        </div>
+        
+        <div class="content-placeholder">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>Quản lý đơn hàng</h3>
+            <p>Xem tất cả đơn hàng đã nhận, đang giao và đã hoàn thành</p>
+            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
+                <i class="fas fa-info-circle"></i> Tính năng đang phát triển
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRANG THÔNG BÁO ===== -->
+    <div id="notifications-page" class="page">
+        <div class="page-header">
+            <h2><i class="fas fa-bell"></i> Thông báo</h2>
+            <p>Cập nhật và thông báo quan trọng</p>
+        </div>
+        
+        <div class="content-placeholder">
+            <i class="fas fa-bell"></i>
+            <h3>Thông báo hệ thống</h3>
+            <p>Không có thông báo mới</p>
+            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
+                <i class="fas fa-info-circle"></i> Bạn đã xem tất cả thông báo
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRANG THU NHẬP ===== -->
+    <div id="earnings-page" class="page">
+        <div class="page-header">
+            <h2><i class="fas fa-chart-line"></i> Thu nhập</h2>
+            <p>Theo dõi thu nhập và thống kê</p>
+        </div>
+        
+        <div class="content-placeholder">
+            <i class="fas fa-money-bill-wave"></i>
+            <h3>Thống kê thu nhập</h3>
+            <p>Xem chi tiết thu nhập theo ngày, tuần, tháng</p>
+            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
+                <i class="fas fa-info-circle"></i> Tính năng đang phát triển
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRANG TÀI KHOẢN ===== -->
+    <div id="account-page" class="page">
+        <div class="account-header">
+            <div class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
             </div>
             
-            <div class="stat-item">
-                <div class="stat-value">0,0%</div>
-                <div class="stat-label">Tỷ lệ huỷ đơn</div>
+            <div class="avatar">
+                <i class="fas fa-user"></i>
             </div>
+            
+            <div class="driver-name">ĐOÀN HỮU QUỐC CƯỜNG</div>
+            <div style="opacity: 0.9; font-size: 14px;">Tài xế AhaMove</div>
         </div>
-    </div>
-    
-    <!-- Lịch sử đơn -->
-    <div class="menu-section">
-        <div class="menu-item" onclick="openHistory()">
-            <div class="menu-item-left">
-                <div class="menu-icon">
-                    <i class="fas fa-history"></i>
+        
+        <div class="rating-card">
+            <div class="rank-badge">
+                <i class="fas fa-medal"></i> CHƯA XẾP HẠNG
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">5★</div>
+                    <div class="stat-label">Đánh giá</div>
                 </div>
-                <div class="menu-text">Lịch sử đơn</div>
-            </div>
-            <div class="history-badge">
-                <i class="fas fa-motorcycle"></i> Vi Tài Xế
-            </div>
-        </div>
-    </div>
-    
-    <!-- Bảo hiểm -->
-    <div class="insurance-section">
-        <div class="insurance-title">
-            <i class="fas fa-shield-alt"></i>
-            <span>Bảo hiểm</span>
-        </div>
-        <div style="color: #666; font-size: 14px; margin-top: 5px;">
-            Bảo hiểm tai nạn và trách nhiệm dân sự
-        </div>
-    </div>
-    
-    <!-- Tài xế thân thiết -->
-    <div class="section-title">Tài xế thân thiết</div>
-    
-    <div class="menu-section">
-        <div class="menu-item" onclick="openReferral()">
-            <div class="menu-item-left">
-                <div class="menu-icon" style="background: #f0f9ff; color: #3b82f6;">
-                    <i class="fas fa-user-plus"></i>
+                
+                <div class="stat-item">
+                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">100,0%</div>
+                    <div class="stat-label">Tỷ lệ chấp nhận</div>
                 </div>
-                <div class="menu-text">Giới thiệu & nhận thưởng</div>
-            </div>
-            <div class="menu-arrow">
-                <i class="fas fa-chevron-right"></i>
+                
+                <div class="stat-item">
+                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">0,0%</div>
+                    <div class="stat-label">Tỷ lệ huỷ đơn</div>
+                </div>
             </div>
         </div>
         
-        <div class="menu-item" onclick="openChallenges()">
-            <div class="menu-item-left">
-                <div class="menu-icon" style="background: #fef3c7; color: #f59e0b;">
-                    <i class="fas fa-trophy"></i>
+        <div class="menu-section">
+            <div class="menu-item" onclick="openHistory()">
+                <div class="menu-item-left">
+                    <div class="menu-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="menu-text">Lịch sử đơn</div>
                 </div>
-                <div class="menu-text">Thử thách</div>
+                <div class="history-badge">
+                    <i class="fas fa-motorcycle"></i> Vi Tài Xế
+                </div>
             </div>
-            <div class="menu-badge">MỚI</div>
         </div>
         
-        <div class="menu-item" onclick="openCompetition()">
-            <div class="menu-item-left">
-                <div class="menu-icon" style="background: #f0fdf4; color: #22c55e;">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="menu-text">Thi đua Tài Xế</div>
+        <div class="insurance-section">
+            <div style="display: flex; align-items: center; gap: 10px; color: #1d4ed8; font-weight: 600; margin-bottom: 5px;">
+                <i class="fas fa-shield-alt"></i>
+                <span>Bảo hiểm</span>
             </div>
-            <div class="menu-arrow">
-                <i class="fas fa-chevron-right"></i>
+            <div style="color: #666; font-size: 14px; margin-top: 5px;">
+                Bảo hiểm tai nạn và trách nhiệm dân sự
+            </div>
+        </div>
+        
+        <div class="section-title">Tài xế thân thiết</div>
+        
+        <div class="menu-section">
+            <div class="menu-item" onclick="openReferral()">
+                <div class="menu-item-left">
+                    <div class="menu-icon" style="background: #f0f9ff; color: #3b82f6;">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="menu-text">Giới thiệu & nhận thưởng</div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+            
+            <div class="menu-item" onclick="openChallenges()">
+                <div class="menu-item-left">
+                    <div class="menu-icon" style="background: #fef3c7; color: #f59e0b;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="menu-text">Thử thách</div>
+                </div>
+                <div style="background: #f97316; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">MỚI</div>
+            </div>
+            
+            <div class="menu-item" onclick="openCompetition()">
+                <div class="menu-item-left">
+                    <div class="menu-icon" style="background: #f0fdf4; color: #22c55e;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="menu-text">Thi đua Tài Xế</div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
             </div>
         </div>
     </div>
-    
-    <!-- Bottom Navigation -->
+
+    <!-- ===== BOTTOM NAVIGATION ===== -->
     <div class="bottom-nav">
-        <div class="nav-item" onclick="goToPage('home')">
+        <div class="nav-item active" onclick="switchPage('home')">
             <div class="nav-icon">
                 <i class="fas fa-home"></i>
             </div>
             <div class="nav-label">Trang chủ</div>
         </div>
         
-        <div class="nav-item" onclick="goToPage('orders')">
+        <div class="nav-item" onclick="switchPage('orders')">
             <div class="nav-icon">
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <div class="nav-label">Đơn hàng</div>
         </div>
         
-        <div class="nav-item" onclick="goToPage('notifications')">
+        <div class="nav-item" onclick="switchPage('notifications')">
             <div class="nav-icon">
                 <i class="fas fa-bell"></i>
             </div>
             <div class="nav-label">Thông báo</div>
+            <div class="notification-badge">3</div>
         </div>
         
-        <div class="nav-item" onclick="goToPage('earnings')">
+        <div class="nav-item" onclick="switchPage('earnings')">
             <div class="nav-icon">
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="nav-label">Thu nhập</div>
         </div>
         
-        <div class="nav-item active">
+        <div class="nav-item" onclick="switchPage('account')">
             <div class="nav-icon">
                 <i class="fas fa-user-circle"></i>
             </div>
@@ -419,22 +749,48 @@
     </div>
 
     <script>
-        function goBack() {
-            alert('Quay lại trang trước');
-            // window.history.back();
+        // ===== CHUYỂN TRANG =====
+        function switchPage(pageId) {
+            // Ẩn tất cả các trang
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Hiện trang được chọn
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // Cập nhật active cho nav
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+            
+            // Tìm nav tương ứng và set active
+            const navItems = document.querySelectorAll('.nav-item');
+            const pageIndex = ['home', 'orders', 'notifications', 'earnings', 'account'].indexOf(pageId);
+            if (navItems[pageIndex]) {
+                navItems[pageIndex].classList.add('active');
+            }
         }
         
-        function goToPage(page) {
-            const pages = {
-                'home': 'Trang chủ',
-                'orders': 'Đơn hàng',
-                'notifications': 'Thông báo',
-                'earnings': 'Thu nhập'
-            };
+        // ===== CHỨC NĂNG TRANG CHỦ =====
+        function acceptOrder(orderId) {
+            const todayOrders = document.querySelector('.stat-value');
+            todayOrders.textContent = parseInt(todayOrders.textContent) + 1;
             
-            if (page !== 'home') {
-                alert(`Chuyển đến trang: ${pages[page]}\n\nTính năng đang phát triển`);
-            }
+            const earnings = document.querySelectorAll('.stat-value')[1];
+            const currentEarnings = parseInt(earnings.textContent.replace('₫', ''));
+            earnings.textContent = '₫' + (currentEarnings + 45000);
+            
+            const orderElement = document.querySelector(`.order-id:contains("${orderId}")`).closest('.order-item');
+            orderElement.style.borderLeftColor = '#22c55e';
+            orderElement.style.opacity = '0.7';
+            
+            alert(`✅ Bạn đã nhận đơn hàng ${orderId}!\n\nHãy đến điểm lấy hàng trong vòng 10 phút.`);
+        }
+        
+        // ===== CHỨC NĂNG TRANG TÀI KHOẢN =====
+        function goBack() {
+            switchPage('home');
         }
         
         function openHistory() {
@@ -453,7 +809,7 @@
             alert('Thi đua Tài Xế\n\nXem bảng xếp hạng và thi đua với tài xế khác');
         }
         
-        // Hiệu ứng khi click menu
+        // ===== HIỆU ỨNG =====
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', function() {
                 this.style.background = '#f5f5f5';
@@ -473,10 +829,17 @@
             });
         });
         
-        // Simulate loading
-        window.addEventListener('load', function() {
-            console.log('Tài khoản tài xế đã tải xong');
-        });
+        // Thêm đơn hàng mới sau 30 giây
+        setInterval(() => {
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                badge.textContent = parseInt(badge.textContent) + 1;
+            }
+            console.log('🔄 Có thông báo mới');
+        }, 30000);
+        
+        // Khởi tạo
+        console.log('AhaMove Driver App đã sẵn sàng!');
     </script>
 </body>
 </html>
