@@ -754,19 +754,20 @@
             cursor: pointer;
             transition: all 0.2s;
             flex: 1;
+            position: relative;
         }
         
         .nav-item.active {
             color: #f97316;
         }
         
-        . {
+        .nav-icon {
             font-size: 22px;
             margin-bottom: 4px;
             transition: transform 0.2s;
         }
         
-        .nav-item.active . {
+        .nav-item.active .nav-icon {
             transform: scale(1.1);
         }
         
@@ -1294,39 +1295,38 @@
         </div>
     </div>
 
-    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <!-- ===== BOTTOM NAVIGATION (ĐÃ SỬA BADGE ĐÚNG VỊ TRÍ) ===== -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchPage('home')">
-            <div class="">
+            <div class="nav-icon">
                 <i class="fas fa-home"></i>
             </div>
             <div class="nav-label">Trang chủ</div>
         </div>
         
         <div class="nav-item" onclick="switchPage('orders')">
-            <div class="">
+            <div class="nav-icon">
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <div class="nav-label">Đơn hàng</div>
         </div>
         
-
-<div class="nav-item" onclick="switchPage('notifications')">
-    <div class="nav-icon">
-        <i class="fas fa-bell"></i>
-    </div>
-    <div class="nav-label">Thông báo</div>
-    <!-- THÊM BADGE VÀO ĐÂY -->
-    <div class="notification-badge">3</div>
-</div>
-
-<div class="nav-item" onclick="switchPage('earnings')">
-    <div class="nav-icon">
-        <i class="fas fa-chart-line"></i>
-    </div>
-    <div class="nav-label">Thu nhập</div>
-    <!-- XOÁ BADGE Ở ĐÂY -->
-</div>
+        <!-- THÔNG BÁO - CÓ BADGE Ở ĐÂY -->
+        <div class="nav-item" onclick="switchPage('notifications')">
+            <div class="nav-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="nav-label">Thông báo</div>
+            <div class="notification-badge">3</div>
+        </div>
+        
+        <!-- THU NHẬP - KHÔNG CÓ BADGE -->
+        <div class="nav-item" onclick="switchPage('earnings')">
+            <div class="nav-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="nav-label">Thu nhập</div>
+        </div>
         
         <div class="nav-item" onclick="switchPage('account')">
             <div class="nav-icon">
@@ -1496,6 +1496,7 @@
         console.log('AhaMove Driver App đã sẵn sàng!');
         console.log('💰 Thu nhập hôm nay: 960.000đ');
         console.log('💳 Số dư ví: 16.760đ');
+        console.log('🔔 Thông báo: 3 tin chưa đọc');
     </script>
 </body>
 </html>
