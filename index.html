@@ -504,6 +504,194 @@
             gap: 8px;
         }
         
+        /* ===== TRANG VÍ TÀI XẾ ===== */
+        #wallet-page {
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+            min-height: 100vh;
+        }
+        
+        .wallet-header {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            position: relative;
+        }
+        
+        .wallet-header h2 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .wallet-back-btn {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .wallet-content {
+            padding: 20px;
+        }
+        
+        .wallet-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 2px solid #fed7aa;
+        }
+        
+        .account-item {
+            margin-bottom: 25px;
+        }
+        
+        .account-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .account-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .account-label i {
+            color: #f97316;
+        }
+        
+        .account-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #000;
+            margin: 5px 0;
+        }
+        
+        .account-subvalue {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3);
+        }
+        
+        .action-btn i {
+            font-size: 24px;
+        }
+        
+        .action-btn.deposit {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        .action-btn.withdraw {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        
+        .action-btn.margin {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        }
+        
+        .wallet-menu {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 2px solid #fed7aa;
+        }
+        
+        .wallet-menu-item {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .wallet-menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .wallet-menu-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .wallet-menu-item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .wallet-menu-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff7ed;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f97316;
+            font-size: 20px;
+        }
+        
+        .wallet-menu-text {
+            font-size: 17px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .wallet-menu-arrow {
+            color: #999;
+            font-size: 20px;
+        }
+        
         /* ===== CÁC TRANG KHÁC ===== */
         #orders-page, #notifications-page {
             padding-top: 20px;
@@ -896,10 +1084,10 @@
         </div>
     </div>
 
-    <!-- ===== TRANG TÀI KHOẢN ===== -->
+    <!-- ===== TRANG TÀI KHOẢN (CÓ NÚT DẪN ĐẾN VÍ) ===== -->
     <div id="account-page" class="page">
         <div class="account-header">
-            <div class="back-btn" onclick="goBack()">
+            <div class="back-btn" onclick="switchPage('home')">
                 <i class="fas fa-arrow-left"></i>
             </div>
             
@@ -909,6 +1097,21 @@
             
             <div class="driver-name">ĐOÀN HỮU QUỐC CƯỜNG</div>
             <div style="opacity: 0.9; font-size: 14px;">Tài xế AhaMove</div>
+        </div>
+        
+        <!-- THÊM NÚT VÍ VÀO TRANG TÀI KHOẢN -->
+        <div class="menu-section" style="margin: 20px;">
+            <div class="menu-item" onclick="switchPage('wallet')">
+                <div class="menu-item-left">
+                    <div class="menu-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="menu-text">Ví tài xế</div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
         </div>
         
         <div class="rating-card">
@@ -1004,6 +1207,93 @@
         </div>
     </div>
 
+    <!-- ===== TRANG VÍ TÀI XẾ (MỚI) ===== -->
+    <div id="wallet-page" class="page">
+        <div class="wallet-header">
+            <div class="wallet-back-btn" onclick="switchPage('account')">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            
+            <h2><i class="fas fa-wallet"></i> Ví tài xế</h2>
+            <p>Quản lý tài chính và giao dịch</p>
+        </div>
+
+        <div class="wallet-content">
+            <!-- Tài khoản chính -->
+            <div class="wallet-card">
+                <div class="account-item">
+                    <div class="account-label">
+                        <i class="fas fa-credit-card"></i> Tài khoản chính
+                    </div>
+                    <div class="account-value">₫16.760</div>
+                </div>
+                
+                <div class="account-item">
+                    <div class="account-label">
+                        <i class="fas fa-gift"></i> Tài khoản khuyến mãi
+                    </div>
+                    <div class="account-subvalue">
+                        <span>₫0</span>
+                    </div>
+                </div>
+                
+                <div class="account-item">
+                    <div class="account-label">
+                        <i class="fas fa-shield-alt"></i> Tài khoản ký quỹ
+                    </div>
+                    <div class="account-subvalue">
+                        <span>₫0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="action-buttons">
+                <button class="action-btn deposit" onclick="depositMoney()">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Nạp tiền</span>
+                </button>
+                
+                <button class="action-btn withdraw" onclick="withdrawMoney()">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Rút tiền</span>
+                </button>
+                
+                <button class="action-btn margin" onclick="manageMargin()">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <span>Ký quỹ</span>
+                </button>
+            </div>
+
+            <!-- Menu ví -->
+            <div class="wallet-menu">
+                <div class="wallet-menu-item" onclick="collectPayment()">
+                    <div class="wallet-menu-item-left">
+                        <div class="wallet-menu-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="wallet-menu-text">Nộp tiền thu hộ</div>
+                    </div>
+                    <div class="wallet-menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                
+                <div class="wallet-menu-item" onclick="viewTransactionHistory()">
+                    <div class="wallet-menu-item-left">
+                        <div class="wallet-menu-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="wallet-menu-text">Lịch sử giao dịch</div>
+                    </div>
+                    <div class="wallet-menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== BOTTOM NAVIGATION ===== -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchPage('home')">
@@ -1054,16 +1344,18 @@
             // Hiện trang được chọn
             document.getElementById(pageId + '-page').classList.add('active');
             
-            // Cập nhật active cho nav
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                nav.classList.remove('active');
-            });
-            
-            // Tìm nav tương ứng và set active
-            const navItems = document.querySelectorAll('.nav-item');
-            const pageIndex = ['home', 'orders', 'notifications', 'earnings', 'account'].indexOf(pageId);
-            if (navItems[pageIndex]) {
-                navItems[pageIndex].classList.add('active');
+            // Cập nhật active cho nav (trừ trang ví vì nó không có trong bottom nav)
+            if (pageId !== 'wallet') {
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                
+                // Tìm nav tương ứng và set active
+                const navItems = document.querySelectorAll('.nav-item');
+                const pageIndex = ['home', 'orders', 'notifications', 'earnings', 'account'].indexOf(pageId);
+                if (navItems[pageIndex]) {
+                    navItems[pageIndex].classList.add('active');
+                }
             }
         }
         
@@ -1113,11 +1405,44 @@
             });
         });
         
-        // ===== CHỨC NĂNG TRANG TÀI KHOẢN =====
-        function goBack() {
-            switchPage('home');
+        // ===== CHỨC NĂNG TRANG VÍ =====
+        function depositMoney() {
+            const amount = prompt("Nhập số tiền muốn nạp (VND):", "100000");
+            if (amount && !isNaN(amount)) {
+                const currentBalance = parseInt(document.querySelector('.account-value').textContent.replace('₫', '').replace(/\./g, ''));
+                const newBalance = currentBalance + parseInt(amount);
+                document.querySelector('.account-value').textContent = '₫' + newBalance.toLocaleString();
+                alert(`✅ Đã nạp ${parseInt(amount).toLocaleString()}đ thành công!\nSố dư mới: ${newBalance.toLocaleString()}đ`);
+            }
         }
         
+        function withdrawMoney() {
+            const amount = prompt("Nhập số tiền muốn rút (VND):", "50000");
+            if (amount && !isNaN(amount)) {
+                const currentBalance = parseInt(document.querySelector('.account-value').textContent.replace('₫', '').replace(/\./g, ''));
+                if (parseInt(amount) <= currentBalance) {
+                    const newBalance = currentBalance - parseInt(amount);
+                    document.querySelector('.account-value').textContent = '₫' + newBalance.toLocaleString();
+                    alert(`✅ Đã rút ${parseInt(amount).toLocaleString()}đ thành công!\nSố dư mới: ${newBalance.toLocaleString()}đ`);
+                } else {
+                    alert('❌ Số dư không đủ để rút!');
+                }
+            }
+        }
+        
+        function manageMargin() {
+            alert('📋 Quản lý ký quỹ\n\nKý quỹ để đảm bảo thực hiện đơn hàng chất lượng');
+        }
+        
+        function collectPayment() {
+            alert('💰 Nộp tiền thu hộ\n\nNộp tiền thu hộ từ khách hàng vào tài khoản');
+        }
+        
+        function viewTransactionHistory() {
+            alert('📊 Lịch sử giao dịch\n\nXem tất cả giao dịch nạp/rút tiền');
+        }
+        
+        // ===== CHỨC NĂNG TRANG TÀI KHOẢN =====
         function openHistory() {
             alert('Mở lịch sử đơn hàng\n\nHiển thị tất cả đơn hàng đã thực hiện');
         }
@@ -1135,7 +1460,7 @@
         }
         
         // ===== HIỆU ỨNG =====
-        document.querySelectorAll('.menu-item').forEach(item => {
+        document.querySelectorAll('.menu-item, .wallet-menu-item').forEach(item => {
             item.addEventListener('click', function() {
                 this.style.background = '#f5f5f5';
                 setTimeout(() => {
@@ -1147,10 +1472,12 @@
         // Hiệu ứng cho bottom nav
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
-                document.querySelectorAll('.nav-item').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                this.classList.add('active');
+                if (!this.classList.contains('active')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => {
+                        nav.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
             });
         });
         
@@ -1165,6 +1492,7 @@
         // Khởi tạo
         console.log('AhaMove Driver App đã sẵn sàng!');
         console.log('💰 Thu nhập hôm nay: 960.000đ');
+        console.log('💳 Số dư ví: 16.760đ');
     </script>
 </body>
 </html>
