@@ -3,186 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AhaMove Cam - Driver App</title>
+    <title>Tài khoản - AhaMove Driver</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
+        
         body {
-            background-color: #fff8f0;
+            background-color: #f5f5f5;
             color: #333;
-            padding-bottom: 80px;
+            padding-bottom: 70px;
             max-width: 500px;
             margin: 0 auto;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            background: #f5f5f5;
         }
-        .header {
+        
+        /* Header */
+        .account-header {
             background: linear-gradient(135deg, #f97316, #fb923c);
             color: white;
-            padding: 25px 20px;
+            padding: 30px 20px 40px;
             text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            position: relative;
         }
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
+        
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            cursor: pointer;
         }
-        .header p {
-            opacity: 0.9;
-            font-size: 15px;
-            margin-top: 5px;
-        }
-        .driver-status {
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 15px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: white;
-            margin: 15px;
-            padding: 15px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
-            border: 2px solid #fed7aa;
+            justify-content: center;
+            font-size: 36px;
+            color: #f97316;
+            border: 4px solid rgba(255, 255, 255, 0.3);
         }
-        .status-online {
-            background: #22c55e;
-            color: white;
-            padding: 8px 15px;
+        
+        .driver-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        /* Rating Section */
+        .rating-card {
+            background: white;
+            margin: -30px 20px 20px;
+            border-radius: 16px;
+            padding: 25px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        
+        .rank-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #666;
+            padding: 6px 15px;
             border-radius: 20px;
-            font-weight: bold;
             font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
         }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
-            border: 2px solid #fed7aa;
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
         }
+        
         .stat-item {
             text-align: center;
         }
+        
         .stat-value {
             font-size: 28px;
-            font-weight: bold;
+            font-weight: 700;
             color: #f97316;
+            margin-bottom: 5px;
         }
+        
         .stat-label {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            margin-top: 5px;
+            font-weight: 500;
         }
-        .map-placeholder {
-            background: linear-gradient(to bottom, #fdba74, #fb923c);
-            height: 200px;
-            margin: 15px;
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 18px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.2);
-            border: 2px solid #fdba74;
+        
+        .stars {
+            color: #ffc107;
+            font-size: 20px;
+            margin-bottom: 10px;
         }
-        .map-overlay {
-            z-index: 1;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
-            padding: 20px;
-            border-radius: 15px;
-        }
-        .order-list {
-            margin: 15px;
-        }
-        .order-list h3 {
-            margin-bottom: 15px;
-            color: #ea580c;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .order-item {
+        
+        /* Menu Items */
+        .menu-section {
             background: white;
+            margin: 0 20px 20px;
             border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
-            border-left: 5px solid #f97316;
-            border: 2px solid #fed7aa;
-            transition: transform 0.3s;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
-        .order-item:hover {
-            transform: translateY(-3px);
-        }
-        .order-header {
+        
+        .menu-item {
+            padding: 18px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-        .order-id {
-            font-weight: bold;
-            color: #ea580c;
-            font-size: 18px;
+        
+        .menu-item:hover {
+            background: #f9f9f9;
         }
-        .order-price {
-            background: linear-gradient(to right, #f97316, #fb923c);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 18px;
+        
+        .menu-item:last-child {
+            border-bottom: none;
         }
-        .order-info {
+        
+        .menu-item-left {
             display: flex;
             align-items: center;
-            margin: 10px 0;
-            color: #555;
-            font-size: 15px;
+            gap: 12px;
         }
-        .order-info i {
-            margin-right: 12px;
-            color: #f97316;
-            width: 20px;
-        }
-        .btn-accept {
-            background: linear-gradient(to right, #f97316, #fb923c);
-            color: white;
-            border: none;
-            padding: 15px 0;
-            width: 100%;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
+        
+        .menu-icon {
+            width: 36px;
+            height: 36px;
+            background: #fff7ed;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            border: 2px solid #fdba74;
+            color: #f97316;
+            font-size: 18px;
         }
-        .btn-accept:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(249, 115, 22, 0.3);
+        
+        .menu-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
         }
+        
+        .menu-arrow {
+            color: #999;
+            font-size: 18px;
+        }
+        
+        .menu-badge {
+            background: #f97316;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -191,277 +190,293 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 15px 0;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
             max-width: 500px;
             margin: 0 auto;
-            border-top: 2px solid #fed7aa;
+            z-index: 100;
         }
+        
         .nav-item {
             text-align: center;
-            color: #666;
+            color: #999;
             cursor: pointer;
-            transition: all 0.3s;
-            padding: 5px 10px;
-            border-radius: 10px;
+            transition: color 0.2s;
+            flex: 1;
         }
-        .nav-item.active, .nav-item:hover {
+        
+        .nav-item.active {
             color: #f97316;
-            background: #ffedd5;
         }
-        .nav-item i {
+        
+        .nav-icon {
             font-size: 22px;
-            display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
+        
         .nav-label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
         }
-        .notification {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #ef4444;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+        
+        /* Insurance Section */
+        .insurance-section {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 12px;
+        }
+        
+        .insurance-title {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            animation: pulse 2s infinite;
+            gap: 10px;
+            color: #1d4ed8;
+            font-weight: 600;
+            margin-bottom: 5px;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        
+        /* Loyalty Program */
+        .loyalty-section {
+            margin-top: 25px;
         }
-        .new-order-badge {
-            background: #f97316;
-            color: white;
-            padding: 5px 15px;
+        
+        .section-title {
+            padding: 0 20px 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 20px;
+        }
+        
+        /* History Badge */
+        .history-badge {
+            background: #f3f4f6;
+            color: #666;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        .online-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #22c55e;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 1.5s infinite;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="notification">3</div>
-    
-    <div class="header">
-        <h1><i class="fas fa-shipping-fast"></i> AhaMove Driver</h1>
-        <p><span class="online-dot"></span>Đang trực tuyến - Sẵn sàng nhận đơn</p>
-        <!-- ĐÃ XOÁ THÔNG TIN TÀI XẾ VÀ XE MÁY Ở ĐÂY -->
-    </div>
-
-    <div class="driver-status">
-        <div>
-            <div style="font-weight: bold; font-size: 16px;">Khu vực hoạt động</div>
-            <div style="color: #666; font-size: 14px;">Quận 1, Quận 3, Quận 5 - TP.HCM</div>
+    <!-- Header với thông tin tài xế -->
+    <div class="account-header">
+        <div class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
         </div>
-        <div class="status-online">
-            <i class="fas fa-bolt"></i> ONLINE
-        </div>
-    </div>
-
-    <div class="stats">
-        <div class="stat-item">
-            <div class="stat-value">0</div>
-            <div class="stat-label">Đơn hôm nay</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">₫0</div>
-            <div class="stat-label">Thu nhập</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">5.0 <i class="fas fa-star" style="color: #fbbf24;"></i></div>
-            <div class="stat-label">Đánh giá</div>
-        </div>
-    </div>
-
-    <div class="map-placeholder">
-        <div class="map-overlay">
-            <i class="fas fa-map-marked-alt" style="font-size: 48px; margin-bottom: 10px;"></i>
-            <p>Bản đồ khu vực trung tâm</p>
-            <small><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> Đang tìm đơn hàng...</small>
-        </div>
-    </div>
-
-    <div class="order-list">
-        <h3><i class="fas fa-bolt" style="color: #f97316;"></i> Đơn hàng có sẵn <span class="new-order-badge">MỚI</span></h3>
         
-        <div class="order-item">
-            <div class="order-header">
-                <span class="order-id">#AHM001</span>
-                <span class="order-price">₫45.000</span>
-            </div>
-            <div class="order-info">
-                <i class="fas fa-map-marker-alt"></i>
-                <span><strong>Lấy:</strong> 123 Lê Lợi, Q1 → <strong>Giao:</strong> 456 Nguyễn Huệ, Q1</span>
-            </div>
-            <div class="order-info">
-                <i class="fas fa-route"></i>
-                <span>2.5 km • 15 phút</span>
-            </div>
-            <div class="order-info">
-                <i class="fas fa-box"></i>
-                <span>Tài liệu văn phòng • 0.5kg</span>
-            </div>
-            <div class="order-info">
-                <i class="far fa-clock"></i>
-                <span>Nhận trong 10 phút</span>
-            </div>
-            <button class="btn-accept" onclick="acceptOrder('AHM001')">
-                <i class="fas fa-check-circle"></i> NHẬN ĐƠN NÀY
-            </button>
+        <div class="avatar">
+            <i class="fas fa-user"></i>
         </div>
-
-        <div class="order-item">
-            <div class="order-header">
-                <span class="order-id">#AHM002</span>
-                <span class="order-price">₫68.000</span>
-            </div>
-            <div class="order-info">
-                <i class="fas fa-map-marker-alt"></i>
-                <span><strong>Lấy:</strong> 789 CMT8, Q10 → <strong>Giao:</strong> 321 An Dương Vương, Q5</span>
-            </div>
-            <div class="order-info">
-                <i class="fas fa-route"></i>
-                <span>4 km • 25 phút</span>
-            </div>
-            <div class="order-info">
-                <i class="fas fa-box"></i>
-                <span>Hàng điện tử • 2kg</span>
-            </div>
-            <div class="order-info">
-                <i class="fas fa-crown" style="color: #fbbf24;"></i>
-                <span>Ưu tiên • Thưởng thêm ₫10.000</span>
-            </div>
-            <button class="btn-accept" onclick="acceptOrder('AHM002')">
-                <i class="fas fa-bolt"></i> NHẬN NGAY
-            </button>
+        
+        <div class="driver-name">ĐOÀN HỮU QUỐC CƯỜNG</div>
+        <div style="opacity: 0.9; font-size: 14px;">Tài xế AhaMove</div>
+    </div>
+    
+    <!-- Thông tin xếp hạng và đánh giá -->
+    <div class="rating-card">
+        <div class="rank-badge">
+            <i class="fas fa-medal"></i> CHƯA XẾP HẠNG
         </div>
-
-        <div class="order-item">
-            <div class="order-header">
-                <span class="order-id">#AHM003</span>
-                <span class="order-price">₫35.000</span>
+        
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-value">5★</div>
+                <div class="stat-label">Đánh giá</div>
             </div>
-            <div class="order-info">
-                <i class="fas fa-map-marker-alt"></i>
-                <span><strong>Lấy:</strong> 555 Nguyễn Văn Linh, Q7 → <strong>Giao:</strong> 777 Tôn Dật Tiên, Q7</span>
+            
+            <div class="stat-item">
+                <div class="stat-value">100,0%</div>
+                <div class="stat-label">Tỷ lệ chấp nhận</div>
             </div>
-            <div class="order-info">
-                <i class="fas fa-route"></i>
-                <span>1.8 km • 12 phút</span>
+            
+            <div class="stat-item">
+                <div class="stat-value">0,0%</div>
+                <div class="stat-label">Tỷ lệ huỷ đơn</div>
             </div>
-            <div class="order-info">
-                <i class="fas fa-box"></i>
-                <span>Thực phẩm • 1.2kg</span>
-            </div>
-            <div class="order-info">
-                <i class="far fa-clock"></i>
-                <span>Nhận trong 15 phút</span>
-            </div>
-            <button class="btn-accept" onclick="acceptOrder('AHM003')">
-                <i class="fas fa-check-circle"></i> NHẬN ĐƠN
-            </button>
         </div>
     </div>
-
+    
+    <!-- Lịch sử đơn -->
+    <div class="menu-section">
+        <div class="menu-item" onclick="openHistory()">
+            <div class="menu-item-left">
+                <div class="menu-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="menu-text">Lịch sử đơn</div>
+            </div>
+            <div class="history-badge">
+                <i class="fas fa-motorcycle"></i> Vi Tài Xế
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bảo hiểm -->
+    <div class="insurance-section">
+        <div class="insurance-title">
+            <i class="fas fa-shield-alt"></i>
+            <span>Bảo hiểm</span>
+        </div>
+        <div style="color: #666; font-size: 14px; margin-top: 5px;">
+            Bảo hiểm tai nạn và trách nhiệm dân sự
+        </div>
+    </div>
+    
+    <!-- Tài xế thân thiết -->
+    <div class="section-title">Tài xế thân thiết</div>
+    
+    <div class="menu-section">
+        <div class="menu-item" onclick="openReferral()">
+            <div class="menu-item-left">
+                <div class="menu-icon" style="background: #f0f9ff; color: #3b82f6;">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="menu-text">Giới thiệu & nhận thưởng</div>
+            </div>
+            <div class="menu-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        
+        <div class="menu-item" onclick="openChallenges()">
+            <div class="menu-item-left">
+                <div class="menu-icon" style="background: #fef3c7; color: #f59e0b;">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="menu-text">Thử thách</div>
+            </div>
+            <div class="menu-badge">MỚI</div>
+        </div>
+        
+        <div class="menu-item" onclick="openCompetition()">
+            <div class="menu-item-left">
+                <div class="menu-icon" style="background: #f0fdf4; color: #22c55e;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="menu-text">Thi đua Tài Xế</div>
+            </div>
+            <div class="menu-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item active">
-            <i class="fas fa-home"></i>
+        <div class="nav-item" onclick="goToPage('home')">
+            <div class="nav-icon">
+                <i class="fas fa-home"></i>
+            </div>
             <div class="nav-label">Trang chủ</div>
         </div>
-        <div class="nav-item" onclick="showPage('orders')">
-            <i class="fas fa-clipboard-list"></i>
+        
+        <div class="nav-item" onclick="goToPage('orders')">
+            <div class="nav-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
             <div class="nav-label">Đơn hàng</div>
         </div>
-        <div class="nav-item" onclick="showPage('earnings')">
-            <i class="fas fa-chart-line"></i>
+        
+        <div class="nav-item" onclick="goToPage('notifications')">
+            <div class="nav-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="nav-label">Thông báo</div>
+        </div>
+        
+        <div class="nav-item" onclick="goToPage('earnings')">
+            <div class="nav-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
             <div class="nav-label">Thu nhập</div>
         </div>
-        <div class="nav-item" onclick="showPage('account')">
-            <i class="fas fa-user-circle"></i>
+        
+        <div class="nav-item active">
+            <div class="nav-icon">
+                <i class="fas fa-user-circle"></i>
+            </div>
             <div class="nav-label">Tài khoản</div>
         </div>
     </div>
 
     <script>
-        function acceptOrder(orderId) {
-            // Tăng số đơn hôm nay
-            const todayOrders = document.querySelector('.stat-value');
-            todayOrders.textContent = parseInt(todayOrders.textContent) + 1;
-            
-            // Tăng thu nhập
-            const earnings = document.querySelectorAll('.stat-value')[1];
-            const currentEarnings = parseInt(earnings.textContent.replace('₫', '').replace('K', '000'));
-            const orderPrice = parseInt(document.querySelector(`.order-id:contains("${orderId}")`)
-                .closest('.order-item')
-                .querySelector('.order-price')
-                .textContent
-                .replace('₫', '')
-                .replace('.', ''));
-            
-            earnings.textContent = '₫' + (currentEarnings + orderPrice);
-            
-            // Hiệu ứng visual
-            const orderElement = document.querySelector(`.order-id:contains("${orderId}")`).closest('.order-item');
-            orderElement.style.borderLeftColor = '#22c55e';
-            orderElement.style.opacity = '0.7';
-            
-            // Thông báo
-            alert(`✅ Bạn đã nhận đơn hàng ${orderId}!\n\nHãy đến điểm lấy hàng trong vòng 10 phút.\nChúc bạn giao hàng an toàn!`);
-            
-            // Xoá thông báo
-            const notif = document.querySelector('.notification');
-            notif.textContent = Math.max(0, parseInt(notif.textContent) - 1);
+        function goBack() {
+            alert('Quay lại trang trước');
+            // window.history.back();
         }
-
-        function showPage(page) {
-            const pageNames = {
-                'orders': '📋 Quản lý đơn hàng',
-                'earnings': '💰 Thống kê thu nhập',
-                'account': '👤 Thông tin tài khoản'
+        
+        function goToPage(page) {
+            const pages = {
+                'home': 'Trang chủ',
+                'orders': 'Đơn hàng',
+                'notifications': 'Thông báo',
+                'earnings': 'Thu nhập'
             };
             
-            alert(`${pageNames[page]}\n\nTính năng đang được phát triển.\nPhiên bản đầy đủ sẽ có sớm!`);
+            if (page !== 'home') {
+                alert(`Chuyển đến trang: ${pages[page]}\n\nTính năng đang phát triển`);
+            }
         }
-
-        // Simulate new orders every 30 giây
-        setInterval(() => {
-            const notif = document.querySelector('.notification');
-            notif.textContent = parseInt(notif.textContent) + 1;
-            
-            // Thêm hiệu ứng cho badge MỚI
-            const badge = document.querySelector('.new-order-badge');
-            badge.style.animation = 'pulse 0.5s 3';
-            
-            console.log('🔄 Đang tìm đơn hàng mới...');
-        }, 30000);
-
-        // Thêm hiệu ứng chấm xanh online
-        setInterval(() => {
-            const dot = document.querySelector('.online-dot');
-            dot.style.animation = 'none';
-            setTimeout(() => {
-                dot.style.animation = 'pulse 1.5s infinite';
-            }, 10);
-        }, 5000);
+        
+        function openHistory() {
+            alert('Mở lịch sử đơn hàng\n\nHiển thị tất cả đơn hàng đã thực hiện');
+        }
+        
+        function openReferral() {
+            alert('Giới thiệu & nhận thưởng\n\nGiới thiệu bạn bè trở thành tài xế và nhận hoa hồng');
+        }
+        
+        function openChallenges() {
+            alert('Thử thách tài xế\n\nTham gia thử thách hàng tuần để nhận thưởng');
+        }
+        
+        function openCompetition() {
+            alert('Thi đua Tài Xế\n\nXem bảng xếp hạng và thi đua với tài xế khác');
+        }
+        
+        // Hiệu ứng khi click menu
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.background = '#f5f5f5';
+                setTimeout(() => {
+                    this.style.background = '';
+                }, 200);
+            });
+        });
+        
+        // Hiệu ứng cho bottom nav
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Simulate loading
+        window.addEventListener('load', function() {
+            console.log('Tài khoản tài xế đã tải xong');
+        });
     </script>
 </body>
 </html>
