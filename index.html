@@ -1310,20 +1310,23 @@
             <div class="nav-label">Đơn hàng</div>
         </div>
         
-        <div class="nav-item" onclick="switchPage('notifications')">
-            <div class="nav-icon">
-                <i class="fas fa-bell"></i>
-            </div>
-            <div class="nav-label">Thông báo</div>
-            <div class="notification-badge">3</div>
-        </div>
-        
-        <div class="nav-item" onclick="switchPage('earnings')">
-            <div class="nav-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="nav-label">Thu nhập</div>
-        </div>
+        // TRONG PHẦN BOTTOM NAV HTML, SỬA:
+<div class="nav-item" onclick="switchPage('notifications')">
+    <div class="nav-icon">
+        <i class="fas fa-bell"></i>
+    </div>
+    <div class="nav-label">Thông báo</div>
+    <!-- THÊM BADGE VÀO ĐÂY -->
+    <div class="notification-badge">3</div>
+</div>
+
+<div class="nav-item" onclick="switchPage('earnings')">
+    <div class="nav-icon">
+        <i class="fas fa-chart-line"></i>
+    </div>
+    <div class="nav-label">Thu nhập</div>
+    <!-- XOÁ BADGE Ở ĐÂY -->
+</div>
         
         <div class="nav-item" onclick="switchPage('account')">
             <div class="nav-icon">
