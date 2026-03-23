@@ -1,1502 +1,1454 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AhaMove Driver - Ứng dụng tài xế</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* RESET & BASE */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            padding-bottom: 70px;
-            max-width: 500px;
-            margin: 0 auto;
-            position: relative;
-            min-height: 100vh;
-        }
-        
-        /* ẨN/HIỆN CÁC TRANG */
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .page.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* ===== TRANG CHỦ (HOME) ===== */
-        #home-page {
-            background-color: #fff8f0;
-        }
-        
-        .home-header {
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
-        
-        .home-header h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .driver-status {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            margin: 15px;
-            padding: 15px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
-            border: 2px solid #fed7aa;
-        }
-        
-        .status-online {
-            background: #22c55e;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
-            border: 2px solid #fed7aa;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #f97316;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        .map-placeholder {
-            background: linear-gradient(to bottom, #fdba74, #fb923c);
-            height: 200px;
-            margin: 15px;
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 18px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.2);
-            border: 2px solid #fdba74;
-        }
-        
-        .order-list {
-            margin: 15px;
-        }
-        
-        .order-list h3 {
-            margin-bottom: 15px;
-            color: #ea580c;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .order-item {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
-            border-left: 5px solid #f97316;
-            border: 2px solid #fed7aa;
-            transition: transform 0.3s;
-        }
-        
-        .btn-accept {
-            background: linear-gradient(to right, #f97316, #fb923c);
-            color: white;
-            border: none;
-            padding: 15px 0;
-            width: 100%;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: 2px solid #fdba74;
-        }
-        
-        /* ===== TRANG THU NHẬP (EARNINGS) ===== */
-        #earnings-page {
-            background-color: #f8fafc;
-        }
-        
-        .earnings-header {
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
-        
-        .earnings-header h2 {
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .today-highlight {
-            background: #ffedd5;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px;
-            border-left: 4px solid #f97316;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .today-label {
-            font-weight: 600;
-            color: #333;
-            font-size: 16px;
-        }
-        
-        .today-amount {
-            font-size: 24px;
-            font-weight: 700;
-            color: #f97316;
-        }
-        
-        .date-selector {
-            background: white;
-            margin: 20px;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 2px solid #fed7aa;
-        }
-        
-        .date-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .date-item {
-            flex: 1;
-            text-align: center;
-            padding: 12px 8px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 0 2px;
-            min-width: 80px;
-        }
-        
-        .date-item.active {
-            background: #ffedd5;
-            color: #f97316;
-            font-weight: 600;
-            border: 2px solid #f97316;
-        }
-        
-        .date-range {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .goal-banner {
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            color: white;
-            margin: 20px;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
-        
-        .goal-text {
-            font-size: 15px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .goal-btn {
-            background: white;
-            color: #3b82f6;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-        
-        .total-earnings {
-            margin: 20px;
-        }
-        
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .earnings-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .earning-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 2px solid #fed7aa;
-            text-align: center;
-        }
-        
-        .earning-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #f97316;
-            margin-bottom: 5px;
-        }
-        
-        .earning-label {
-            font-size: 14px;
-            color: #666;
-            font-weight: 500;
-        }
-        
-        .weekly-calendar {
-            background: white;
-            margin: 20px;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 2px solid #fed7aa;
-        }
-        
-        .week-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .day-item {
-            text-align: center;
-            padding: 12px 5px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .day-item.today {
-            background: #f97316;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .day-name {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        
-        /* ===== TRANG TÀI KHOẢN ===== */
-        #account-page .account-header {
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
-            padding: 30px 20px 40px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .back-btn {
-            position: absolute;
-            left: 20px;
-            top: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        
-        .avatar {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            color: #f97316;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .driver-name {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .rating-card {
-            background: white;
-            margin: -30px 20px 20px;
-            border-radius: 16px;
-            padding: 25px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            text-align: center;
-        }
-        
-        .rank-badge {
-            display: inline-block;
-            background: #f0f0f0;
-            color: #666;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 15px;
-        }
-        
-        .menu-section {
-            background: white;
-            margin: 0 20px 20px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        
-        .menu-item {
-            padding: 18px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .menu-item-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .menu-icon {
-            width: 36px;
-            height: 36px;
-            background: #fff7ed;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #f97316;
-            font-size: 18px;
-        }
-        
-        .menu-text {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-        }
-        
-        .menu-arrow {
-            color: #999;
-            font-size: 18px;
-        }
-        
-        .insurance-section {
-            background: #f0f9ff;
-            border-left: 4px solid #3b82f6;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 12px;
-        }
-        
-        .section-title-account {
-            padding: 0 20px 10px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .history-badge {
-            background: #f3f4f6;
-            color: #666;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        /* ===== TRANG VÍ TÀI XẾ ===== */
-        #wallet-page {
-            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
-            min-height: 100vh;
-        }
-        
-        .wallet-header {
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            position: relative;
-        }
-        
-        .wallet-header h2 {
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .wallet-back-btn {
-            position: absolute;
-            left: 20px;
-            top: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        
-        .wallet-content {
-            padding: 20px;
-        }
-        
-        .wallet-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            border: 2px solid #fed7aa;
-        }
-        
-        .account-item {
-            margin-bottom: 25px;
-        }
-        
-        .account-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .account-label {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .account-label i {
-            color: #f97316;
-        }
-        
-        .account-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #000;
-            margin: 5px 0;
-        }
-        
-        .account-subvalue {
-            font-size: 22px;
-            font-weight: 600;
-            color: #333;
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin: 30px 0;
-        }
-        
-        .action-btn {
-            flex: 1;
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3);
-        }
-        
-        .action-btn i {
-            font-size: 24px;
-        }
-        
-        .action-btn.deposit {
-            background: linear-gradient(135deg, #10b981, #34d399);
-        }
-        
-        .action-btn.withdraw {
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-        }
-        
-        .action-btn.margin {
-            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-        }
-        
-        .wallet-menu {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 2px solid #fed7aa;
-        }
-        
-        .wallet-menu-item {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .wallet-menu-item:last-child {
-            border-bottom: none;
-        }
-        
-        .wallet-menu-item:hover {
-            background: #f9f9f9;
-        }
-        
-        .wallet-menu-item-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .wallet-menu-icon {
-            width: 40px;
-            height: 40px;
-            background: #fff7ed;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #f97316;
-            font-size: 20px;
-        }
-        
-        .wallet-menu-text {
-            font-size: 17px;
-            font-weight: 500;
-            color: #333;
-        }
-        
-        .wallet-menu-arrow {
-            color: #999;
-            font-size: 20px;
-        }
-        
-        /* ===== CÁC TRANG KHÁC ===== */
-        #orders-page, #notifications-page {
-            padding-top: 20px;
-        }
-        
-        .page-header {
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .page-header h2 {
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .content-placeholder {
-            background: white;
-            margin: 20px;
-            padding: 40px 20px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            color: #666;
-            border: 2px solid #fed7aa;
-        }
-        
-        .content-placeholder i {
-            font-size: 48px;
-            color: #f97316;
-            margin-bottom: 15px;
-        }
-        
-        /* ===== BOTTOM NAVIGATION ===== */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
-            max-width: 500px;
-            margin: 0 auto;
-            z-index: 100;
-        }
-        
-        .nav-item {
-            text-align: center;
-            color: #999;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex: 1;
-            position: relative;
-        }
-        
-        .nav-item.active {
-            color: #f97316;
-        }
-        
-        .nav-icon {
-            font-size: 22px;
-            margin-bottom: 4px;
-            transition: transform 0.2s;
-        }
-        
-        .nav-item.active .nav-icon {
-            transform: scale(1.1);
-        }
-        
-        .nav-label {
-            font-size: 11px;
-            font-weight: 500;
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: 25%;
-            background: #ef4444;
-            color: white;
-            font-size: 10px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        /* Order item styles */
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .order-id {
-            font-weight: bold;
-            color: #ea580c;
-            font-size: 18px;
-        }
-        
-        .order-price {
-            background: linear-gradient(to right, #f97316, #fb923c);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .order-info {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            color: #555;
-            font-size: 15px;
-        }
-        
-        .order-info i {
-            margin-right: 12px;
-            color: #f97316;
-            width: 20px;
-        }
-        
-        .new-order-badge {
-            background: #f97316;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        
-        .online-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #22c55e;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <title>Nạp Coins TikTok</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+
+  <style>
+    :root{
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      color: #111;
+      -webkit-font-smoothing:antialiased;
+      -webkit-text-size-adjust:100%;
+      touch-action: pan-y;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    /* Header - Fixed */
+    header.ios-header {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      z-index: 1200;
+      box-sizing: border-box;
+    }
+    header.ios-header .header-inner {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: calc(8px + var(--safe-top)) 16px 8px;
+      display: grid;
+      grid-template-columns: 56px 1fr 56px;
+      align-items: center;
+      gap: 8px;
+      box-sizing: border-box;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 56px;
+      height: 40px;
+      padding-left: 6px;
+      border: none;
+      background: transparent;
+      color: #000;
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 1;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .back-btn:active { opacity: 0.7; }
+
+    .ios-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 6px;
+    }
+
+    .more-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 56px;
+      height: 40px;
+      padding-right: 6px;
+      border: none;
+      background: transparent;
+      color: #333;
+      font-size: 22px;
+      font-weight: 500;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .more-btn:active { opacity: 0.75; }
+
+    /* Main container */
+    .main-content { 
+      margin-top: 72px;
+      height: calc(100vh - 72px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .container {
+      margin: 0 auto;
+      max-width: 420px;
+      width: 100%;
+      padding: 20px 16px 220px;
+      box-sizing: border-box;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+
+    /* Balance box */
+    .balance-box {
+      display:flex;
+      align-items:center;
+      background:#fff;
+      border-radius:12px;
+      padding:12px 15px;
+      gap:12px;
+      border: 1px solid rgba(0,0,0,0.03);
+      box-sizing:border-box;
+      width:100%;
+    }
+    .tiktok-logo { width:40px; height:40px; object-fit:contain; }
+    .balance-info { display:flex; flex-direction:column; gap:4px; }
+    .recharge-text { font-size:18px; font-weight:700; color:#000; }
+    .balance-line { display:flex; align-items:center; gap:8px; }
+    .coin-icon { width:18px; height:18px; }
+    #balanceAmount { font-size:15px; color:#111; border:none; background:transparent; font-size: 16px; }
+
+    /* Recharge section */
+    .recharge-section { width:100%; box-sizing:border-box; }
+    .recharge-section h3 { margin:0 0 8px 0; font-size:23px; font-weight:700; position: sticky; top: 0; background: white; padding: 10px 0; z-index: 10; }
+
+    /* Thêm 2 dòng text mới */
+    .recharge-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .recharge-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #000;
+      text-align: left;
+    }
+    .recharge-discount {
+      font-size: 15px;
+      color: #fe2c55;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    /* Cập nhật: Đặt chiều cao ô username bằng nút Recharge */
+    .tiktok-input-wrapper {
+      display:flex;
+      align-items:center;
+      border:1.5px solid #d0d0d0;
+      border-radius:10px;
+      padding:0 10px;
+      background:#f9f9f9;
+      box-sizing:border-box;
+      width:100%;
+      transition: border-color 0.2s ease;
+      font-size: 16px;
+      height: 44px; /* Chiều cao bằng nút Recharge */
+    }
+    .tiktok-input-wrapper:focus-within {
+      border-color: #007AFF;
+      background: #fff;
+    }
+    .tiktok-input-wrapper .at-symbol { margin-right:8px; color:#666; font-size: 16px; }
+    .tiktok-input-wrapper input { 
+      border:none; 
+      outline:none; 
+      flex:1; 
+      font-size:16px; 
+      padding:10px 0; 
+      background:transparent; 
+      width:100%;
+      height: 100%; /* Chiếm toàn bộ chiều cao */
+      min-height: auto; /* Ghi đè min-height cũ */
+    }
+    
+    /* Error message */
+    .error-message {
+      color: #fe2c55;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    .tiktok-input-wrapper.error {
+      border-color: #fe2c55;
+    }
+
+    /* Coins grid */
+    .coins-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+      box-sizing: border-box;
+      width:100%;
+    }
+    .coin-option {
+      background: #e3e3e3;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 10px;
+      padding: 12px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.18s;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      user-select: none;
+      box-sizing: border-box;
+      width:100%;
+    }
+    .coin-option:focus { outline: 3px solid rgba(254,44,85,0.12); }
+    .coin-option.selected { border-color: #fe2c55; background: #fff2f5; }
+    .coin-option.disabled { opacity: 0.45; pointer-events: none; }
+    .coin-value { font-weight:600; font-size:18px; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .coin-value img { width:18px; height:18px; }
+    .coin-price { font-size:13px; color:#777; }
+
+    /* Footer */
+    .payment-footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid #eee;
+      box-shadow: 0 -3px 10px rgba(0,0,0,0.06);
+      z-index: 1200;
+      box-sizing: border-box;
+    }
+    .payment-footer .footer-inner {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 12px 16px calc(12px + var(--safe-bottom));
+      box-sizing: border-box;
+    }
+    .payment-logos { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
+    .pay-icon { height:14px; width:auto; object-fit:contain; }
+    .total-line { display:flex; justify-content:space-between; width:100%; font-size:15px; color:#333; margin:8px 0; }
+    .done-btn {
+      width:100%;
+      background:#fe2c55;
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      padding:13px;
+      font-size:16px;
+      cursor:pointer;
+      height: 48px; /* Chiều cao cố định */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px; /* khoảng cách giữa icon và chữ */
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .done-btn:not([disabled]):active {
+      transform: scale(0.98); /* Hiệu ứng nhấn */
+    }
+    /* SỬA: Loại bỏ trạng thái disabled mờ */
+    .done-btn[disabled] { 
+      opacity: 1; /* Thay đổi từ 0.6 thành 1 */
+      cursor: pointer; /* Thay đổi từ not-allowed thành pointer */
+      background: #fe2c55; /* Giữ nguyên màu nền */
+    }
+
+    /* Sheet - Updated to match requirements */
+    .sheet-backdrop {  
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Easing mượt hơn */
+      z-index:1500; 
+    }
+    .sheet-backdrop.active { opacity: 1; visibility: visible; }
+    .sheet { 
+      position: fixed; 
+      left: 0; 
+      right: 0; 
+      bottom: -100%; 
+      background: #fff; 
+      border-top-left-radius:20px; 
+      border-top-right-radius:20px; 
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.2); 
+      transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Easing mượt hơn */
+      z-index:1501;
+      height: 70vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(10px); /* Thêm transform ban đầu */
+      opacity: 0; /* Thêm opacity ban đầu */
+    }
+    .sheet.active { 
+      bottom: 0;
+      transform: translateY(0); /* Reset transform */
+      opacity: 1; 
+    }
+    .sheet-header { 
+      padding: 16px 20px; 
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+    }
+    .sheet-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .help-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+    .sheet-title {
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      flex: 1;
+    }
+    
+    .sheet-body { 
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Cập nhật: Number of Coins và mũi tên thanh mỏng căn trái */
+    .number-of-coins-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      justify-content: flex-start; /* Căn trái */
+    }
+    
+    .number-of-coins-text {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .arrow-symbol {
+      font-size: 14px;
+      color: #666;
+      font-weight: 300;
+      transform: scale(1.3);
+      display: inline-block;
+    }
+    
+    /* Cập nhật: Coin input section căn trái */
+    .coin-input-section {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* Căn trái */
+      gap: 10px;
+      margin: 20px 0;
+      padding: 15px;
+      background: #fff; /* Đổi màu nền thành trắng */
+      border: 1.5px solid #e0e0e0;
+      border-radius: 12px;
+    }
+    
+    .coin-input {
+      border: none;
+      background: transparent;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: left; /* Căn trái */
+      outline: none;
+      width: 100%;
+      color: #000;
+    }
+    
+    /* Cập nhật: Keypad với background trắng và phím màu xám */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px; /* Giảm khoảng cách xuống 1mm */
+      margin: 20px 0;
+      background: #fff; /* Background bàn phím màu trắng */
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .keypad-btn {
+      background: #f0f0f0; /* Phím màu xám nhạt */
+      border: none;
+      border-radius: 6px; /* Bo góc nhẹ */
+      padding: 15px 5px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      height: 55px; /* Tăng chiều cao phím */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      min-width: 0; /* Đảm bảo phím co lại vừa với grid */
+    }
+
+    .keypad-btn:active {
+      background: #e0e0e0; /* Màu khi nhấn */
+    }
+
+    .keypad-btn.backspace {
+      font-size: 18px;
+    }
+    
+    .sheet-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      margin: 10px 0;
+    }
+    
+    .total-label {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .total-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    /* Order Summary Popup - Updated */
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Thêm easing */
+    }
+    
+    .popup-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .order-popup {
+      background: white;
+      border-radius: 16px;
+      padding: 0;
+      width: 90%;
+      max-width: 340px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .popup-backdrop.active .order-popup {
+      transform: scale(1);
+    }
+    
+    .order-header {
+      padding: 20px 20px 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .order-main-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+    
+    .order-account-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    
+    .account-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+    
+    .account-username {
+      font-size: 16px;
+      color: #666;
+    }
+    
+    .order-details {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .coins-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .coins-label {
+      font-size: 15px;
+      color: #777;
+    }
+    
+    .coins-price {
+      font-size: 15px;
+      color: #777;
+    }
+    
+    .total-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    
+    .total-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+    
+    .total-price {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+    
+    .payment-method-section {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .payment-method-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 10px;
+    }
+    
+    .payment-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+    
+    .card-logo {
+      width: 40px;
+      height: 25px;
+      object-fit: contain;
+    }
+    
+    .card-number {
+      font-size: 15px;
+      color: #333;
+    }
+    
+    .terms-section {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .terms-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      text-align: justify; /* Căn đều hai bên */
+    }
+
+    .privacy-policy {
+      font-weight: bold; /* In đậm chữ Privacy Policy */
+    }
+    
+    .terms-text:last-child {
+      margin-bottom: 0;
+    }
+    
+    .popup-buttons {
+      padding: 15px 20px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    .popup-cancel {
+      flex: 1;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #333;
+    }
+    
+    .popup-confirm {
+      flex: 1;
+      background: #fe2c55;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Processing Popup - Updated với hiệu ứng hai vòng tròn */
+    .processing-popup {
+      background: white;
+      border-radius: 16px;
+      padding: 40px 30px;
+      width: 90%;
+      max-width: 300px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      text-align: center;
+    }
+    
+    .popup-backdrop.active .processing-popup {
+      transform: scale(1);
+    }
+    
+    /* Thay thế spinner bằng container cho hiệu ứng hai vòng tròn */
+    .circles-container {
+      width: 120px;
+      height: 80px;
+      margin: 0 auto 20px;
+      position: relative;
+      transition: opacity 0.3s ease
+    }
+    
+    .processing-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #000;
+      text-align: center;
+    }
+    
+    .processing-subtext {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    .countdown {
+        font-size: 16px;
+        font-weight: 600;
+        color: #666;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Đổi font thành font hệ thống */
+        text-align: center;
+      }
+    
+
+    /* Success Popup */
+    .success-popup {
+      background: white;
+      border-radius: 16px;
+      padding: 40px 30px;
+      width: 90%;
+      max-width: 320px; /* Tăng từ 300px lên 320px */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      text-align: center;
+    }
+    
+    .popup-backdrop.active .success-popup {
+       transform: scale(1) translateY(0); /* Reset translateY */
+        opacity: 1;
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: #00d95f;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    
+    .success-icon::after {
+      content: '✓';
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+    }
+    
+    .success-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #000;
+      text-align: center;
+    }
+    
+    .success-message {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
+
+    /* Protect icon styles */
+    .protect-icon {
+      width: 25px !important;
+      height: 27px !important;
+      margin-right: 0px !important;
+      display: block;
+      transform: translateY(1px);
+    }
+
+    /* Hiệu ứng cho coin options */
+    .coin-option {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .coin-option:active {
+      transform: scale(0.95);
+    }
+
+    @media (max-width: 340px) {
+      .coin-value { font-size:16px; }
+      .coin-price { font-size:12px; }
+      .keypad-btn { font-size: 18px; padding: 12px; }
+      .tiktok-input-wrapper { height: 48px; } /* Giảm nhẹ chiều cao trên màn hình nhỏ */
+    }
+  </style>
 </head>
 <body>
-    <!-- ===== TRANG CHỦ ===== -->
-    <div id="home-page" class="page active">
-        <div class="home-header">
-            <h1><i class="fas fa-shipping-fast"></i> AhaMove Driver</h1>
-            <p><span class="online-dot"></span>Đang trực tuyến - Sẵn sàng nhận đơn</p>
+  <div class="phone">
+    <header class="ios-header" role="banner">
+      <div class="header-inner">
+        <button class="back-btn" id="backBtn" aria-label="Trở lại">&lsaquo;</button>
+        <div class="ios-title" id="pageTitle">Get Coins to send Gifts to TikTok</div>
+        <button class="more-btn" id="moreBtn" aria-label="Thêm tùy chọn">⋯</button>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <main class="container" role="main">
+        <div class="balance-box" aria-hidden="false">
+          <img src="tiktok.png" class="tiktok-logo" alt="TikTok logo">
+          <div class="balance-info">
+            <span class="recharge-text">Recharge</span>
+            <div class="balance-line">
+              <img src="coin.png" class="coin-icon" alt="coin icon">
+              <input type="text" id="balanceAmount" value="2,506,051" readonly aria-readonly="true" />
+            </div>
+          </div>
         </div>
 
-        <div class="driver-status">
-            <div>
-                <div style="font-weight: bold; font-size: 16px;">Khu vực hoạt động</div>
-                <div style="color: #666; font-size: 14px;">Quận 1, Quận 3, Quận 5 - TP.HCM</div>
-            </div>
-            <div class="status-online">
-                <i class="fas fa-bolt"></i> ONLINE
-            </div>
-        </div>
+        <section class="recharge-section" aria-label="Get Coins section">
+          <h3>Get Coins</h3>
 
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-value">0</div>
-                <div class="stat-label">Đơn hôm nay</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">₫0</div>
-                <div class="stat-label">Thu nhập</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">5.0 <i class="fas fa-star" style="color: #fbbf24;"></i></div>
-                <div class="stat-label">Đánh giá</div>
-            </div>
-        </div>
+          <!-- Thêm 2 dòng text mới ở đây -->
+          <div class="recharge-info">
+            <div class="recharge-title">Recharge form</div>
+            <div class="recharge-discount">Save around 30% with a lower third-party service fee.</div>
+          </div>
 
-        <div class="map-placeholder">
-            <div style="z-index: 1; text-align: center;">
-                <i class="fas fa-map-marked-alt" style="font-size: 48px; margin-bottom: 10px;"></i>
-                <p>Bản đồ khu vực trung tâm</p>
-                <small><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> Đang tìm đơn hàng...</small>
-            </div>
-        </div>
+          <label for="tiktokId" class="visually-hidden">TikTok username</label>
+          <div class="tiktok-input-wrapper" id="usernameWrapper">
+            <span class="at-symbol" aria-hidden="true">@</span>
+            <input type="text" id="tiktokId" placeholder="username" aria-label="TikTok username" autocomplete="username">
+          </div>
+          <div class="error-message" id="usernameError">Please enter a valid TikTok username</div>
 
-        <div class="order-list">
-            <h3><i class="fas fa-bolt" style="color: #f97316;"></i> Đơn hàng có sẵn <span class="new-order-badge">MỚI</span></h3>
-            
-            <div class="order-item">
-                <div class="order-header">
-                    <span class="order-id">#AHM001</span>
-                    <span class="order-price">₫45.000</span>
-                </div>
-                <div class="order-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span><strong>Lấy:</strong> 123 Lê Lợi, Q1 → <strong>Giao:</strong> 456 Nguyễn Huệ, Q1</span>
-                </div>
-                <div class="order-info">
-                    <i class="fas fa-route"></i>
-                    <span>2.5 km • 15 phút</span>
-                </div>
-                <div class="order-info">
-                    <i class="fas fa-box"></i>
-                    <span>Tài liệu văn phòng • 0.5kg</span>
-                </div>
-                <div class="order-info">
-                    <i class="far fa-clock"></i>
-                    <span>Nhận trong 10 phút</span>
-                </div>
-                <button class="btn-accept" onclick="acceptOrder('AHM001')">
-                    <i class="fas fa-check-circle"></i> NHẬN ĐƠN NÀY
-                </button>
+          <div class="coins-grid" role="list">
+            <div class="coin-option" role="button" tabindex="0" data-coins="70" data-price="1.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">70</div>
+              <div class="coin-price">$1.00</div>
             </div>
-        </div>
-    </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="350" data-price="5.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">350</div>
+              <div class="coin-price">$5.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="700" data-price="9.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">700</div>
+              <div class="coin-price">$9.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="1700" data-price="19.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">1,700</div>
+              <div class="coin-price">$19.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="3000" data-price="29.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">3,000</div>
+              <div class="coin-price">$29.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="7000" data-price="69.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">7,000</div>
+              <div class="coin-price">$69.00</div>
+            </div>
+            <div class="coin-option" role="button" tabindex="0" data-coins="17500" data-price="199.00">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">17,500</div>
+              <div class="coin-price">$199.00</div>
+            </div>
+            <div class="coin-option" id="customOption" role="button" tabindex="0" aria-label="Custom amount">
+              <div class="coin-value"><img src="coin.png" alt="coin icon">Custom</div>
+            </div>
+          </div>
+        </section>
+      </main>
 
-    <!-- ===== TRANG ĐƠN HÀNG ===== -->
-    <div id="orders-page" class="page">
-        <div class="page-header">
-            <h2><i class="fas fa-clipboard-list"></i> Đơn hàng</h2>
-            <p>Quản lý và theo dõi đơn hàng</p>
-        </div>
-        
-        <div class="content-placeholder">
-            <i class="fas fa-clipboard-list"></i>
-            <h3>Quản lý đơn hàng</h3>
-            <p>Xem tất cả đơn hàng đã nhận, đang giao và đã hoàn thành</p>
-            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
-                <i class="fas fa-info-circle"></i> Tính năng đang phát triển
-            </div>
-        </div>
-    </div>
+      <div class="payment-footer" aria-live="polite">
+        <div class="footer-inner">
+          <div class="payment-logos" aria-hidden="true">
+            <img src="visa.png" class="pay-icon" alt="Visa">
+            <img src="mastercard.png" class="pay-icon" alt="Mastercard">
+            <img src="paypal.png" class="pay-icon" alt="PayPal">
+            <img src="applepay.png" class="pay-icon" alt="Apple Pay">
+            <img src="googlepay.png" class="pay-icon" alt="Google Pay">
+            <img src="zalopay.png" class="pay-icon" alt="ZaloPay">
+            <img src="momo.png" class="pay-icon" alt="MoMo">
+            <img src="vnpay.png" class="pay-icon" alt="VNPay">
+          </div>
 
-    <!-- ===== TRANG THÔNG BÁO ===== -->
-    <div id="notifications-page" class="page">
-        <div class="page-header">
-            <h2><i class="fas fa-bell"></i> Thông báo</h2>
-            <p>Cập nhật và thông báo quan trọng</p>
-        </div>
-        
-        <div class="content-placeholder">
-            <i class="fas fa-bell"></i>
-            <h3>Thông báo hệ thống</h3>
-            <p>Không có thông báo mới</p>
-            <div style="margin-top: 20px; color: #f97316; font-weight: bold;">
-                <i class="fas fa-info-circle"></i> Bạn đã xem tất cả thông báo
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== TRANG THU NHẬP ===== -->
-    <div id="earnings-page" class="page">
-        <div class="earnings-header">
-            <h2><i class="fas fa-chart-line"></i> Thu nhập</h2>
-            <p>Theo dõi thu nhập và thống kê</p>
-        </div>
-
-        <!-- Thu nhập hôm nay -->
-        <div class="today-highlight">
-            <div>
-                <div class="today-label">Thu nhập hôm nay (09/02)</div>
-                <div style="color: #666; font-size: 14px; margin-top: 5px;">Tổng cộng từ các đơn hàng</div>
-            </div>
-            <div class="today-amount">960.000đ</div>
-        </div>
-
-        <!-- Chọn khoảng thời gian -->
-        <div class="date-selector">
-            <div class="date-row">
-                <div class="date-item">
-                    <div class="date-range">19/01<br>25/01</div>
-                </div>
-                <div class="date-item">
-                    <div class="date-range">26/01<br>01/02</div>
-                </div>
-                <div class="date-item active">
-                    <div class="date-range">02/02<br>08/02</div>
-                </div>
-            </div>
-            <div class="date-row">
-                <div class="date-item">
-                    <div class="date-range">09/02<br>15/02</div>
-                </div>
-                <div class="date-item">
-                    <div class="date-range">16/02<br>22/02</div>
-                </div>
-                <div class="date-item">
-                    <div class="date-range">23/02<br>29/02</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Banner mục tiêu -->
-        <div class="goal-banner">
-            <div class="goal-text">
-                <i class="fas fa-bullseye"></i> Tài xế ơi! Hãy tối đa hoá thu nhập bằng cách thiết lập mục tiêu cá nhân.
-            </div>
-            <button class="goal-btn" onclick="setGoal()">
-                <i class="fas fa-target"></i> Đặt mục tiêu
+          <div class="total-line"><span>Total:</span><span id="totalAmount">$0.00</span></div>
+          <!-- SỬA: Loại bỏ disabled khỏi nút Recharge -->
+          <button class="done-btn" id="rechargeBtn" type="button">
+              <img src="protect.png" alt="protect icon" class="protect-icon">
+              Recharge
             </button>
         </div>
-
-        <!-- Tổng thu nhập -->
-        <div class="total-earnings">
-            <div class="section-title">
-                <i class="fas fa-chart-pie"></i> Tổng thu nhập
-            </div>
-            
-            <div class="earnings-grid">
-                <div class="earning-card">
-                    <div class="earning-value">960.000đ</div>
-                    <div class="earning-label">Thu nhập từ đơn hàng</div>
-                </div>
-                
-                <div class="earning-card">
-                    <div class="earning-value">0đ</div>
-                    <div class="earning-label">Tiền thưởng</div>
-                </div>
-                
-                <div class="earning-card">
-                    <div class="earning-value">12 đơn</div>
-                    <div class="earning-label">Số đơn hoàn thành</div>
-                </div>
-                
-                <div class="earning-card">
-                    <div class="earning-value">360 phút</div>
-                    <div class="earning-label">Thời gian hoạt động</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lịch tuần -->
-        <div class="weekly-calendar">
-            <div class="section-title">
-                <i class="fas fa-calendar-alt"></i> Tuần này
-            </div>
-            
-            <div class="week-days">
-                <div class="day-item">
-                    <div class="day-name">T2</div>
-                    <div>05</div>
-                </div>
-                <div class="day-item">
-                    <div class="day-name">T3</div>
-                    <div>06</div>
-                </div>
-                <div class="day-item">
-                    <div class="day-name">T4</div>
-                    <div>07</div>
-                </div>
-                <div class="day-item">
-                    <div class="day-name">T5</div>
-                    <div>08</div>
-                </div>
-                <div class="day-item today">
-                    <div class="day-name">T6</div>
-                    <div>09</div>
-                </div>
-                <div class="day-item">
-                    <div class="day-name">T7</div>
-                    <div>10</div>
-                </div>
-                <div class="day-item">
-                    <div class="day-name">CN</div>
-                    <div>11</div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 20px; text-align: center; color: #666; font-size: 14px;">
-                <i class="fas fa-info-circle"></i> Click vào ngày để xem chi tiết thu nhập
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- ===== TRANG TÀI KHOẢN (CÓ NÚT DẪN ĐẾN VÍ) ===== -->
-    <div id="account-page" class="page">
-        <div class="account-header">
-            <div class="back-btn" onclick="switchPage('home')">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            
-            <div class="avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            
-            <div class="driver-name">ĐOÀN HỮU QUỐC CƯỜNG</div>
-            <div style="opacity: 0.9; font-size: 14px;">Tài xế AhaMove</div>
+    <!-- Custom sheet -->
+    <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true"></div>
+    <div class="sheet" id="customSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="customTitle">
+      <div class="sheet-header">
+        <button class="back-btn" id="sheetBackBtn" aria-label="Trở lại">&lsaquo;</button>
+        <div class="sheet-title">Custom</div>
+        <div class="help-icon">?</div>
+      </div>
+      <div class="sheet-body">
+        <!-- Cập nhật: Number of Coins và mũi tên thanh mỏng căn trái -->
+        <div class="number-of-coins-row">
+          <div class="number-of-coins-text">Number of Coins</div>
+          <div class="arrow-symbol">▼</div> <!-- Mũi tên thanh mỏng hướng xuống -->
         </div>
         
-        <!-- THÊM NÚT VÍ VÀO TRANG TÀI KHOẢN -->
-        <div class="menu-section" style="margin: 20px;">
-            <div class="menu-item" onclick="switchPage('wallet')">
-                <div class="menu-item-left">
-                    <div class="menu-icon">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <div class="menu-text">Ví tài xế</div>
-                </div>
-                <div class="menu-arrow">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
+        <!-- Cập nhật: Coin input section căn trái -->
+          <div class="coin-input-section">
+            <img src="coin.png" alt="coin icon" style="width: 24px; height: 24px;">
+            <input type="text" class="coin-input" id="customCoinInput" value="0" aria-label="Number of coins" inputmode="numeric" readonly />
+          </div>
+        
+        <!-- Cập nhật: Keypad với màu nền xám -->
+        <div class="keypad">
+          <button class="keypad-btn" data-key="1">1</button>
+          <button class="keypad-btn" data-key="2">2</button>
+          <button class="keypad-btn" data-key="3">3</button>
+          <button class="keypad-btn backspace" id="backspaceBtn">⌫</button>
+          <button class="keypad-btn" data-key="4">4</button>
+          <button class="keypad-btn" data-key="5">5</button>
+          <button class="keypad-btn" data-key="6">6</button>
+          <button class="keypad-btn" data-key="000">000</button>
+          <button class="keypad-btn" data-key="7">7</button>
+          <button class="keypad-btn" data-key="8">8</button>
+          <button class="keypad-btn" data-key="9">9</button>
+          <button class="keypad-btn" data-key="0">0</button>
         </div>
         
-        <div class="rating-card">
-            <div class="rank-badge">
-                <i class="fas fa-medal"></i> CHƯA XẾP HẠNG
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">5★</div>
-                    <div style="font-size: 13px; color: #666; font-weight: 500;">Đánh giá</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">100,0%</div>
-                    <div style="font-size: 13px; color: #666; font-weight: 500;">Tỷ lệ chấp nhận</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div style="font-size: 28px; font-weight: 700; color: #f97316; margin-bottom: 5px;">0,0%</div>
-                    <div style="font-size: 13px; color: #666; font-weight: 500;">Tỷ lệ huỷ đơn</div>
-                </div>
-            </div>
+        <div class="sheet-total">
+          <span class="total-label">Total:</span>
+          <span class="total-value" id="sheetTotalAmount">$0.00</span>
         </div>
         
-        <div class="menu-section">
-            <div class="menu-item" onclick="openHistory()">
-                <div class="menu-item-left">
-                    <div class="menu-icon">
-                        <i class="fas fa-history"></i>
-                    </div>
-                    <div class="menu-text">Lịch sử đơn</div>
-                </div>
-                <div class="history-badge">
-                    <i class="fas fa-motorcycle"></i> Vi Tài Xế
-                </div>
-            </div>
-        </div>
-        
-        <div class="insurance-section">
-            <div style="display: flex; align-items: center; gap: 10px; color: #1d4ed8; font-weight: 600; margin-bottom: 5px;">
-                <i class="fas fa-shield-alt"></i>
-                <span>Bảo hiểm</span>
-            </div>
-            <div style="color: #666; font-size: 14px; margin-top: 5px;">
-                Bảo hiểm tai nạn và trách nhiệm dân sự
-            </div>
-        </div>
-        
-        <div class="section-title-account">Tài xế thân thiết</div>
-        
-        <div class="menu-section">
-            <div class="menu-item" onclick="openReferral()">
-                <div class="menu-item-left">
-                    <div class="menu-icon" style="background: #f0f9ff; color: #3b82f6;">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="menu-text">Giới thiệu & nhận thưởng</div>
-                </div>
-                <div class="menu-arrow">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-            
-            <div class="menu-item" onclick="openChallenges()">
-                <div class="menu-item-left">
-                    <div class="menu-icon" style="background: #fef3c7; color: #f59e0b;">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <div class="menu-text">Thử thách</div>
-                </div>
-                <div style="background: #f97316; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">MỚI</div>
-            </div>
-            
-            <div class="menu-item" onclick="openCompetition()">
-                <div class="menu-item-left">
-                    <div class="menu-icon" style="background: #f0fdf4; color: #22c55e;">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="menu-text">Thi đua Tài Xế</div>
-                </div>
-                <div class="menu-arrow">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-        </div>
+        <button class="done-btn" id="confirmCustom" type="button">
+          <img src="protect.png" alt="protect icon" class="protect-icon">
+          Recharge
+        </button>
+      </div>
     </div>
 
-    <!-- ===== TRANG VÍ TÀI XẾ (MỚI) ===== -->
-    <div id="wallet-page" class="page">
-        <div class="wallet-header">
-            <div class="wallet-back-btn" onclick="switchPage('account')">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            
-            <h2><i class="fas fa-wallet"></i> Ví tài xế</h2>
-            <p>Quản lý tài chính và giao dịch</p>
-        </div>
-
-        <div class="wallet-content">
-            <!-- Tài khoản chính -->
-            <div class="wallet-card">
-                <div class="account-item">
-                    <div class="account-label">
-                        <i class="fas fa-credit-card"></i> Tài khoản chính
-                    </div>
-                    <div class="account-value">₫16.760</div>
-                </div>
-                
-                <div class="account-item">
-                    <div class="account-label">
-                        <i class="fas fa-gift"></i> Tài khoản khuyến mãi
-                    </div>
-                    <div class="account-subvalue">
-                        <span>₫0</span>
-                    </div>
-                </div>
-                
-                <div class="account-item">
-                    <div class="account-label">
-                        <i class="fas fa-shield-alt"></i> Tài khoản ký quỹ
-                    </div>
-                    <div class="account-subvalue">
-                        <span>₫0</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Nút hành động -->
-            <div class="action-buttons">
-                <button class="action-btn deposit" onclick="depositMoney()">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Nạp tiền</span>
-                </button>
-                
-                <button class="action-btn withdraw" onclick="withdrawMoney()">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Rút tiền</span>
-                </button>
-                
-                <button class="action-btn margin" onclick="manageMargin()">
-                    <i class="fas fa-hand-holding-usd"></i>
-                    <span>Ký quỹ</span>
-                </button>
-            </div>
-
-            <!-- Menu ví -->
-            <div class="wallet-menu">
-                <div class="wallet-menu-item" onclick="collectPayment()">
-                    <div class="wallet-menu-item-left">
-                        <div class="wallet-menu-icon">
-                            <i class="fas fa-hand-holding-usd"></i>
-                        </div>
-                        <div class="wallet-menu-text">Nộp tiền thu hộ</div>
-                    </div>
-                    <div class="wallet-menu-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-                
-                <div class="wallet-menu-item" onclick="viewTransactionHistory()">
-                    <div class="wallet-menu-item-left">
-                        <div class="wallet-menu-icon">
-                            <i class="fas fa-history"></i>
-                        </div>
-                        <div class="wallet-menu-text">Lịch sử giao dịch</div>
-                    </div>
-                    <div class="wallet-menu-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Order Summary Popup - Updated -->
+<div class="popup-backdrop" id="orderPopup">
+  <div class="order-popup">
+    <div class="order-header">
+      <div class="order-main-title">Order Summary</div>
+      <div class="order-account-section">
+        <div class="account-label">Account</div>
+        <div class="account-username" id="popupUsername">@username</div>
+      </div>
+    </div>
+    
+    <div class="order-details">
+      <div class="coins-section">
+        <div class="coins-label" id="popupCoins">0 coins</div>
+        <div class="coins-price" id="popupPrice">$0.00</div>
+      </div>
+      <div class="total-section">
+        <div class="total-label">Total</div>
+        <div class="total-price" id="popupTotal">$0.00</div>
+      </div>
+    </div>
+    
+    <div class="payment-method-section">
+      <div class="payment-method-label">Select a payment method</div>
+      <div class="payment-card">
+        <img src="visa.png" class="card-logo" alt="Visa">
+        <div class="card-number">**** **** **** 36</div>
+      </div>
+    </div>
+    
+    <div class="terms-section">
+      <div class="terms-text">
+        By clicking 'Pay Now,' you confirm that your payment details are correct and understand that the transaction is final. Please make sure your card supports international payments if needed, and double-check any promo codes or discounts before proceeding.
+      </div>
+      <div class="terms-text">
+        To access your tax rate and review the total amount due, please verify your billing information carefully. By clicking 'Pay Now,' you confirm that all details are correct, the transaction is final, and you agree to our <span class="privacy-policy">Privacy Policy</span>. Ensure your card supports international payments if applicable. A confirmation email will be sent once your payment is complete.
+      </div>
+    </div>
+    
+    <div class="popup-buttons">
+      <button class="popup-cancel" id="cancelOrder">Cancel</button>
+      <button class="popup-confirm" id="confirmOrder">Pay Now</button>
+    </div>
+  </div>
+</div>
+    <!-- Processing Popup - Updated với hiệu ứng hai vòng tròn -->
+    <div class="popup-backdrop" id="processingPopup">
+      <div class="processing-popup">
+        <div class="circles-container" id="circlesContainer"></div>
+        <div class="processing-text">Processing your payment</div>
+        <div class="processing-subtext">This could take few seconds</div>
+        <div class="countdown" id="countdown">5:00</div>
+      </div>
     </div>
 
-    <!-- ===== BOTTOM NAVIGATION (ĐÃ SỬA BADGE ĐÚNG VỊ TRÍ) ===== -->
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchPage('home')">
-            <div class="nav-icon">
-                <i class="fas fa-home"></i>
-            </div>
-            <div class="nav-label">Trang chủ</div>
-        </div>
-        
-        <div class="nav-item" onclick="switchPage('orders')">
-            <div class="nav-icon">
-                <i class="fas fa-clipboard-list"></i>
-            </div>
-            <div class="nav-label">Đơn hàng</div>
-        </div>
-        
-        <!-- THÔNG BÁO - CÓ BADGE Ở ĐÂY -->
-        <div class="nav-item" onclick="switchPage('notifications')">
-            <div class="nav-icon">
-                <i class="fas fa-bell"></i>
-            </div>
-            <div class="nav-label">Thông báo</div>
-            <div class="notification-badge">3</div>
-        </div>
-        
-        <!-- THU NHẬP - KHÔNG CÓ BADGE -->
-        <div class="nav-item" onclick="switchPage('earnings')">
-            <div class="nav-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="nav-label">Thu nhập</div>
-        </div>
-        
-        <div class="nav-item" onclick="switchPage('account')">
-            <div class="nav-icon">
-                <i class="fas fa-user-circle"></i>
-            </div>
-            <div class="nav-label">Tài khoản</div>
-        </div>
+    <!-- Success Popup -->
+    <div class="popup-backdrop" id="successPopup">
+      <div class="success-popup">
+        <div class="success-icon"></div>
+        <div class="success-title">Payment Complete</div>
+        <div class="success-message" id="successMessage">You recharged 0 Coins from Get Coins to send Gifts to TikTok</div>
+      </div>
     </div>
 
-    <script>
-        // ===== CHUYỂN TRANG =====
-        function switchPage(pageId) {
-            // Ẩn tất cả các trang
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Hiện trang được chọn
-            document.getElementById(pageId + '-page').classList.add('active');
-            
-            // Cập nhật active cho nav (trừ trang ví vì nó không có trong bottom nav)
-            if (pageId !== 'wallet') {
-                document.querySelectorAll('.nav-item').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                
-                // Tìm nav tương ứng và set active
-                const navItems = document.querySelectorAll('.nav-item');
-                const pageIndex = ['home', 'orders', 'notifications', 'earnings', 'account'].indexOf(pageId);
-                if (navItems[pageIndex]) {
-                    navItems[pageIndex].classList.add('active');
-                }
-            }
-        }
+  </div>
+
+  <script>
+    // Hiệu ứng hai vòng tròn cho Processing Popup
+    function createCirclesAnimation(container) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 120;
+      canvas.height = 80;
+      container.appendChild(canvas);
+      
+      const ctx = canvas.getContext('2d');
+      let r = 14;
+      let amp = 15;
+      let speed = 0.005;
+      let startTime = Date.now();
+
+      function draw() {
+        // Clear canvas với background trong suốt
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // ===== CHỨC NĂNG TRANG CHỦ =====
-        function acceptOrder(orderId) {
-            const todayOrders = document.querySelector('.stat-value');
-            todayOrders.textContent = parseInt(todayOrders.textContent) + 1;
-            
-            const earnings = document.querySelectorAll('.stat-value')[1];
-            const currentEarnings = parseInt(earnings.textContent.replace('₫', ''));
-            earnings.textContent = '₫' + (currentEarnings + 45000);
-            
-            const orderElement = document.querySelector(`.order-id:contains("${orderId}")`).closest('.order-item');
-            orderElement.style.borderLeftColor = '#22c55e';
-            orderElement.style.opacity = '0.7';
-            
-            alert(`✅ Bạn đã nhận đơn hàng ${orderId}!\n\nHãy đến điểm lấy hàng trong vòng 10 phút.`);
+        const t = (Date.now() - startTime) * speed;
+        const d = Math.sin(t) * amp;
+
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        // hai vị trí đối xứng
+        const xL = cx - Math.abs(d);
+        const xR = cx + Math.abs(d);
+
+        // xác định lúc này màu nào đang ở trái, màu nào ở phải
+        let leftColor, rightColor;
+        if (d < 0) {
+          // sin âm → cyan bên trái, pink bên phải
+          leftColor  = '#00f2ea';
+          rightColor = '#fe2c55';
+        } else {
+          // sin dương → pink bên trái, cyan bên phải
+          leftColor  = '#fe2c55';
+          rightColor = '#00f2ea';
         }
+
+        // vẽ trái trước, phải sau -> đảm bảo bên phải đè
+        ctx.fillStyle = leftColor;
+        ctx.beginPath();
+        ctx.arc(xL, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = rightColor;
+        ctx.beginPath();
+        ctx.arc(xR, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        requestAnimationFrame(draw);
+      }
+
+      draw();
+    }
+
+    // DOM refs
+    const coinOptions = Array.from(document.querySelectorAll('.coin-option'));
+    const customOption = document.getElementById('customOption');
+    const totalAmountEl = document.getElementById('totalAmount');
+    const sheet = document.getElementById('customSheet');
+    const sheetBackdrop = document.getElementById('sheetBackdrop');
+    const sheetBackBtn = document.getElementById('sheetBackBtn');
+    const confirmCustom = document.getElementById('confirmCustom');
+    const rechargeBtn = document.getElementById('rechargeBtn');
+    const tiktokIdInput = document.getElementById('tiktokId');
+    const balanceInput = document.getElementById('balanceAmount');
+    const usernameWrapper = document.getElementById('usernameWrapper');
+    const usernameError = document.getElementById('usernameError');
+    
+    // Custom sheet elements
+    const customCoinInput = document.getElementById('customCoinInput');
+    const sheetTotalAmount = document.getElementById('sheetTotalAmount');
+    const keypadBtns = document.querySelectorAll('.keypad-btn');
+    const backspaceBtn = document.getElementById('backspaceBtn');
+
+    // Popup elements
+    const orderPopup = document.getElementById('orderPopup');
+    const processingPopup = document.getElementById('processingPopup');
+    const successPopup = document.getElementById('successPopup');
+    const popupCoins = document.getElementById('popupCoins');
+    const popupPrice = document.getElementById('popupPrice');
+    const popupUsername = document.getElementById('popupUsername');
+    const popupTotal = document.getElementById('popupTotal');
+    const cancelOrder = document.getElementById('cancelOrder');
+    const confirmOrder = document.getElementById('confirmOrder');
+    const countdownEl = document.getElementById('countdown');
+    const successMessage = document.getElementById('successMessage');
+    const circlesContainer = document.getElementById('circlesContainer');
+
+    const backBtn = document.getElementById('backBtn');
+    const moreBtn = document.getElementById('moreBtn');
+
+    let selectedCoins = 0;
+    let selectedPrice = 0;
+    let coinOptionsDisabled = false;
+    const STORAGE_KEY = 'recharge_balance';
+    
+    // Custom amount state
+    let customAmount = 0;
+
+    // Countdown variables
+    let countdownInterval;
+    let countdownSeconds = 300; // 5:00 in seconds
+
+    // default rate
+    const firstPriced = coinOptions.find(o => o.dataset.coins && o.dataset.price);
+    const DEFAULT_RATE = (firstPriced && parseInt(firstPriced.dataset.coins, 10) > 0)
+      ? (parseFloat(firstPriced.dataset.price) / parseInt(firstPriced.dataset.coins, 10))
+      : (1.0 / 70);
+
+    // formatting helpers
+    function formatNumberWithCommas(n) {
+      if (n === null || n === undefined) return '';
+      if (!isFinite(n)) return String(n);
+      return Number(n).toLocaleString('en-US');
+    }
+
+    function parseIntFromFormatted(str) {
+      if (!str) return NaN;
+      const digits = String(str).replace(/,/g, '').replace(/\s/g, '');
+      const integerPart = digits.split('.')[0];
+      return parseInt(integerPart, 10);
+    }
+
+    // Format time as MM:SS
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Hàm reset form về trạng thái ban đầu
+    function resetForm() {
+      // Reset username input
+      tiktokIdInput.value = '';
+      hideUsernameError();
+      
+      // Reset coin selection - bỏ chọn tất cả options
+      coinOptions.forEach(o => o.classList.remove('selected'));
+      selectedCoins = 0;
+      selectedPrice = 0;
+      customAmount = 0;
+      
+      // Reset total display
+      totalAmountEl.textContent = '$0.00';
+      
+      // Reset custom sheet nếu đang mở
+      if (sheet.classList.contains('active')) {
+        closePopup();
+      }
+    }
+
+    // Hiển thị lỗi username
+    function showUsernameError() {
+      usernameWrapper.classList.add('error');
+      usernameError.style.display = 'block';
+    }
+
+    // Ẩn lỗi username
+    function hideUsernameError() {
+      usernameWrapper.classList.remove('error');
+      usernameError.style.display = 'none';
+    }
+
+    // Kiểm tra username hợp lệ
+    function validateUsername(username) {
+      // Username TikTok thường có độ dài từ 2-24 ký tự, chỉ chứa chữ cái, số, dấu gạch dưới và dấu chấm
+      const usernameRegex = /^[a-zA-Z0-9._]{2,24}$/;
+      return usernameRegex.test(username);
+    }
+
+    // Start countdown
+    function startCountdown() {
+      countdownSeconds = 300; // Reset to 5:00
+      countdownEl.textContent = formatTime(countdownSeconds);
+      
+      clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        countdownSeconds--;
+        countdownEl.textContent = formatTime(countdownSeconds);
         
-        // ===== CHỨC NĂNG TRANG THU NHẬP =====
-        function setGoal() {
-            const goal = prompt("Nhập mục tiêu thu nhập của bạn (VND):", "1500000");
-            if (goal) {
-                alert(`🎯 Đã đặt mục tiêu: ${parseInt(goal).toLocaleString()}đ\n\nChúc bạn đạt được mục tiêu!`);
-            }
+        if (countdownSeconds <= 297) { // When it reaches 4:57
+          clearInterval(countdownInterval);
+          showSuccessPopup();
         }
-        
-        // Click vào ngày trong lịch
-        document.querySelectorAll('.day-item').forEach(day => {
-            day.addEventListener('click', function() {
-                const date = this.querySelector('div:last-child').textContent;
-                const dayName = this.querySelector('.day-name').textContent;
-                alert(`Xem thu nhập ngày ${date} (${dayName})\n\nTính năng chi tiết đang phát triển`);
-            });
+      }, 1000);
+    }
+
+    // Update custom display
+    function updateCustomDisplay() {
+      const coins = customAmount;
+      const priceUSD = coins * DEFAULT_RATE;
+      
+      customCoinInput.value = formatNumberWithCommas(coins);
+      sheetTotalAmount.textContent = '$' + priceUSD.toFixed(2);
+    }
+
+    // Handle keypad input
+    function handleKeypadInput(key) {
+      if (key === '⌫') {
+        // Backspace - remove last digit
+        customAmount = Math.floor(customAmount / 10);
+      } else if (key === '000') {
+        // Triple zero - add 000
+        customAmount = customAmount * 1000;
+      } else {
+        // Number input - append digit
+        const digit = parseInt(key, 10);
+        customAmount = customAmount * 10 + digit;
+      }
+      
+      // Allow any value, no limits
+      updateCustomDisplay();
+    }
+
+    // Show order summary popup
+    function showOrderSummary() {
+      const coins = customAmount > 0 ? customAmount : selectedCoins;
+      const price = customAmount > 0 ? (customAmount * DEFAULT_RATE) : selectedPrice;
+      const username = tiktokIdInput.value || 'username';
+      
+      // Cập nhật nội dung popup với định dạng mới
+      popupCoins.textContent = formatNumberWithCommas(coins) + ' coins';
+      popupPrice.textContent = '$' + price.toFixed(2);
+      popupUsername.textContent = '@' + username;
+      popupTotal.textContent = '$' + price.toFixed(2);
+      
+      orderPopup.classList.add('active');
+    }
+
+    // Show processing popup
+    function showProcessingPopup() {
+      // Tạo hiệu ứng hai vòng tròn khi popup hiển thị
+      circlesContainer.innerHTML = '';
+      createCirclesAnimation(circlesContainer);
+      
+      orderPopup.classList.remove('active');
+      processingPopup.classList.add('active');
+      startCountdown();
+    }
+
+    // Show success popup
+    function showSuccessPopup() {
+      processingPopup.classList.remove('active');
+      const coins = customAmount > 0 ? customAmount : selectedCoins;
+      successMessage.textContent = `You recharged ${formatNumberWithCommas(coins)} Coins from Get Coins to send Gifts to TikTok`;
+      successPopup.classList.add('active');
+      
+      // Add coins to balance after successful payment
+      addCoinsToBalance(coins);
+      
+      setTimeout(() => {
+        closeAllPopups();
+      }, 3000);
+    }
+
+    // Close all popups
+    function closeAllPopups() {
+      orderPopup.classList.remove('active');
+      processingPopup.classList.remove('active');
+      successPopup.classList.remove('active');
+      clearInterval(countdownInterval);
+      resetForm();
+    }
+
+    // load/save balance persistent
+    function loadBalance() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored !== null) {
+          const num = Number(stored);
+          if (!Number.isNaN(num)) {
+            balanceInput.value = formatNumberWithCommas(num);
+            return;
+          }
+        }
+        const raw = (balanceInput.value || '').toString().replace(/,/g, '');
+        const num = Number(raw) || 0;
+        localStorage.setItem(STORAGE_KEY, String(num));
+        balanceInput.value = formatNumberWithCommas(num);
+      } catch (e) {
+        try {
+          const raw = (balanceInput.value || '').toString().replace(/,/g, '');
+          const num = Number(raw) || 0;
+          balanceInput.value = formatNumberWithCommas(num);
+        } catch {}
+      }
+    }
+
+    function saveBalance(num) {
+      try {
+        localStorage.setItem(STORAGE_KEY, String(Number(num) || 0));
+      } catch (e) {}
+    }
+
+    function addCoinsToBalance(coinsToAdd) {
+      try {
+        const raw = (balanceInput.value || '').toString().replace(/,/g, '');
+        const current = Number(raw) || 0;
+        const next = current + Number(coinsToAdd || 0);
+        balanceInput.value = formatNumberWithCommas(next);
+        saveBalance(next);
+      } catch (e) {}
+    }
+
+    function setCoinOptionsDisabled(disabled) {
+      coinOptionsDisabled = !!disabled;
+      coinOptions.forEach(o => {
+        if (coinOptionsDisabled) {
+          o.classList.add('disabled');
+          o.setAttribute('aria-disabled', 'true');
+        } else {
+          o.classList.remove('disabled');
+          o.removeAttribute('aria-disabled');
+        }
+      });
+    }
+
+    // sheet open/close
+    const openSheet = () => {
+      if (coinOptionsDisabled) return;
+      sheet.classList.add('active');
+      sheetBackdrop.classList.add('active');
+      sheet.setAttribute('aria-hidden', 'false');
+      sheetBackdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      
+      // Reset to 0
+      customAmount = 0;
+      updateCustomDisplay();
+    };
+
+    const closePopup = () => {
+      sheet.classList.remove('active');
+      sheetBackdrop.classList.remove('active');
+      sheet.setAttribute('aria-hidden', 'true');
+      sheetBackdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      const focused = document.querySelector('.coin-option.selected') || document.querySelector('.coin-option');
+      if (focused) focused.focus();
+    };
+
+    // Kiểm tra điều kiện để hiển thị popup
+    function canProceedToPayment() {
+      const username = tiktokIdInput.value.trim();
+      const hasUser = username.length > 0;
+      const hasSelection = selectedCoins > 0 && selectedPrice > 0;
+      
+      // Kiểm tra username hợp lệ
+      if (hasUser && !validateUsername(username)) {
+        showUsernameError();
+        return false;
+      } else {
+        hideUsernameError();
+      }
+      
+      return hasUser && hasSelection;
+    }
+
+    // option handlers
+    coinOptions.forEach(option => {
+      function selectOption() {
+        if (coinOptionsDisabled) return;
+        coinOptions.forEach(o => o.classList.remove('selected'));
+        if (option.id === 'customOption') {
+          openSheet();
+        } else {
+          option.classList.add('selected');
+          const coins = parseInt(option.dataset.coins, 10);
+          const price = parseFloat(option.dataset.price);
+          selectedCoins = Number.isFinite(coins) ? coins : 0;
+          selectedPrice = Number.isFinite(price) ? price : 0;
+          totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
+        }
+      }
+      option.addEventListener('click', selectOption);
+      option.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectOption();
+        }
+      });
+    });
+
+    // Keypad event listeners
+    keypadBtns.forEach(btn => {
+      if (btn.dataset.key || btn.id === 'backspaceBtn') {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.key || '⌫';
+          handleKeypadInput(key);
         });
+      }
+    });
+
+    // Event listeners
+    sheetBackdrop.addEventListener('click', closePopup);
+    sheetBackBtn.addEventListener('click', closePopup);
+
+    confirmCustom.addEventListener('click', () => {
+      if (customAmount > 0) {
+        selectedCoins = customAmount;
+        selectedPrice = customAmount * DEFAULT_RATE;
+        totalAmountEl.textContent = '$' + selectedPrice.toFixed(2);
+        closePopup();
         
-        // Click vào khoảng thời gian
-        document.querySelectorAll('.date-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.date-item').forEach(d => {
-                    d.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                const range = this.querySelector('.date-range').textContent;
-                alert(`Xem thu nhập khoảng: ${range}\n\nDữ liệu chi tiết đang được cập nhật`);
-            });
-        });
-        
-        // ===== CHỨC NĂNG TRANG VÍ =====
-        function depositMoney() {
-            const amount = prompt("Nhập số tiền muốn nạp (VND):", "100000");
-            if (amount && !isNaN(amount)) {
-                const currentBalance = parseInt(document.querySelector('.account-value').textContent.replace('₫', '').replace(/\./g, ''));
-                const newBalance = currentBalance + parseInt(amount);
-                document.querySelector('.account-value').textContent = '₫' + newBalance.toLocaleString();
-                alert(`✅ Đã nạp ${parseInt(amount).toLocaleString()}đ thành công!\nSố dư mới: ${newBalance.toLocaleString()}đ`);
-            }
-        }
-        
-        function withdrawMoney() {
-            const amount = prompt("Nhập số tiền muốn rút (VND):", "50000");
-            if (amount && !isNaN(amount)) {
-                const currentBalance = parseInt(document.querySelector('.account-value').textContent.replace('₫', '').replace(/\./g, ''));
-                if (parseInt(amount) <= currentBalance) {
-                    const newBalance = currentBalance - parseInt(amount);
-                    document.querySelector('.account-value').textContent = '₫' + newBalance.toLocaleString();
-                    alert(`✅ Đã rút ${parseInt(amount).toLocaleString()}đ thành công!\nSố dư mới: ${newBalance.toLocaleString()}đ`);
-                } else {
-                    alert('❌ Số dư không đủ để rút!');
-                }
-            }
-        }
-        
-        function manageMargin() {
-            alert('📋 Quản lý ký quỹ\n\nKý quỹ để đảm bảo thực hiện đơn hàng chất lượng');
-        }
-        
-        function collectPayment() {
-            alert('💰 Nộp tiền thu hộ\n\nNộp tiền thu hộ từ khách hàng vào tài khoản');
-        }
-        
-        function viewTransactionHistory() {
-            alert('📊 Lịch sử giao dịch\n\nXem tất cả giao dịch nạp/rút tiền');
-        }
-        
-        // ===== CHỨC NĂNG TRANG TÀI KHOẢN =====
-        function openHistory() {
-            alert('Mở lịch sử đơn hàng\n\nHiển thị tất cả đơn hàng đã thực hiện');
-        }
-        
-        function openReferral() {
-            alert('Giới thiệu & nhận thưởng\n\nGiới thiệu bạn bè trở thành tài xế và nhận hoa hồng');
-        }
-        
-        function openChallenges() {
-            alert('Thử thách tài xế\n\nTham gia thử thách hàng tuần để nhận thưởng');
-        }
-        
-        function openCompetition() {
-            alert('Thi đua Tài Xế\n\nXem bảng xếp hạng và thi đua với tài xế khác');
-        }
-        
-        // ===== HIỆU ỨNG =====
-        document.querySelectorAll('.menu-item, .wallet-menu-item').forEach(item => {
-            item.addEventListener('click', function() {
-                this.style.background = '#f5f5f5';
-                setTimeout(() => {
-                    this.style.background = '';
-                }, 200);
-            });
-        });
-        
-        // Hiệu ứng cho bottom nav
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                if (!this.classList.contains('active')) {
-                    document.querySelectorAll('.nav-item').forEach(nav => {
-                        nav.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                }
-            });
-        });
-        
-        // Thêm thông báo mới sau 30 giây
-        setInterval(() => {
-            const badge = document.querySelector('.notification-badge');
-            if (badge) {
-                badge.textContent = parseInt(badge.textContent) + 1;
-            }
-        }, 30000);
-        
-        // Khởi tạo
-        console.log('AhaMove Driver App đã sẵn sàng!');
-        console.log('💰 Thu nhập hôm nay: 960.000đ');
-        console.log('💳 Số dư ví: 16.760đ');
-        console.log('🔔 Thông báo: 3 tin chưa đọc');
-    </script>
+        // Clear selection from other options
+        coinOptions.forEach(o => o.classList.remove('selected'));
+      }
+    });
+
+    // Recharge button shows order summary - SỬA: Luôn click được
+    rechargeBtn.addEventListener('click', () => {
+      // Kiểm tra điều kiện trước khi hiển thị popup
+      if (!canProceedToPayment()) {
+        alert('Please enter a valid TikTok username and select a coin package');
+        return;
+      }
+      
+      showOrderSummary();
+    });
+
+    // Order popup handlers
+    cancelOrder.addEventListener('click', closeAllPopups);
+    confirmOrder.addEventListener('click', showProcessingPopup);
+
+    // Success popup auto close after 3 seconds và reset form
+    successPopup.addEventListener('click', closeAllPopups);
+
+    backBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to go back? Any unsaved changes will be lost.')) {
+        window.history.back();
+      }
+    });
+
+    moreBtn.addEventListener('click', () => {
+      alert('More options menu would open here');
+    });
+
+    // Prevent zoom on input focus
+    tiktokIdInput.addEventListener('focus', () => {
+      setTimeout(() => {
+        document.documentElement.style.zoom = "1";
+      }, 100);
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBalance();
+      updateCustomDisplay();
+    });
+
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(err => {
+        console.warn('Service worker registration failed:', err);
+      });
+    }
+  </script>
 </body>
 </html>
